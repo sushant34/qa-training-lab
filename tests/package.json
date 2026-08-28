@@ -1,0 +1,8 @@
+{
+  "name": "qa-training-lab-tests",
+  "version": "1.0.0",
+  "description": "Tests for QA Training Lab",
+  "scripts": {
+    "test": "echo \"Tests not configured yet\""
+  }
+}

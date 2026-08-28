@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: qa-training-lab
+    runtime: node
+    buildCommand: npm install && cd server && npm install && cd ../client && npm install && cd .. && npm run build
+    startCommand: cd server && npm run seed && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        generateValue: true
