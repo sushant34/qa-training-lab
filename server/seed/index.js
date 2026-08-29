@@ -21,7 +21,7 @@ db.exec(`
 
 // Seed Users
 const users = [
-  { username: 'trainer', email: 'trainer@qalab.com', password: 'trainer123', role: 'TRAINER', full_name: 'Training Manager' },
+  { username: 'trainer', email: 'trainer@qalab.com', password: 'April@2025', role: 'TRAINER', full_name: 'Training Manager' },
   { username: 'intern', email: 'intern@qalab.com', password: 'intern123', role: 'INTERN', full_name: 'QA Intern' },
 ];
 

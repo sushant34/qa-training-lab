@@ -100,7 +100,7 @@ NODE_ENV=development
 
 | Role     | Username | Password    |
 |----------|----------|-------------|
-| Trainer  | trainer  | trainer123  |
+| Trainer  | trainer  | April@2025  |
 | Intern   | intern   | intern123   |
 
 ## How Intentional Bugs Work

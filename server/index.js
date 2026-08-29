@@ -58,6 +58,6 @@ if (process.env.NODE_ENV === 'production') {
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
   console.log('Demo accounts:');
-  console.log('  Trainer: trainer / trainer123');
+  console.log('  Trainer: trainer / April@2025');
   console.log('  Intern: intern / intern123');
 });

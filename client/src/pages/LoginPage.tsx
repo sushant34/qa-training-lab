@@ -82,9 +82,8 @@ const LoginPage: React.FC = () => {
           </div>
 
           <div className="mt-6 p-4 bg-slate-50 rounded-lg">
-            <p className="text-xs font-medium text-slate-700 mb-2">Demo Accounts:</p>
+            <p className="text-xs font-medium text-slate-700 mb-2">Demo Account:</p>
             <div className="text-xs text-slate-600 space-y-1">
-              <p><strong>Trainer:</strong> trainer / trainer123</p>
               <p><strong>Intern:</strong> intern / intern123</p>
             </div>
           </div>
