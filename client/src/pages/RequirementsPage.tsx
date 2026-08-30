@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { getRequirements, getProjects } from '../services/api';
 import { Requirement, Project } from '../types';
-import { BookOpen } from 'lucide-react';
+import { BookOpen, Download, FileText } from 'lucide-react';
+import { generateBRS } from '../utils/generateBRS';
 
 const RequirementsPage: React.FC = () => {
   const [requirements, setRequirements] = useState<Requirement[]>([]);
@@ -39,18 +40,41 @@ const RequirementsPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-slate-900">Requirements</h1>
-        <p className="text-slate-600 mt-1">
-          Read each requirement carefully before creating your test cases. Think about positive, negative and boundary scenarios.
-        </p>
+      <div className="flex items-start justify-between gap-4 flex-wrap">
+        <div>
+          <h1 className="text-2xl font-bold text-slate-900">Requirements</h1>
+          <p className="text-slate-500 mt-1">
+            Read each requirement carefully before creating your test cases. Think about positive, negative and boundary scenarios.
+          </p>
+        </div>
+        <button
+          onClick={generateBRS}
+          className="btn btn-primary shrink-0"
+        >
+          <Download size={18} />
+          Download BRS (PDF)
+        </button>
       </div>
 
       {project && (
-        <div className="card">
-          <h2 className="text-lg font-semibold text-slate-900">{project.name}</h2>
-          <p className="text-slate-600 mt-1">{project.description}</p>
-          <p className="text-sm text-slate-500 mt-2">Difficulty: {project.difficulty}</p>
+        <div className="card bg-gradient-to-r from-indigo-50 to-violet-50 border-indigo-100">
+          <div className="flex items-start gap-3">
+            <div className="p-2 bg-white rounded-xl shadow-sm">
+              <FileText size={22} className="text-indigo-600" />
+            </div>
+            <div>
+              <h2 className="text-lg font-semibold text-slate-900">{project.name}</h2>
+              <p className="text-slate-600 mt-1">{project.description}</p>
+              <div className="flex items-center gap-3 mt-2">
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white text-sm font-medium text-slate-700 border border-slate-200">
+                  {project.difficulty}
+                </span>
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-sm font-medium text-emerald-700 border border-emerald-200">
+                  {requirements.length} requirements
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
       )}
 
