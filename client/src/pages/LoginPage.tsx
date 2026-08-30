@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { login as apiLogin } from '../services/api';
 import toast from 'react-hot-toast';
+import { FlaskConical, ClipboardCheck, Bug, LineChart } from 'lucide-react';
 
 const LoginPage: React.FC = () => {
   const [username, setUsername] = useState('');
@@ -28,15 +29,62 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-white">QA Training Lab</h1>
-          <p className="text-slate-400 mt-2">Software Testing Training Platform</p>
+    <div className="min-h-screen bg-gradient-to-br from-indigo-950 via-slate-900 to-violet-950 flex items-center justify-center p-4">
+      <div className="w-full max-w-5xl grid lg:grid-cols-2 bg-white/95 backdrop-blur rounded-3xl shadow-2xl overflow-hidden">
+        {/* Left branding panel */}
+        <div className="hidden lg:flex flex-col justify-between p-10 bg-gradient-to-br from-indigo-600 to-violet-700 text-white">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center">
+              <FlaskConical size={26} />
+            </div>
+            <div>
+              <h1 className="text-2xl font-bold leading-tight">QA Training Lab</h1>
+              <p className="text-indigo-200 text-sm">Software Testing Training Platform</p>
+            </div>
+          </div>
+
+          <div className="space-y-6">
+            <h2 className="text-3xl font-bold leading-tight">
+              Master the art of<br />manual software testing
+            </h2>
+            <div className="space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-white/15 flex items-center justify-center">
+                  <ClipboardCheck size={20} />
+                </div>
+                <p className="text-indigo-100">Read requirements and create effective test cases</p>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-white/15 flex items-center justify-center">
+                  <Bug size={20} />
+                </div>
+                <p className="text-indigo-100">Execute tests and find real defects</p>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-white/15 flex items-center justify-center">
+                  <LineChart size={20} />
+                </div>
+                <p className="text-indigo-100">Track your score and improve your skills</p>
+              </div>
+            </div>
+          </div>
+
+          <p className="text-sm text-indigo-200">© 2025 QA Training Lab</p>
         </div>
 
-        <div className="card">
-          <h2 className="text-xl font-semibold text-slate-900 mb-6">Sign In</h2>
+        {/* Right form panel */}
+        <div className="p-8 lg:p-12">
+          <div className="lg:hidden text-center mb-8">
+            <div className="inline-flex items-center gap-2">
+              <span className="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center">
+                <FlaskConical size={22} />
+              </span>
+              <h1 className="text-2xl font-bold text-slate-900">QA Training Lab</h1>
+            </div>
+          </div>
+
+          <h2 className="text-2xl font-bold text-slate-900 mb-1">Welcome back</h2>
+          <p className="text-slate-500 mb-8">Sign in to continue your training</p>
 
           <form onSubmit={handleSubmit}>
             <div className="form-group">
@@ -66,25 +114,39 @@ const LoginPage: React.FC = () => {
             <button
               type="submit"
               disabled={loading}
-              className="btn btn-primary w-full justify-center"
+              className="btn btn-primary w-full justify-center py-3 text-base"
             >
-              {loading ? 'Signing in...' : 'Sign In'}
+              {loading ? (
+                <span className="inline-flex items-center gap-2">
+                  <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+                  Signing in...
+                </span>
+              ) : (
+                'Sign In'
+              )}
             </button>
           </form>
 
           <div className="mt-6 text-center">
             <p className="text-sm text-slate-600">
               Don't have an account?{' '}
-              <Link to="/register" className="text-blue-600 hover:text-blue-700 font-medium">
+              <Link to="/register" className="text-indigo-600 hover:text-indigo-700 font-semibold">
                 Register here
               </Link>
             </p>
           </div>
 
-          <div className="mt-6 p-4 bg-slate-50 rounded-lg">
-            <p className="text-xs font-medium text-slate-700 mb-2">Demo Account:</p>
-            <div className="text-xs text-slate-600 space-y-1">
-              <p><strong>Intern:</strong> intern / intern123</p>
+          <div className="mt-8 p-4 bg-slate-50 rounded-xl border border-slate-200">
+            <p className="text-xs font-semibold text-slate-700 mb-2 flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-indigo-500" />
+              Intern Demo Account
+            </p>
+            <div className="text-sm text-slate-600 flex items-center justify-between">
+              <span>
+                <span className="font-mono font-medium text-slate-800">intern</span>
+              </span>
+              <span className="text-slate-400">·</span>
+              <span className="font-mono font-medium text-slate-800">intern123</span>
             </div>
           </div>
         </div>

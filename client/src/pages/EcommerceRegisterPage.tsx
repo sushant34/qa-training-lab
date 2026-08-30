@@ -72,7 +72,7 @@ const EcommerceRegisterPage: React.FC = () => {
 
       login(data.token, data.user);
       toast.success('Account created! Welcome to the store!');
-      navigate('/shop');
+      navigate('/ecommerce/shop');
     } catch (error: any) {
       toast.error(error.message || 'Registration failed');
     } finally {

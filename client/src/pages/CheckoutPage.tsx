@@ -93,16 +93,16 @@ const CheckoutPage: React.FC = () => {
 
   if (orderComplete) {
     return (
-      <div className="max-w-md mx-auto text-center py-12">
-        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-100 mb-4">
-          <CheckCircle size={32} className="text-green-600" />
+      <div className="max-w-md mx-auto text-center py-16">
+        <div className="w-20 h-20 rounded-full bg-emerald-100 flex items-center justify-center mx-auto mb-5 shadow-inner">
+          <CheckCircle size={40} className="text-emerald-600" />
         </div>
-        <h1 className="text-2xl font-bold text-slate-900 mb-2">Order Confirmed!</h1>
+        <h1 className="text-2xl font-bold text-slate-900 mb-2">Order Confirmed! 🎉</h1>
         <p className="text-slate-600 mb-4">
-          Your order #{orderId} has been placed successfully.
+          Your order <span className="font-mono font-semibold text-indigo-600">#{orderId}</span> has been placed successfully.
         </p>
-        <p className="text-sm text-slate-500 mb-6">
-          Total: ${cart.total.toFixed(2)}
+        <p className="text-sm text-slate-500 mb-8">
+          Total: <span className="font-bold text-slate-800">${cart.total.toFixed(2)}</span>
         </p>
         <button
           onClick={() => navigate('/ecommerce/shop')}

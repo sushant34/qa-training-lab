@@ -30,7 +30,7 @@ const EcommerceLoginPage: React.FC = () => {
 
       login(data.token, data.user);
       toast.success('Welcome to the store!');
-      navigate('/shop');
+      navigate('/ecommerce/shop');
     } catch (error: any) {
       toast.error(error.message || 'Login failed');
     } finally {
@@ -98,11 +98,11 @@ const EcommerceLoginPage: React.FC = () => {
             </p>
           </div>
 
-          <div className="mt-6 p-4 bg-slate-50 rounded-lg">
-            <p className="text-xs font-medium text-slate-700 mb-2">Quick Test:</p>
-            <div className="text-xs text-slate-600 space-y-1">
-              <p>Use existing account: <strong>intern / intern123</strong></p>
-              <p>Or register a new account above</p>
+          <div className="mt-6 p-4 bg-emerald-50 rounded-xl border border-emerald-100">
+            <p className="text-xs font-semibold text-emerald-700 mb-2">Quick Test:</p>
+            <div className="text-sm text-emerald-800 space-y-1">
+              <p className="font-mono">intern / intern123</p>
+              <p className="text-xs text-emerald-600">Or register a new account above</p>
             </div>
           </div>
         </div>

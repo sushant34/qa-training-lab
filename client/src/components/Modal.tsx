@@ -34,19 +34,19 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, maxWidt
     <div className="modal-overlay" onClick={onClose}>
       <div
         ref={modalRef}
-        className={`modal-content ${maxWidth}`}
+        className={`modal-content ${maxWidth} animate-[modalIn_.2s_ease-out]`}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between p-4 border-b border-slate-200">
+        <div className="flex items-center justify-between p-5 border-b border-slate-200 bg-slate-50/60 sticky top-0 rounded-t-2xl">
           <h2 className="text-lg font-semibold text-slate-900">{title}</h2>
           <button
             onClick={onClose}
-            className="p-1 hover:bg-slate-100 rounded-lg transition-colors"
+            className="p-1.5 hover:bg-slate-200 rounded-lg transition-colors"
           >
             <X size={20} className="text-slate-500" />
           </button>
         </div>
-        <div className="p-4">{children}</div>
+        <div className="p-5">{children}</div>
       </div>
     </div>
   );

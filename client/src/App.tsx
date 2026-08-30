@@ -60,9 +60,9 @@ const EcommerceProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ chil
 
 const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
-    <div className="min-h-screen bg-slate-100">
+    <div className="min-h-screen bg-slate-50">
       <Sidebar />
-      <main className="lg:ml-64 p-4 lg:p-8 pt-16 lg:pt-8">
+      <main className="lg:ml-72 p-4 lg:p-8 pt-20 lg:pt-8 max-w-7xl mx-auto">
         {children}
       </main>
     </div>
@@ -71,9 +71,9 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
 const EcommerceLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
-    <div className="min-h-screen bg-slate-100">
+    <div className="min-h-screen bg-slate-50">
       <EcommerceSidebar />
-      <main className="lg:ml-64 p-4 lg:p-8 pt-16 lg:pt-8">
+      <main className="lg:ml-72 p-4 lg:p-8 pt-20 lg:pt-8 max-w-7xl mx-auto">
         {children}
       </main>
     </div>

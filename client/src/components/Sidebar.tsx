@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import {
   LayoutDashboard, BookOpen, FileText, Play, Bug, Award,
-  Users, Shield, BarChart3, ShoppingCart, LogOut, Menu, X, ExternalLink
+  Users, Shield, BarChart3, ShoppingCart, LogOut, Menu, X, ExternalLink, FlaskConical
 } from 'lucide-react';
 
 const Sidebar: React.FC = () => {
@@ -39,7 +39,7 @@ const Sidebar: React.FC = () => {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-slate-800 text-white rounded-lg"
+        className="lg:hidden fixed top-4 left-4 z-50 p-2.5 bg-indigo-600 text-white rounded-xl shadow-lg shadow-indigo-900/30"
       >
         <Menu size={20} />
       </button>
@@ -52,64 +52,87 @@ const Sidebar: React.FC = () => {
       )}
 
       <aside
-        className={`fixed left-0 top-0 h-full bg-slate-800 text-white w-64 transform transition-transform duration-300 z-50 ${
+        className={`fixed left-0 top-0 h-full w-72 bg-gradient-to-b from-slate-900 via-slate-900 to-indigo-950 text-white transform transition-transform duration-300 z-50 shadow-2xl ${
           isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         }`}
       >
-        <div className="p-4">
-          <div className="flex items-center justify-between">
-            <h1 className="text-xl font-bold">QA Training Lab</h1>
+        <div className="flex flex-col h-full">
+          <div className="p-5 border-b border-white/10">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center shadow-lg shadow-indigo-900/40">
+                  <FlaskConical size={22} className="text-white" />
+                </div>
+                <div>
+                  <h1 className="text-lg font-bold leading-tight">QA Training Lab</h1>
+                  <p className="text-xs text-slate-400">Manual Testing Platform</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setIsOpen(false)}
+                className="lg:hidden text-white"
+              >
+                <X size={20} />
+              </button>
+            </div>
+            {user && (
+              <div className="mt-4 p-3 bg-white/10 rounded-xl backdrop-blur">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-sm font-bold text-white">
+                    {user.full_name.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase()}
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-sm font-semibold truncate">{user.full_name}</p>
+                    <p className={`text-xs ${isTrainer ? 'text-amber-300' : 'text-violet-300'}`}>
+                      {isTrainer ? 'Trainer' : 'QA Intern'}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+            <p className="px-4 pb-2 text-[10px] font-bold uppercase tracking-widest text-slate-500">
+              {isTrainer ? 'Management' : 'My Work'
+              }
+            </p>
+            {links.map((link) =>
+              link.external ? (
+                <a
+                  key={link.path}
+                  href={link.path}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="sidebar-link"
+                >
+                  <link.icon size={18} />
+                  <span>{link.label}</span>
+                  <ExternalLink size={14} className="ml-auto opacity-50" />
+                </a>
+              ) : (
+                <Link
+                  key={link.path}
+                  to={link.path}
+                  onClick={() => setIsOpen(false)}
+                  className={`sidebar-link ${isActive(link.path) ? 'active' : ''}`}
+                >
+                  <link.icon size={18} />
+                  <span>{link.label}</span>
+                </Link>
+              )
+            )}
+          </nav>
+
+          <div className="p-4 border-t border-white/10">
             <button
-              onClick={() => setIsOpen(false)}
-              className="lg:hidden text-white"
+              onClick={() => { logout(); setIsOpen(false); }}
+              className="sidebar-link w-full text-red-300 hover:bg-red-500/10 hover:text-red-200"
             >
-              <X size={20} />
+              <LogOut size={18} />
+              <span>Logout</span>
             </button>
           </div>
-          {user && (
-            <div className="mt-4 p-3 bg-slate-700/50 rounded-lg">
-              <p className="text-sm font-medium">{user.full_name}</p>
-              <p className="text-xs text-slate-400">{user.role}</p>
-            </div>
-          )}
-        </div>
-
-        <nav className="px-3 py-4">
-          {links.map((link) =>
-            link.external ? (
-              <a
-                key={link.path}
-                href={link.path}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="sidebar-link text-slate-300"
-              >
-                <link.icon size={18} />
-                <span>{link.label}</span>
-                <ExternalLink size={14} className="ml-auto opacity-50" />
-              </a>
-            ) : (
-              <Link
-                key={link.path}
-                to={link.path}
-                onClick={() => setIsOpen(false)}
-                className={`sidebar-link ${isActive(link.path) ? 'active' : 'text-slate-300'}`}
-              >
-                <link.icon size={18} />
-                <span>{link.label}</span>
-              </Link>
-            )
-          )}
-        </nav>
-
-        <div className="absolute bottom-4 left-3 right-3">
-          <button
-            onClick={() => { logout(); setIsOpen(false); }}
-            className="sidebar-link text-slate-300 w-full hover:bg-red-600/20 hover:text-red-400"
-          >
-            <LogOut size={18} />
-            <span>Logout</span>
-          </button>
         </div>
       </aside>
     </>

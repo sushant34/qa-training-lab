@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { register as apiRegister } from '../services/api';
 import toast from 'react-hot-toast';
+import { FlaskConical } from 'lucide-react';
 
 const RegisterPage: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -53,14 +54,17 @@ const RegisterPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-950 via-slate-900 to-violet-950 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-white">QA Training Lab</h1>
-          <p className="text-slate-400 mt-2">Create your account</p>
+          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-500 to-violet-600 text-white shadow-lg shadow-indigo-900/40 mb-4">
+            <FlaskConical size={28} />
+          </div>
+          <h1 className="text-2xl font-bold text-white">Create your account</h1>
+          <p className="text-slate-400 mt-1">Join the QA Training Lab</p>
         </div>
 
-        <div className="card">
+        <div className="card shadow-2xl">
           <h2 className="text-xl font-semibold text-slate-900 mb-6">Register</h2>
 
           <form onSubmit={handleSubmit}>
@@ -132,7 +136,7 @@ const RegisterPage: React.FC = () => {
             <button
               type="submit"
               disabled={loading}
-              className="btn btn-primary w-full justify-center"
+              className="btn btn-primary w-full justify-center py-3 text-base"
             >
               {loading ? 'Creating account...' : 'Create Account'}
             </button>
@@ -141,7 +145,7 @@ const RegisterPage: React.FC = () => {
           <div className="mt-6 text-center">
             <p className="text-sm text-slate-600">
               Already have an account?{' '}
-              <Link to="/login" className="text-blue-600 hover:text-blue-700 font-medium">
+              <Link to="/login" className="text-indigo-600 hover:text-indigo-700 font-semibold">
                 Sign in
               </Link>
             </p>

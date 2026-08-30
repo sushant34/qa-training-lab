@@ -22,7 +22,10 @@ function DataTable<T extends Record<string, any>>({
 }: DataTableProps<T>) {
   if (data.length === 0) {
     return (
-      <div className="card text-center py-8">
+      <div className="card text-center py-12">
+        <div className="w-14 h-14 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-3">
+          <span className="text-2xl">📭</span>
+        </div>
         <p className="text-slate-500">{emptyMessage}</p>
       </div>
     );

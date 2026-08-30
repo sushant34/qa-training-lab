@@ -58,27 +58,32 @@ const RequirementsPage: React.FC = () => {
         {requirements.map((req) => (
           <div
             key={req.id}
-            className="card cursor-pointer hover:border-blue-300 transition-colors"
+            className="card cursor-pointer hover:border-indigo-300 hover:shadow-md transition-all"
             onClick={() => setExpandedId(expandedId === req.id ? null : req.id)}
           >
             <div className="flex items-start gap-4">
-              <div className="p-2 bg-blue-100 rounded-lg">
-                <BookOpen size={20} className="text-blue-600" />
+              <div className="p-2.5 bg-indigo-100 rounded-xl">
+                <BookOpen size={20} className="text-indigo-600" />
               </div>
               <div className="flex-1">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-mono text-blue-600">{req.req_id}</span>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="text-sm font-mono bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded-md">{req.req_id}</span>
                   <h3 className="text-lg font-semibold text-slate-900">{req.title}</h3>
                 </div>
-                <p className="text-slate-600 mt-1">{req.description}</p>
+                <p className="text-slate-600 mt-1.5">{req.description}</p>
 
                 {expandedId === req.id && (
-                  <div className="mt-4 p-4 bg-slate-50 rounded-lg">
-                    <h4 className="font-medium text-slate-900 mb-2">Acceptance Criteria:</h4>
-                    <ul className="space-y-1 text-sm text-slate-700">
+                  <div className="mt-4 p-4 bg-slate-50 rounded-xl animate-[fadeInUp_.2s_ease-out]">
+                    <h4 className="font-semibold text-slate-900 mb-3 flex items-center gap-2">
+                      <span className="w-1.5 h-4 bg-indigo-500 rounded-full" />
+                      Acceptance Criteria
+                    </h4>
+                    <ul className="space-y-2 text-sm text-slate-700">
                       {req.acceptance_criteria.split('\n').map((criteria, idx) => (
                         <li key={idx} className="flex items-start gap-2">
-                          <span className="text-green-600 mt-0.5">✓</span>
+                          <span className="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center mt-0.5 shrink-0">
+                            <span className="text-emerald-600 text-xs font-bold">✓</span>
+                          </span>
                           <span>{criteria}</span>
                         </li>
                       ))}
@@ -86,8 +91,10 @@ const RequirementsPage: React.FC = () => {
                   </div>
                 )}
               </div>
-              <span className="text-slate-400">
-                {expandedId === req.id ? '▼' : '▶'}
+              <span className={`text-slate-400 transition-transform ${expandedId === req.id ? 'rotate-180' : ''}`}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <path d="m6 9 6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
               </span>
             </div>
           </div>

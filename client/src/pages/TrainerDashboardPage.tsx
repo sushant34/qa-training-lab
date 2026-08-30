@@ -152,19 +152,26 @@ const TrainerDashboardPage: React.FC = () => {
         </p>
       </div>
 
-      <div className="card text-center">
-        <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-blue-100 mb-4">
-          <span className="text-3xl font-bold text-blue-600">{stats.avgScore}</span>
+      <div className="card bg-gradient-to-r from-indigo-600 to-violet-600 border-0 text-white shadow-lg shadow-indigo-200">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-xl font-semibold mb-1">Average Intern Score</h2>
+            <p className="text-indigo-200">across all interns in this project</p>
+          </div>
+          <div className="w-24 h-24 rounded-full bg-white/15 flex items-center justify-center backdrop-blur">
+            <span className="text-4xl font-bold">{stats.avgScore}</span>
+          </div>
         </div>
-        <h2 className="text-xl font-semibold text-slate-900">Average Intern Score</h2>
-        <p className="text-slate-500">out of 100</p>
+        <div className="mt-4 h-2.5 bg-white/20 rounded-full overflow-hidden">
+          <div className="h-full bg-white rounded-full" style={{ width: `${stats.avgScore}%` }} />
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="card">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="card hover:shadow-md transition-shadow">
           <div className="flex items-center gap-3">
-            <div className="p-3 bg-blue-100 rounded-lg">
-              <Users size={24} className="text-blue-600" />
+            <div className="p-3 bg-indigo-100 rounded-xl">
+              <Users size={22} className="text-indigo-600" />
             </div>
             <div>
               <p className="text-2xl font-bold text-slate-900">{stats.totalInterns}</p>
@@ -173,10 +180,10 @@ const TrainerDashboardPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="card">
+        <div className="card hover:shadow-md transition-shadow">
           <div className="flex items-center gap-3">
-            <div className="p-3 bg-purple-100 rounded-lg">
-              <FileText size={24} className="text-purple-600" />
+            <div className="p-3 bg-violet-100 rounded-xl">
+              <FileText size={22} className="text-violet-600" />
             </div>
             <div>
               <p className="text-2xl font-bold text-slate-900">{stats.totalTestCases}</p>
@@ -185,10 +192,10 @@ const TrainerDashboardPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="card">
+        <div className="card hover:shadow-md transition-shadow">
           <div className="flex items-center gap-3">
-            <div className="p-3 bg-green-100 rounded-lg">
-              <Play size={24} className="text-green-600" />
+            <div className="p-3 bg-emerald-100 rounded-xl">
+              <Play size={22} className="text-emerald-600" />
             </div>
             <div>
               <p className="text-2xl font-bold text-slate-900">{stats.totalExecutions}</p>
@@ -197,10 +204,10 @@ const TrainerDashboardPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="card">
+        <div className="card hover:shadow-md transition-shadow">
           <div className="flex items-center gap-3">
-            <div className="p-3 bg-red-100 rounded-lg">
-              <Bug size={24} className="text-red-600" />
+            <div className="p-3 bg-red-100 rounded-xl">
+              <Bug size={22} className="text-red-600" />
             </div>
             <div>
               <p className="text-2xl font-bold text-slate-900">{stats.totalBugs}</p>
