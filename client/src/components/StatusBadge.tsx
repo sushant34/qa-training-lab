@@ -39,9 +39,6 @@ const statusClasses: Record<string, string> = {
   'UI/UX': 'bg-pink-100 text-pink-700',
   Security: 'bg-red-100 text-red-700',
   Performance: 'bg-amber-100 text-amber-700',
-  Usability: 'bg-cyan-100 text-cyan-700',
-  Compatibility: 'bg-purple-100 text-purple-700',
-  Regression: 'bg-orange-100 text-orange-700',
 };
 
 const StatusBadge: React.FC<StatusBadgeProps> = ({ status, size = 'md' }) => {

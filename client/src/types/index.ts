@@ -38,7 +38,7 @@ export interface TestCase {
   steps: string;
   expected_result: string;
   priority: 'P0' | 'P1' | 'P2' | 'P3';
-  test_type: 'Functional' | 'UI/UX' | 'Security' | 'Performance' | 'Usability' | 'Compatibility' | 'Regression';
+  test_type: 'Functional' | 'UI/UX' | 'Security' | 'Performance';
   status: 'Draft' | 'Ready' | 'Executed';
   created_at?: string;
   updated_at?: string;

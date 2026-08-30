@@ -266,9 +266,6 @@ const TestCasesPage: React.FC = () => {
                 <option value="UI/UX">UI/UX</option>
                 <option value="Security">Security</option>
                 <option value="Performance">Performance</option>
-                <option value="Usability">Usability</option>
-                <option value="Compatibility">Compatibility</option>
-                <option value="Regression">Regression</option>
               </select>
             </div>
           </div>

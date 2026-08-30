@@ -52,7 +52,7 @@ db.exec(`
     steps TEXT NOT NULL,
     expected_result TEXT NOT NULL,
     priority TEXT CHECK(priority IN ('P0', 'P1', 'P2', 'P3')),
-    test_type TEXT CHECK(test_type IN ('Functional', 'UI/UX', 'Security', 'Performance', 'Usability', 'Compatibility', 'Regression')),
+    test_type TEXT CHECK(test_type IN ('Functional', 'UI/UX', 'Security', 'Performance')),
     status TEXT DEFAULT 'Draft' CHECK(status IN ('Draft', 'Ready', 'Executed')),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
