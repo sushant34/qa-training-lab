@@ -262,11 +262,13 @@ const TestCasesPage: React.FC = () => {
                 onChange={(e) => setFormData({ ...formData, test_type: e.target.value })}
                 className="input-field"
               >
-                <option value="Positive">Positive</option>
-                <option value="Negative">Negative</option>
-                <option value="Boundary">Boundary</option>
-                <option value="Validation">Validation</option>
                 <option value="Functional">Functional</option>
+                <option value="UI/UX">UI/UX</option>
+                <option value="Security">Security</option>
+                <option value="Performance">Performance</option>
+                <option value="Usability">Usability</option>
+                <option value="Compatibility">Compatibility</option>
+                <option value="Regression">Regression</option>
               </select>
             </div>
           </div>
