@@ -170,34 +170,34 @@ console.log('Requirements seeded');
 
 // Seed Products
 const products = [
-  { name: 'Wireless Bluetooth Headphones', description: 'Premium noise-cancelling wireless headphones with 30-hour battery life.', price: 149.99, category: 'Electronics', stock: 50 },
-  { name: 'USB-C Charging Cable', description: 'Fast charging USB-C cable, 6 feet length.', price: 12.99, category: 'Accessories', stock: 200 },
-  { name: 'Smartphone Stand', description: 'Adjustable aluminum smartphone stand for desk.', price: 24.99, category: 'Accessories', stock: 100 },
-  { name: 'Wireless Mouse', description: 'Ergonomic wireless mouse with adjustable DPI.', price: 34.99, category: 'Electronics', stock: 75 },
-  { name: 'Laptop Backpack', description: 'Water-resistant laptop backpack with USB charging port.', price: 49.99, category: 'Accessories', stock: 60 },
-  { name: 'Portable Power Bank', description: '20000mAh portable power bank with fast charging.', price: 39.99, category: 'Electronics', stock: 120 },
-  { name: 'Smart Watch', description: 'Fitness tracking smartwatch with heart rate monitor.', price: 199.99, category: 'Electronics', stock: 40 },
-  { name: 'Bluetooth Speaker', description: 'Waterproof portable Bluetooth speaker.', price: 79.99, category: 'Electronics', stock: 80 },
-  { name: 'Laptop Cooling Pad', description: 'Quiet cooling pad for laptops with LED lights.', price: 29.99, category: 'Accessories', stock: 90 },
-  { name: 'Webcam HD', description: '1080p HD webcam with built-in microphone.', price: 59.99, category: 'Electronics', stock: 65 },
-  { name: 'Mechanical Keyboard', description: 'RGB mechanical keyboard with blue switches.', price: 89.99, category: 'Accessories', stock: 55 },
-  { name: 'Monitor Stand', description: 'Adjustable monitor stand with USB hub.', price: 44.99, category: 'Accessories', stock: 70 },
-  { name: 'Wireless Charger', description: 'Qi wireless charger for smartphones.', price: 29.99, category: 'Electronics', stock: 150 },
-  { name: 'Desk Lamp', description: 'LED desk lamp with adjustable brightness.', price: 34.99, category: 'Home', stock: 85 },
-  { name: 'Notebook Set', description: 'Premium notebook set with 3 notebooks.', price: 19.99, category: 'Home', stock: 200 },
-  { name: 'Smartphone Case', description: 'Shockproof smartphone case with screen protector.', price: 15.99, category: 'Accessories', stock: 300 },
-  { name: 'Wireless Earbuds', description: 'True wireless earbuds with touch controls.', price: 69.99, category: 'Electronics', stock: 100 },
-  { name: 'Laptop Sleeve', description: 'Padded laptop sleeve for 15-inch laptops.', price: 24.99, category: 'Accessories', stock: 120 },
-  { name: 'Power Strip', description: 'Surge protector power strip with USB ports.', price: 22.99, category: 'Electronics', stock: 95 },
-  { name: 'Cable Organizer', description: 'Desk cable organizer with clips.', price: 9.99, category: 'Accessories', stock: 250 }
+  { name: 'Wireless Bluetooth Headphones', description: 'Premium noise-cancelling wireless headphones with 30-hour battery life.', price: 149.99, category: 'Electronics', stock: 50, image_url: 'https://placehold.co/400x400/7c3aed/ffffff?text=Headphones' },
+  { name: 'USB-C Charging Cable', description: 'Fast charging USB-C cable, 6 feet length.', price: 12.99, category: 'Accessories', stock: 200, image_url: 'https://placehold.co/400x400/2563eb/ffffff?text=USB-C+Cable' },
+  { name: 'Smartphone Stand', description: 'Adjustable aluminum smartphone stand for desk.', price: 24.99, category: 'Accessories', stock: 100, image_url: 'https://placehold.co/400x400/2563eb/ffffff?text=Phone+Stand' },
+  { name: 'Wireless Mouse', description: 'Ergonomic wireless mouse with adjustable DPI.', price: 34.99, category: 'Electronics', stock: 75, image_url: 'https://placehold.co/400x400/7c3aed/ffffff?text=Wireless+Mouse' },
+  { name: 'Laptop Backpack', description: 'Water-resistant laptop backpack with USB charging port.', price: 49.99, category: 'Accessories', stock: 60, image_url: 'https://placehold.co/400x400/2563eb/ffffff?text=Backpack' },
+  { name: 'Portable Power Bank', description: '20000mAh portable power bank with fast charging.', price: 39.99, category: 'Electronics', stock: 120, image_url: 'https://placehold.co/400x400/7c3aed/ffffff?text=Power+Bank' },
+  { name: 'Smart Watch', description: 'Fitness tracking smartwatch with heart rate monitor.', price: 199.99, category: 'Electronics', stock: 40, image_url: 'https://placehold.co/400x400/7c3aed/ffffff?text=Smart+Watch' },
+  { name: 'Bluetooth Speaker', description: 'Waterproof portable Bluetooth speaker.', price: 79.99, category: 'Electronics', stock: 80, image_url: 'https://placehold.co/400x400/7c3aed/ffffff?text=Speaker' },
+  { name: 'Laptop Cooling Pad', description: 'Quiet cooling pad for laptops with LED lights.', price: 29.99, category: 'Accessories', stock: 90, image_url: 'https://placehold.co/400x400/2563eb/ffffff?text=Cooling+Pad' },
+  { name: 'Webcam HD', description: '1080p HD webcam with built-in microphone.', price: 59.99, category: 'Electronics', stock: 65, image_url: 'https://placehold.co/400x400/7c3aed/ffffff?text=Webcam' },
+  { name: 'Mechanical Keyboard', description: 'RGB mechanical keyboard with blue switches.', price: 89.99, category: 'Accessories', stock: 55, image_url: 'https://placehold.co/400x400/2563eb/ffffff?text=Keyboard' },
+  { name: 'Monitor Stand', description: 'Adjustable monitor stand with USB hub.', price: 44.99, category: 'Accessories', stock: 70, image_url: 'https://placehold.co/400x400/2563eb/ffffff?text=Monitor+Stand' },
+  { name: 'Wireless Charger', description: 'Qi wireless charger for smartphones.', price: 29.99, category: 'Electronics', stock: 150, image_url: 'https://placehold.co/400x400/7c3aed/ffffff?text=Charger' },
+  { name: 'Desk Lamp', description: 'LED desk lamp with adjustable brightness.', price: 34.99, category: 'Home', stock: 85, image_url: 'https://placehold.co/400x400/059669/ffffff?text=Desk+Lamp' },
+  { name: 'Notebook Set', description: 'Premium notebook set with 3 notebooks.', price: 19.99, category: 'Home', stock: 200, image_url: 'https://placehold.co/400x400/059669/ffffff?text=Notebooks' },
+  { name: 'Smartphone Case', description: 'Shockproof smartphone case with screen protector.', price: 15.99, category: 'Accessories', stock: 300, image_url: 'https://placehold.co/400x400/2563eb/ffffff?text=Phone+Case' },
+  { name: 'Wireless Earbuds', description: 'True wireless earbuds with touch controls.', price: 69.99, category: 'Electronics', stock: 100, image_url: 'https://placehold.co/400x400/7c3aed/ffffff?text=Earbuds' },
+  { name: 'Laptop Sleeve', description: 'Padded laptop sleeve for 15-inch laptops.', price: 24.99, category: 'Accessories', stock: 120, image_url: 'https://placehold.co/400x400/2563eb/ffffff?text=Laptop+Sleeve' },
+  { name: 'Power Strip', description: 'Surge protector power strip with USB ports.', price: 22.99, category: 'Electronics', stock: 95, image_url: 'https://placehold.co/400x400/7c3aed/ffffff?text=Power+Strip' },
+  { name: 'Cable Organizer', description: 'Desk cable organizer with clips.', price: 9.99, category: 'Accessories', stock: 250, image_url: 'https://placehold.co/400x400/2563eb/ffffff?text=Cable+Organizer' }
 ];
 
 const insertProduct = db.prepare(
-  'INSERT INTO products (name, description, price, category, stock) VALUES (?, ?, ?, ?, ?)'
+  'INSERT INTO products (name, description, price, category, stock, image_url) VALUES (?, ?, ?, ?, ?, ?)'
 );
 
 products.forEach(product => {
-  insertProduct.run(product.name, product.description, product.price, product.category, product.stock);
+  insertProduct.run(product.name, product.description, product.price, product.category, product.stock, product.image_url);
 });
 
 console.log('Products seeded');
@@ -483,6 +483,76 @@ const groundTruthBugs = [
     module: 'Product Search',
     trigger_condition: 'Select a category, then type and clear a search term.',
     detection_keywords: 'filter,category,search,reset,clear,interaction'
+  },
+  {
+    project_id: 1,
+    bug_id: 'GT-021',
+    requirement_id: 9,
+    title: 'Product category label shows incorrect category',
+    description: 'The Laptop Backpack (product ID 5) displays "Electronics" as its category label instead of "Accessories".',
+    expected_behavior: 'Product category label must match the actual product category stored in the database.',
+    actual_behavior: 'The Laptop Backpack shows "Electronics" category label instead of "Accessories".',
+    severity: 'Medium',
+    priority: 'P2',
+    module: 'Product Display',
+    trigger_condition: 'Browse products and check the category label of the Laptop Backpack.',
+    detection_keywords: 'product,category,label,incorrect,wrong,mismatch,backpack'
+  },
+  {
+    project_id: 1,
+    bug_id: 'GT-022',
+    requirement_id: 9,
+    title: 'Product description shows incorrect information',
+    description: 'The Bluetooth Speaker (product ID 8) shows the wrong product description text.',
+    expected_behavior: 'Each product must display its own correct description.',
+    actual_behavior: 'The Bluetooth Speaker displays an incorrect or unrelated description.',
+    severity: 'Medium',
+    priority: 'P2',
+    module: 'Product Display',
+    trigger_condition: 'Browse products and read the description of the Bluetooth Speaker.',
+    detection_keywords: 'product,description,wrong,incorrect,mismatch,speaker'
+  },
+  {
+    project_id: 1,
+    bug_id: 'GT-023',
+    requirement_id: 4,
+    title: 'Add to Cart button is missing on one product',
+    description: 'The Webcam HD (product ID 10) does not display an Add to Cart button even though it is in stock.',
+    expected_behavior: 'All in-stock products must display an Add to Cart button.',
+    actual_behavior: 'The Webcam HD product card has no Add to Cart button visible.',
+    severity: 'High',
+    priority: 'P1',
+    module: 'Product Display',
+    trigger_condition: 'Browse products and locate the Webcam HD product card.',
+    detection_keywords: 'product,button,add to cart,missing,hidden,webcam'
+  },
+  {
+    project_id: 1,
+    bug_id: 'GT-024',
+    requirement_id: 9,
+    title: 'Product price displays as zero',
+    description: 'The Notebook Set (product ID 15) displays a price of $0.00 instead of the correct price $19.99.',
+    expected_behavior: 'Product price must display the correct price from the database.',
+    actual_behavior: 'The Notebook Set shows $0.00 instead of $19.99.',
+    severity: 'High',
+    priority: 'P1',
+    module: 'Product Display',
+    trigger_condition: 'Browse products and check the price of the Notebook Set.',
+    detection_keywords: 'product,price,zero,incorrect,0.00,notebook'
+  },
+  {
+    project_id: 1,
+    bug_id: 'GT-025',
+    requirement_id: 9,
+    title: 'Product image shows wrong product',
+    description: 'The Wireless Mouse (product ID 4) displays the image for headphones instead of a mouse image.',
+    expected_behavior: 'Each product must display its own correct product image.',
+    actual_behavior: 'The Wireless Mouse product card shows an image of headphones.',
+    severity: 'Medium',
+    priority: 'P2',
+    module: 'Product Display',
+    trigger_condition: 'Browse products and check the image of the Wireless Mouse.',
+    detection_keywords: 'product,image,wrong,incorrect,mismatch,mouse,headphones'
   }
 ];
 

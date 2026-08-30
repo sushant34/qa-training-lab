@@ -109,27 +109,54 @@ const ShopPage: React.FC = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
         {products.map(product => (
           <div key={product.id} className="card group hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 overflow-hidden">
-            <div className="aspect-square bg-gradient-to-br from-slate-50 to-indigo-50 rounded-xl mb-4 flex items-center justify-center group-hover:scale-[1.02] transition-transform">
-              <span className="text-5xl">📦</span>
+            <div className="aspect-square bg-gradient-to-br from-slate-50 to-indigo-50 rounded-xl mb-4 flex items-center justify-center overflow-hidden group-hover:scale-[1.02] transition-transform">
+              {(() => {
+                // GT-025: Wireless Mouse (ID 4) shows headphones image
+                const imageUrl = product.id === 4
+                  ? 'https://placehold.co/400x400/7c3aed/ffffff?text=Headphones'
+                  : product.image_url;
+                return imageUrl ? (
+                  <img
+                    src={imageUrl}
+                    alt={product.name}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <span className="text-5xl">📦</span>
+                );
+              })()}
             </div>
             <div className="space-y-2">
+              {/* GT-021: Laptop Backpack (ID 5) shows wrong category */}
               <span className="inline-block px-2 py-0.5 text-xs font-medium bg-indigo-50 text-indigo-600 rounded-full">
-                {product.category}
+                {product.id === 5 ? 'Electronics' : product.category}
               </span>
               <h3 className="font-semibold text-slate-900 line-clamp-2">{product.name}</h3>
-              <p className="text-sm text-slate-500 line-clamp-2">{product.description}</p>
+              {/* GT-022: Bluetooth Speaker (ID 8) shows wrong description */}
+              <p className="text-sm text-slate-500 line-clamp-2">
+                {product.id === 8
+                  ? 'Compact portable speaker with rich bass and waterproof design.'
+                  : product.description
+                }
+              </p>
               <div className="flex items-center justify-between pt-3 border-t border-slate-100">
                 <div>
-                  <span className="text-lg font-bold text-slate-900">${product.price.toFixed(2)}</span>
+                  {/* GT-024: Notebook Set (ID 15) shows $0.00 */}
+                  <span className="text-lg font-bold text-slate-900">
+                    ${product.id === 15 ? '0.00' : product.price.toFixed(2)}
+                  </span>
                   <p className="text-xs text-emerald-600">{product.stock} in stock</p>
                 </div>
-                <button
-                  onClick={() => handleAddToCart(product)}
-                  className="btn btn-primary btn-sm"
-                >
-                  <ShoppingCart size={14} />
-                  Add
-                </button>
+                {/* GT-023: Webcam HD (ID 10) has no Add to Cart button */}
+                {product.id !== 10 && (
+                  <button
+                    onClick={() => handleAddToCart(product)}
+                    className="btn btn-primary btn-sm"
+                  >
+                    <ShoppingCart size={14} />
+                    Add
+                  </button>
+                )}
               </div>
             </div>
           </div>

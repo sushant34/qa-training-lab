@@ -80,8 +80,16 @@ const CartPage: React.FC = () => {
           <div className="lg:col-span-2 space-y-4">
             {cart.items.map(item => (
               <div key={item.id} className="card flex items-center gap-4 hover:shadow-md transition-shadow">
-                <div className="w-20 h-20 bg-gradient-to-br from-slate-50 to-indigo-50 rounded-xl flex items-center justify-center shrink-0">
-                  <span className="text-3xl">📦</span>
+                <div className="w-20 h-20 bg-gradient-to-br from-slate-50 to-indigo-50 rounded-xl flex items-center justify-center shrink-0 overflow-hidden">
+                  {item.image_url ? (
+                    <img
+                      src={item.image_url}
+                      alt={item.name}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <span className="text-3xl">📦</span>
+                  )}
                 </div>
                 <div className="flex-1 min-w-0">
                   <h3 className="font-semibold text-slate-900 truncate">{item.name}</h3>
