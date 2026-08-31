@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { getProjects, getRequirements, getTestCases, getExecutions, getBugReports, getMyScore } from '../services/api';
 import ProgressBar from '../components/ProgressBar';
-import { BookOpen, FileText, Play, Bug, CheckCircle, XCircle, Lightbulb, Rocket } from 'lucide-react';
+import { BookOpen, FileText, Play, Bug, CheckCircle, XCircle, Lightbulb, Rocket, GraduationCap } from 'lucide-react';
 
 const DashboardPage: React.FC = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
+  const tutorialComplete = localStorage.getItem('qa-tutorial-progress');
   const [stats, setStats] = useState({
     requirements: 0,
     testCases: 0,
@@ -77,6 +80,23 @@ const DashboardPage: React.FC = () => {
           <span className="text-sm font-semibold">{stats.testCases} test cases created</span>
         </div>
       </div>
+
+      {!tutorialComplete && (
+        <div className="card bg-gradient-to-r from-emerald-50 to-teal-50 border-emerald-200 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-emerald-100 rounded-xl">
+              <GraduationCap size={22} className="text-emerald-600" />
+            </div>
+            <div>
+              <h3 className="font-semibold text-slate-900">New to QA Testing?</h3>
+              <p className="text-sm text-slate-600">Start with our step-by-step tutorial to learn the workflow.</p>
+            </div>
+          </div>
+          <button onClick={() => navigate('/tutorial')} className="btn btn-success btn-sm shrink-0">
+            Start Tutorial
+          </button>
+        </div>
+      )}
 
       <div className="card bg-gradient-to-r from-indigo-600 to-violet-600 border-0 text-white shadow-lg shadow-indigo-200">
         <div className="flex items-center justify-between mb-2">

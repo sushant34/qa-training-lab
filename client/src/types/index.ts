@@ -107,6 +107,8 @@ export interface Evaluation {
   actual_result_score: number;
   severity_score: number;
   priority_score: number;
+  test_case_quality_score: number;
+  test_execution_score: number;
   overall_score: number;
 }
 
@@ -191,4 +193,40 @@ export interface PaginatedProducts {
   total: number;
   page: number;
   totalPages: number;
+}
+
+export interface TraceabilityItem {
+  id: number;
+  req_id: string;
+  title: string;
+  has_test_cases: boolean;
+  test_case_count: number;
+  has_bugs: boolean;
+  bug_count: number;
+  status: 'covered' | 'partial' | 'gaps';
+}
+
+export interface TraceabilityMatrix {
+  requirements: TraceabilityItem[];
+  summary: {
+    total_requirements: number;
+    with_test_cases: number;
+    with_bugs: number;
+    fully_covered: number;
+    coverage_percentage: number;
+  };
+}
+
+export interface CoverageData {
+  summary: {
+    total_requirements: number;
+    with_test_cases: number;
+    without_test_cases: number;
+    with_bugs: number;
+    total_test_cases: number;
+    total_bug_reports: number;
+    coverage_percentage: number;
+  };
+  uncovered_requirements: { req_id: string; title: string; description: string }[];
+  module_stats: Record<string, { total: number; with_tc: number; with_bugs: number }>;
 }

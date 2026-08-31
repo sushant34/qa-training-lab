@@ -128,6 +128,8 @@ db.exec(`
     actual_result_score REAL DEFAULT 0,
     severity_score REAL DEFAULT 0,
     priority_score REAL DEFAULT 0,
+    test_case_quality_score REAL DEFAULT 0,
+    test_execution_score REAL DEFAULT 0,
     overall_score REAL DEFAULT 0,
     evaluated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id),

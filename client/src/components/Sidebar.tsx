@@ -3,7 +3,8 @@ import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import {
   LayoutDashboard, BookOpen, FileText, Play, Bug, Award,
-  Users, Shield, BarChart3, ShoppingCart, LogOut, Menu, X, ExternalLink, FlaskConical
+  Users, Shield, BarChart3, ShoppingCart, LogOut, Menu, X, ExternalLink, FlaskConical,
+  GitBranch, Rocket, GraduationCap
 } from 'lucide-react';
 
 const Sidebar: React.FC = () => {
@@ -15,11 +16,14 @@ const Sidebar: React.FC = () => {
 
   const internLinks = [
     { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { path: '/tutorial', label: 'Tutorial', icon: GraduationCap },
     { path: '/requirements', label: 'Requirements', icon: BookOpen },
     { path: '/test-cases', label: 'Test Cases', icon: FileText },
     { path: '/test-execution', label: 'Test Execution', icon: Play },
     { path: '/bug-reports', label: 'Bug Reports', icon: Bug },
     { path: '/my-score', label: 'My Score', icon: Award },
+    { path: '/traceability', label: 'Traceability', icon: GitBranch },
+    { path: '/coverage', label: 'Coverage', icon: BarChart3 },
     { path: '/ecommerce/shop', label: 'E-Commerce App', icon: ShoppingCart, external: true },
   ];
 
@@ -30,6 +34,8 @@ const Sidebar: React.FC = () => {
     { path: '/requirements', label: 'Requirements', icon: BookOpen },
     { path: '/test-cases', label: 'All Test Cases', icon: FileText },
     { path: '/bug-reports', label: 'All Bug Reports', icon: Bug },
+    { path: '/traceability', label: 'Traceability', icon: GitBranch },
+    { path: '/coverage', label: 'Coverage', icon: BarChart3 },
     { path: '/ecommerce/shop', label: 'E-Commerce App', icon: ShoppingCart, external: true },
   ];
 

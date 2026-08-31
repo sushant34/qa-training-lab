@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { getMyScore, getProjects } from '../services/api';
 import { Evaluation } from '../types';
 import ProgressBar from '../components/ProgressBar';
-import { Award, Target, FileText, AlertTriangle, CheckCircle, BarChart3 } from 'lucide-react';
+import { Award, Target, FileText, AlertTriangle, CheckCircle, BarChart3, ClipboardCheck, Zap } from 'lucide-react';
 
 const MyScorePage: React.FC = () => {
   const [evaluation, setEvaluation] = useState<Evaluation | null>(null);
@@ -47,7 +47,7 @@ const MyScorePage: React.FC = () => {
     {
       name: 'Bug Detection',
       score: evaluation.bug_detection_score,
-      max: 30,
+      max: 25,
       icon: Target,
       color: 'bg-red-600',
       description: 'Ability to find intentional defects',
@@ -55,7 +55,7 @@ const MyScorePage: React.FC = () => {
     {
       name: 'Requirement Mapping',
       score: evaluation.requirement_mapping_score,
-      max: 15,
+      max: 10,
       icon: FileText,
       color: 'bg-blue-600',
       description: 'Mapping bugs to correct requirements',
@@ -63,7 +63,7 @@ const MyScorePage: React.FC = () => {
     {
       name: 'Reproduction Steps',
       score: evaluation.reproduction_steps_score,
-      max: 15,
+      max: 10,
       icon: AlertTriangle,
       color: 'bg-yellow-600',
       description: 'Quality of steps to reproduce',
@@ -71,7 +71,7 @@ const MyScorePage: React.FC = () => {
     {
       name: 'Expected Result',
       score: evaluation.expected_result_score,
-      max: 10,
+      max: 8,
       icon: CheckCircle,
       color: 'bg-green-600',
       description: 'Accuracy of expected behavior',
@@ -79,7 +79,7 @@ const MyScorePage: React.FC = () => {
     {
       name: 'Actual Result',
       score: evaluation.actual_result_score,
-      max: 10,
+      max: 7,
       icon: BarChart3,
       color: 'bg-purple-600',
       description: 'Clarity of actual behavior',
@@ -87,7 +87,7 @@ const MyScorePage: React.FC = () => {
     {
       name: 'Severity Rating',
       score: evaluation.severity_score,
-      max: 10,
+      max: 5,
       icon: AlertTriangle,
       color: 'bg-orange-600',
       description: 'Accuracy of severity classification',
@@ -95,10 +95,26 @@ const MyScorePage: React.FC = () => {
     {
       name: 'Priority Rating',
       score: evaluation.priority_score,
-      max: 10,
+      max: 5,
       icon: Award,
       color: 'bg-indigo-600',
       description: 'Accuracy of priority classification',
+    },
+    {
+      name: 'Test Case Quality',
+      score: evaluation.test_case_quality_score,
+      max: 15,
+      icon: ClipboardCheck,
+      color: 'bg-teal-600',
+      description: 'Test structure, steps, preconditions, and linking',
+    },
+    {
+      name: 'Test Execution',
+      score: evaluation.test_execution_score,
+      max: 15,
+      icon: Zap,
+      color: 'bg-pink-600',
+      description: 'Executing tests and reporting bugs from failures',
     },
   ];
 
@@ -146,14 +162,20 @@ const MyScorePage: React.FC = () => {
 
       <div className="card">
         <h2 className="text-lg font-semibold text-slate-900 mb-4">Scoring Criteria</h2>
-        <div className="space-y-3 text-sm text-slate-600">
-          <p><strong>Bug Detection (30%):</strong> Finding intentional defects in the application.</p>
-          <p><strong>Requirement Mapping (15%):</strong> Correctly identifying which requirement each bug violates.</p>
-          <p><strong>Reproduction Steps (15%):</strong> Writing clear steps that allow others to reproduce the issue.</p>
-          <p><strong>Expected Result (10%):</strong> Accurately describing what should have happened.</p>
-          <p><strong>Actual Result (10%):</strong> Clearly documenting what actually happened.</p>
-          <p><strong>Severity Rating (10%):</strong> Correctly classifying the impact of each bug.</p>
-          <p><strong>Priority Rating (10%):</strong> Correctly classifying the urgency of each bug.</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-slate-600">
+          <div className="space-y-3">
+            <p><strong>Bug Detection (25%):</strong> Finding intentional defects in the application.</p>
+            <p><strong>Requirement Mapping (10%):</strong> Correctly identifying which requirement each bug violates.</p>
+            <p><strong>Reproduction Steps (10%):</strong> Writing clear steps that allow others to reproduce the issue.</p>
+            <p><strong>Expected Result (8%):</strong> Accurately describing what should have happened.</p>
+            <p><strong>Actual Result (7%):</strong> Clearly documenting what actually happened.</p>
+          </div>
+          <div className="space-y-3">
+            <p><strong>Severity Rating (5%):</strong> Correctly classifying the impact of each bug.</p>
+            <p><strong>Priority Rating (5%):</strong> Correctly classifying the urgency of each bug.</p>
+            <p><strong>Test Case Quality (15%):</strong> Writing well-structured test cases with preconditions, detailed steps, expected results, and requirement links.</p>
+            <p><strong>Test Execution (15%):</strong> Executing test cases, recording results, and reporting bugs from failed tests.</p>
+          </div>
         </div>
       </div>
     </div>

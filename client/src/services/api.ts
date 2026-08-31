@@ -1,4 +1,4 @@
-import { User, Project, Requirement, TestCase, TestExecution, BugReport, GroundTruthBug, Evaluation, Product, Cart, Order, PaginatedProducts, WishlistItem, Review, ReviewStats } from '../types';
+import { User, Project, Requirement, TestCase, TestExecution, BugReport, GroundTruthBug, Evaluation, Product, Cart, Order, PaginatedProducts, WishlistItem, Review, ReviewStats, TraceabilityMatrix, CoverageData } from '../types';
 
 const API_BASE = '/api';
 
@@ -362,5 +362,17 @@ export const updateProfile = async (data: { full_name?: string; email?: string; 
     headers: getHeaders(),
     body: JSON.stringify(data),
   });
+  return handleResponse(response);
+};
+
+// Traceability Matrix
+export const getTraceability = async (projectId: number): Promise<TraceabilityMatrix> => {
+  const response = await fetch(`${API_BASE}/traceability/${projectId}`, { headers: getHeaders() });
+  return handleResponse(response);
+};
+
+// Coverage Dashboard
+export const getCoverage = async (projectId: number): Promise<CoverageData> => {
+  const response = await fetch(`${API_BASE}/coverage/${projectId}`, { headers: getHeaders() });
   return handleResponse(response);
 };

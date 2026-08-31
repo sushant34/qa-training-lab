@@ -25,6 +25,9 @@ import InternsPage from './pages/InternsPage';
 import BugRepositoryPage from './pages/BugRepositoryPage';
 import EcommerceLoginPage from './pages/EcommerceLoginPage';
 import EcommerceRegisterPage from './pages/EcommerceRegisterPage';
+import TraceabilityMatrixPage from './pages/TraceabilityMatrixPage';
+import CoverageDashboardPage from './pages/CoverageDashboardPage';
+import TutorialPage from './pages/TutorialPage';
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user, loading } = useAuth();
@@ -190,6 +193,24 @@ const AppRoutes: React.FC = () => {
       <Route path="/bug-repository" element={
         <ProtectedRoute>
           <AppLayout><BugRepositoryPage /></AppLayout>
+        </ProtectedRoute>
+      } />
+
+      <Route path="/tutorial" element={
+        <ProtectedRoute>
+          <AppLayout><TutorialPage /></AppLayout>
+        </ProtectedRoute>
+      } />
+
+      <Route path="/traceability" element={
+        <ProtectedRoute>
+          <AppLayout><TraceabilityMatrixPage /></AppLayout>
+        </ProtectedRoute>
+      } />
+
+      <Route path="/coverage" element={
+        <ProtectedRoute>
+          <AppLayout><CoverageDashboardPage /></AppLayout>
         </ProtectedRoute>
       } />
 
