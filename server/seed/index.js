@@ -255,27 +255,6 @@ const requirements = [
     title: 'Wishlist Persists Across Sessions',
     description: 'Wishlist items should persist when user logs out and back in.',
     acceptance_criteria: 'Wishlist items are saved per user in the database.\nWishlist is restored on login.\nWishlist items are not shared between users.'
-  },
-  {
-    project_id: 1,
-    req_id: 'REQ-TM01',
-    title: 'Test Traceability',
-    description: 'The system must provide a traceability matrix showing coverage between requirements, test cases, and bug reports.',
-    acceptance_criteria: 'Traceability matrix shows all requirements with test case and bug status.\nEach requirement shows count of linked test cases and bugs.\nCoverage status is categorized as covered, partial, or gaps.'
-  },
-  {
-    project_id: 1,
-    req_id: 'REQ-COV01',
-    title: 'Test Coverage Reporting',
-    description: 'The system must display a test coverage dashboard showing which requirements have test cases and which do not.',
-    acceptance_criteria: 'Coverage percentage is calculated from requirements with test cases.\nUncovered requirements are listed as action items.\nModule-level breakdown is available.'
-  },
-  {
-    project_id: 1,
-    req_id: 'REQ-TUT01',
-    title: 'QA Workflow Tutorial',
-    description: 'A guided tutorial must be available to help beginners understand the QA process step by step.',
-    acceptance_criteria: 'Tutorial has at least 5 steps covering the full QA workflow.\nEach step has a description and learning objective.\nTutorial progress is saved and can be resumed.\nTutorial can be skipped.'
   }
 ];
 
@@ -870,21 +849,6 @@ const groundTruthBugs = [
   },
   {
     project_id: 1,
-    bug_id: 'GT-038',
-    requirement_id: null,
-    req_id_ref: 'REQ-TM01',
-    title: 'Traceability matrix shows incorrect test case count',
-    description: 'The traceability matrix shows wrong number of test cases linked to some requirements.',
-    expected_behavior: 'Test case count must match the actual number of test cases linked to each requirement.',
-    actual_behavior: 'Matrix shows inflated or deflated test case counts.',
-    severity: 'Medium',
-    priority: 'P2',
-    module: 'Traceability Matrix',
-    trigger_condition: 'Compare traceability matrix counts with actual test case data.',
-    detection_keywords: 'traceability,count,incorrect,wrong,matrix'
-  },
-  {
-    project_id: 1,
     bug_id: 'GT-039',
     requirement_id: null,
     req_id_ref: 'REQ-COV01',
@@ -897,21 +861,6 @@ const groundTruthBugs = [
     module: 'Coverage Dashboard',
     trigger_condition: 'Add a test case for an uncovered requirement and check coverage percentage.',
     detection_keywords: 'coverage,percentage,stale,update,cache'
-  },
-  {
-    project_id: 1,
-    bug_id: 'GT-040',
-    requirement_id: null,
-    req_id_ref: 'REQ-TUT01',
-    title: 'Tutorial progress resets on page refresh',
-    description: 'The tutorial step completion status is lost when the page is refreshed.',
-    expected_behavior: 'Tutorial progress should persist across page refreshes using localStorage or database.',
-    actual_behavior: 'All tutorial steps reset to incomplete on page refresh.',
-    severity: 'Low',
-    priority: 'P3',
-    module: 'Tutorial',
-    trigger_condition: 'Complete tutorial steps, then refresh the page.',
-    detection_keywords: 'tutorial,progress,reset,refresh,localStorage'
   }
 ];
 
