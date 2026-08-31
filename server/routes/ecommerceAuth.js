@@ -2,6 +2,7 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const db = require('../models/database');
+const { authenticateToken } = require('../middleware/auth');
 
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET || 'qa-training-lab-secret-key-change-in-production';
@@ -113,6 +114,49 @@ router.get('/me', (req, res) => {
   } catch (error) {
     return res.status(403).json({ error: 'Invalid or expired token' });
   }
+});
+
+router.put('/profile', authenticateToken, (req, res) => {
+  const { full_name, email, current_password, new_password } = req.body;
+
+  const user = db.prepare('SELECT * FROM users WHERE id = ?').get(req.user.id);
+  if (!user) {
+    return res.status(404).json({ error: 'User not found' });
+  }
+
+  if (email && email !== user.email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ error: 'Invalid email format' });
+    }
+    const existing = db.prepare('SELECT id FROM users WHERE email = ? AND id != ?').get(email, req.user.id);
+    if (existing) {
+      return res.status(409).json({ error: 'Email already in use' });
+    }
+  }
+
+  if (new_password) {
+    if (!current_password) {
+      return res.status(400).json({ error: 'Current password is required to set new password' });
+    }
+    const validPassword = bcrypt.compareSync(current_password, user.password);
+    if (!validPassword) {
+      return res.status(401).json({ error: 'Current password is incorrect' });
+    }
+    if (new_password.length < 8) {
+      return res.status(400).json({ error: 'New password must be at least 8 characters' });
+    }
+    const hashedPassword = bcrypt.hashSync(new_password, 10);
+    db.prepare('UPDATE users SET password = ? WHERE id = ?').run(hashedPassword, req.user.id);
+  }
+
+  if (full_name || email) {
+    db.prepare('UPDATE users SET full_name = COALESCE(?, full_name), email = COALESCE(?, email) WHERE id = ?')
+      .run(full_name || null, email || null, req.user.id);
+  }
+
+  const updatedUser = db.prepare('SELECT id, username, email, role, full_name FROM users WHERE id = ?').get(req.user.id);
+  res.json({ user: updatedUser });
 });
 
 module.exports = router;

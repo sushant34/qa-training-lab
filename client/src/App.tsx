@@ -17,6 +17,10 @@ import MyScorePage from './pages/MyScorePage';
 import ShopPage from './pages/ShopPage';
 import CartPage from './pages/CartPage';
 import CheckoutPage from './pages/CheckoutPage';
+import ProductDetailsPage from './pages/ProductDetailsPage';
+import WishlistPage from './pages/WishlistPage';
+import OrderHistoryPage from './pages/OrderHistoryPage';
+import ProfilePage from './pages/ProfilePage';
 import InternsPage from './pages/InternsPage';
 import BugRepositoryPage from './pages/BugRepositoryPage';
 import EcommerceLoginPage from './pages/EcommerceLoginPage';
@@ -103,6 +107,26 @@ const AppRoutes: React.FC = () => {
         <Route path="/ecommerce/checkout" element={
           <EcommerceProtectedRoute>
             <EcommerceLayout><CheckoutPage /></EcommerceLayout>
+          </EcommerceProtectedRoute>
+        } />
+        <Route path="/ecommerce/products/:id" element={
+          <EcommerceProtectedRoute>
+            <EcommerceLayout><ProductDetailsPage /></EcommerceLayout>
+          </EcommerceProtectedRoute>
+        } />
+        <Route path="/ecommerce/wishlist" element={
+          <EcommerceProtectedRoute>
+            <EcommerceLayout><WishlistPage /></EcommerceLayout>
+          </EcommerceProtectedRoute>
+        } />
+        <Route path="/ecommerce/orders" element={
+          <EcommerceProtectedRoute>
+            <EcommerceLayout><OrderHistoryPage /></EcommerceLayout>
+          </EcommerceProtectedRoute>
+        } />
+        <Route path="/ecommerce/profile" element={
+          <EcommerceProtectedRoute>
+            <EcommerceLayout><ProfilePage /></EcommerceLayout>
           </EcommerceProtectedRoute>
         } />
         <Route path="*" element={<Navigate to="/ecommerce/login" replace />} />

@@ -146,4 +146,49 @@ export interface Order {
   total_amount: number;
   status: string;
   created_at: string;
+  items?: OrderItem[];
+}
+
+export interface OrderItem {
+  id: number;
+  order_id: number;
+  product_id: number;
+  quantity: number;
+  price: number;
+  name: string;
+  image_url: string | null;
+}
+
+export interface WishlistItem {
+  id: number;
+  product_id: number;
+  created_at: string;
+  name: string;
+  price: number;
+  category: string;
+  image_url: string | null;
+  stock: number;
+}
+
+export interface Review {
+  id: number;
+  user_id: number;
+  product_id: number;
+  rating: number;
+  title: string | null;
+  comment: string | null;
+  created_at: string;
+  author_name: string;
+}
+
+export interface ReviewStats {
+  count: number;
+  average: number;
+}
+
+export interface PaginatedProducts {
+  products: Product[];
+  total: number;
+  page: number;
+  totalPages: number;
 }

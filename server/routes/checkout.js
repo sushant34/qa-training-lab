@@ -63,7 +63,18 @@ router.post('/', authenticateToken, (req, res) => {
 
 router.get('/history', authenticateToken, (req, res) => {
   const orders = db.prepare('SELECT * FROM orders WHERE user_id = ? ORDER BY created_at DESC').all(req.user.id);
-  res.json(orders);
+
+  const ordersWithItems = orders.map(order => {
+    const items = db.prepare(`
+      SELECT oi.*, p.name, p.image_url
+      FROM order_items oi
+      JOIN products p ON oi.product_id = p.id
+      WHERE oi.order_id = ?
+    `).all(order.id);
+    return { ...order, items };
+  });
+
+  res.json(ordersWithItems);
 });
 
 module.exports = router;

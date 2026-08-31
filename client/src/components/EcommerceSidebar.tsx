@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useEcommerceAuth } from '../hooks/useEcommerceAuth';
 import {
-  Store, ShoppingCart, LogOut, Menu, X, User, RotateCcw, ShoppingBag
+  Store, ShoppingCart, LogOut, Menu, X, User, RotateCcw, ShoppingBag, Heart, Clock, UserCircle
 } from 'lucide-react';
 
 const EcommerceSidebar: React.FC = () => {
@@ -15,6 +15,9 @@ const EcommerceSidebar: React.FC = () => {
   const authLinks = [
     { path: '/ecommerce/shop', label: 'Shop', icon: Store },
     { path: '/ecommerce/cart', label: 'Cart', icon: ShoppingCart },
+    { path: '/ecommerce/wishlist', label: 'Wishlist', icon: Heart },
+    { path: '/ecommerce/orders', label: 'Orders', icon: Clock },
+    { path: '/ecommerce/profile', label: 'Profile', icon: UserCircle },
   ];
 
   const guestLinks = [

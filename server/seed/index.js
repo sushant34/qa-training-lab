@@ -5,6 +5,8 @@ console.log('Seeding database...');
 
 // Clear existing data
 db.exec(`
+  DELETE FROM reviews;
+  DELETE FROM wishlist_items;
   DELETE FROM order_items;
   DELETE FROM orders;
   DELETE FROM cart_items;
@@ -155,6 +157,104 @@ const requirements = [
     title: 'Form Input Sanitization',
     description: 'All user inputs must be properly sanitized to prevent injection attacks.',
     acceptance_criteria: 'SQL injection attempts in search are prevented.\nXSS attempts in form inputs are prevented.\nSpecial characters in inputs are handled safely.'
+  },
+  {
+    project_id: 1,
+    req_id: 'REQ-EC001',
+    title: 'View Product Details',
+    description: 'Users should be able to view detailed product information by clicking on a product.',
+    acceptance_criteria: 'Clicking a product card navigates to the product details page.\nDetails page displays full product name, description, price, image, and stock.\nA back navigation or breadcrumb returns to the shop.'
+  },
+  {
+    project_id: 1,
+    req_id: 'REQ-EC002',
+    title: 'Add to Cart from Details Page',
+    description: 'Users should be able to add a product to the cart from the product details page with quantity selection.',
+    acceptance_criteria: 'Quantity selector allows choosing 1 to available stock.\nAdd to Cart button adds the selected quantity.\nToast notification confirms the action.'
+  },
+  {
+    project_id: 1,
+    req_id: 'REQ-EC003',
+    title: 'Add and Remove from Wishlist',
+    description: 'Users should be able to add and remove products from a wishlist.',
+    acceptance_criteria: 'Heart icon toggles wishlist status.\nWishlist page shows all saved products.\nRemoving from wishlist updates the UI immediately.'
+  },
+  {
+    project_id: 1,
+    req_id: 'REQ-EC004',
+    title: 'View Wishlist',
+    description: 'Users should be able to view their wishlist from the sidebar navigation.',
+    acceptance_criteria: 'Wishlist page displays all saved products with images and prices.\nEmpty wishlist shows appropriate message.\nProducts can be added to cart from the wishlist.'
+  },
+  {
+    project_id: 1,
+    req_id: 'REQ-EC005',
+    title: 'View Order History with Items',
+    description: 'Users should be able to view past orders with individual item details.',
+    acceptance_criteria: 'Order history shows order ID, date, total, and status.\nEach order can be expanded to show line items.\nOrders are sorted by most recent first.'
+  },
+  {
+    project_id: 1,
+    req_id: 'REQ-EC006',
+    title: 'Submit Product Review',
+    description: 'Users should be able to submit a star rating and text review for products.',
+    acceptance_criteria: 'Rating must be between 1 and 5 stars.\nReview title and comment are optional.\nUser can only review a product once.'
+  },
+  {
+    project_id: 1,
+    req_id: 'REQ-EC007',
+    title: 'View Product Reviews',
+    description: 'Users should be able to view reviews and average rating on the product details page.',
+    acceptance_criteria: 'Reviews display author name, rating, date, and text.\nAverage rating and total review count are shown.\nReviews are sorted by newest first.'
+  },
+  {
+    project_id: 1,
+    req_id: 'REQ-EC008',
+    title: 'Edit User Profile',
+    description: 'Users should be able to view and edit their profile information.',
+    acceptance_criteria: 'User can update full name and email.\nEmail must be valid format.\nPassword change requires current password.'
+  },
+  {
+    project_id: 1,
+    req_id: 'REQ-EC009',
+    title: 'Search Pagination',
+    description: 'Product search results should be paginated with max 10 items per page.',
+    acceptance_criteria: 'Pagination controls show page numbers and next/prev buttons.\nPage resets when search or filter changes.\nTotal pages are displayed.'
+  },
+  {
+    project_id: 1,
+    req_id: 'REQ-EC010',
+    title: 'Stock Validation on Cart',
+    description: 'The system must validate stock availability before allowing add to cart.',
+    acceptance_criteria: 'Cannot add more items than available stock.\nQuantity selector max is limited to stock.\nOut-of-stock products show disabled Add to Cart.'
+  },
+  {
+    project_id: 1,
+    req_id: 'REQ-EC011',
+    title: 'View Related Products',
+    description: 'Product details page should show related products from the same category.',
+    acceptance_criteria: 'Related products section shows up to 4 items.\nRelated products are from the same category.\nCurrent product is excluded from related list.'
+  },
+  {
+    project_id: 1,
+    req_id: 'REQ-EC012',
+    title: 'Filter by Price Range',
+    description: 'Users should be able to filter products by minimum and maximum price.',
+    acceptance_criteria: 'Price filter inputs accept numeric values.\nProducts outside the range are excluded.\nFilter works with category and search filters.'
+  },
+  {
+    project_id: 1,
+    req_id: 'REQ-EC013',
+    title: 'Profile Password Edit',
+    description: 'Users should be able to change their password from the profile page.',
+    acceptance_criteria: 'Current password is required to set new password.\nNew password must be at least 8 characters.\nSuccess message is shown after password change.'
+  },
+  {
+    project_id: 1,
+    req_id: 'REQ-EC014',
+    title: 'Wishlist Persists Across Sessions',
+    description: 'Wishlist items should persist when user logs out and back in.',
+    acceptance_criteria: 'Wishlist items are saved per user in the database.\nWishlist is restored on login.\nWishlist items are not shared between users.'
   }
 ];
 
@@ -167,6 +267,19 @@ requirements.forEach(req => {
 });
 
 console.log('Requirements seeded');
+
+// Look up requirement IDs by req_id for bug references
+const requirementIdMap = {};
+db.prepare('SELECT id, req_id FROM requirements WHERE project_id = ?').all(projectId).forEach(r => {
+  requirementIdMap[r.req_id] = r.id;
+});
+
+// Map old numeric requirement_id to req_id string for lookup
+const bugReqIdToReqId = {
+  1: 'REQ-001', 2: 'REQ-002', 3: 'REQ-003', 4: 'REQ-004', 5: 'REQ-005',
+  6: 'REQ-006', 7: 'REQ-007', 8: 'REQ-008', 9: 'REQ-009', 10: 'REQ-010',
+  11: 'REQ-011', 12: 'REQ-012', 13: 'REQ-013', 14: 'REQ-014', 15: 'REQ-015',
+};
 
 // Seed Products
 const products = [
@@ -553,6 +666,186 @@ const groundTruthBugs = [
     module: 'Product Display',
     trigger_condition: 'Browse products and check the image of the Wireless Mouse.',
     detection_keywords: 'product,image,wrong,incorrect,mismatch,mouse,headphones'
+  },
+  {
+    project_id: 1,
+    bug_id: 'GT-026',
+    requirement_id: null,
+    req_id_ref: 'REQ-EC001',
+    title: 'Product details page crashes for non-existent product ID',
+    description: 'Navigating to a product details page with an invalid ID causes a crash instead of showing an error.',
+    expected_behavior: 'Page should show "Product not found" message or redirect to shop.',
+    actual_behavior: 'Page crashes with an unhandled error when product ID does not exist.',
+    severity: 'High',
+    priority: 'P1',
+    module: 'Product Details',
+    trigger_condition: 'Navigate to /ecommerce/products/99999.',
+    detection_keywords: 'details,crash,not found,invalid id,error'
+  },
+  {
+    project_id: 1,
+    bug_id: 'GT-027',
+    requirement_id: null,
+    req_id_ref: 'REQ-EC001',
+    title: 'Product price displays as NaN on details page',
+    description: 'Product details page shows NaN for price when the product has a null or undefined price.',
+    expected_behavior: 'Price should display correctly or show "Price not available".',
+    actual_behavior: 'Price shows NaN instead of the actual price value.',
+    severity: 'Medium',
+    priority: 'P2',
+    module: 'Product Details',
+    trigger_condition: 'View product details for a product with missing price data.',
+    detection_keywords: 'price,nan,display,undefined,details'
+  },
+  {
+    project_id: 1,
+    bug_id: 'GT-028',
+    requirement_id: null,
+    req_id_ref: 'REQ-EC003',
+    title: 'Wishlist badge count shows incorrect number',
+    description: 'The wishlist count indicator shows wrong number of items.',
+    expected_behavior: 'Badge should show the exact count of items in the wishlist.',
+    actual_behavior: 'Badge count is off by one or shows stale data.',
+    severity: 'Low',
+    priority: 'P3',
+    module: 'Wishlist',
+    trigger_condition: 'Add or remove items from wishlist and observe badge count.',
+    detection_keywords: 'wishlist,badge,count,incorrect,wrong number'
+  },
+  {
+    project_id: 1,
+    bug_id: 'GT-029',
+    requirement_id: null,
+    req_id_ref: 'REQ-EC005',
+    title: 'Order history displays raw ISO date string',
+    description: 'Order dates are shown in raw ISO format (e.g., 2026-08-31T12:00:00.000Z) instead of user-friendly format.',
+    expected_behavior: 'Dates should be formatted as readable strings (e.g., Aug 31, 2026).',
+    actual_behavior: 'Raw ISO 8601 timestamp strings are displayed.',
+    severity: 'Low',
+    priority: 'P3',
+    module: 'Order History',
+    trigger_condition: 'View order history page.',
+    detection_keywords: 'order,date,iso,format,timestamp,display'
+  },
+  {
+    project_id: 1,
+    bug_id: 'GT-030',
+    requirement_id: null,
+    req_id_ref: 'REQ-EC006',
+    title: 'Review form allows submission with 0 stars',
+    description: 'The review form can be submitted without selecting a star rating.',
+    expected_behavior: 'Rating must be between 1 and 5. Form should reject 0-star submission.',
+    actual_behavior: 'Review form accepts and submits 0-star ratings.',
+    severity: 'Medium',
+    priority: 'P2',
+    module: 'Product Reviews',
+    trigger_condition: 'Submit a review without selecting any star rating.',
+    detection_keywords: 'review,rating,0,stars,validation,submit'
+  },
+  {
+    project_id: 1,
+    bug_id: 'GT-031',
+    requirement_id: null,
+    req_id_ref: 'REQ-EC002',
+    title: 'Quantity selector allows adding more than available stock',
+    description: 'Product details page quantity selector does not cap at available stock.',
+    expected_behavior: 'Quantity selector maximum should be limited to product stock.',
+    actual_behavior: 'User can set quantity higher than available stock.',
+    severity: 'High',
+    priority: 'P1',
+    module: 'Product Details',
+    trigger_condition: 'Set quantity on product details page to a value higher than stock.',
+    detection_keywords: 'quantity,stock,limit,max,overflow,details'
+  },
+  {
+    project_id: 1,
+    bug_id: 'GT-032',
+    requirement_id: null,
+    req_id_ref: 'REQ-EC001',
+    title: 'Broken product image not handled with fallback',
+    description: 'Product details page does not show a fallback when the image URL is broken.',
+    expected_behavior: 'Broken image should show a placeholder or emoji fallback.',
+    actual_behavior: 'Broken image icon is displayed instead of a graceful fallback.',
+    severity: 'Low',
+    priority: 'P3',
+    module: 'Product Details',
+    trigger_condition: 'View product details for a product with an invalid image URL.',
+    detection_keywords: 'image,broken,fallback,placeholder,display'
+  },
+  {
+    project_id: 1,
+    bug_id: 'GT-033',
+    requirement_id: null,
+    req_id_ref: 'REQ-EC007',
+    title: 'Reviews remain visible after user logs out',
+    description: 'Product reviews submitted by a user remain visible in the UI after the user logs out.',
+    expected_behavior: 'Reviews should be properly associated with the user and persist independently.',
+    actual_behavior: 'Review display state is not cleared on logout.',
+    severity: 'Medium',
+    priority: 'P2',
+    module: 'Product Reviews',
+    trigger_condition: 'Submit a review, then log out and view the product page.',
+    detection_keywords: 'review,logout,persist,session,cache'
+  },
+  {
+    project_id: 1,
+    bug_id: 'GT-034',
+    requirement_id: null,
+    req_id_ref: 'REQ-EC009',
+    title: 'Page number not reset when search term changes',
+    description: 'When user is on page 2+ and changes the search term, the page number does not reset to 1.',
+    expected_behavior: 'Pagination should reset to page 1 when search or filter changes.',
+    actual_behavior: 'Page stays on the current number after search change, potentially showing no results.',
+    severity: 'Medium',
+    priority: 'P2',
+    module: 'Search/Pagination',
+    trigger_condition: 'Navigate to page 2, then change the search term.',
+    detection_keywords: 'pagination,search,reset,page,filter'
+  },
+  {
+    project_id: 1,
+    bug_id: 'GT-035',
+    requirement_id: null,
+    req_id_ref: 'REQ-EC012',
+    title: 'Price filter with min > max returns all products',
+    description: 'Setting minimum price higher than maximum price returns all products instead of empty or error.',
+    expected_behavior: 'Should return empty results or show validation error.',
+    actual_behavior: 'Returns all products as if no filter was applied.',
+    severity: 'Medium',
+    priority: 'P2',
+    module: 'Search/Filter',
+    trigger_condition: 'Set min price to 100 and max price to 10.',
+    detection_keywords: 'price,filter,min,max,range,validation'
+  },
+  {
+    project_id: 1,
+    bug_id: 'GT-036',
+    requirement_id: null,
+    req_id_ref: 'REQ-EC011',
+    title: 'Related products include the current product',
+    description: 'The related products section on the details page includes the product currently being viewed.',
+    expected_behavior: 'Current product should be excluded from related products list.',
+    actual_behavior: 'Current product appears in its own related products section.',
+    severity: 'Low',
+    priority: 'P3',
+    module: 'Product Details',
+    trigger_condition: 'View product details and check the related products section.',
+    detection_keywords: 'related,products,self,current,exclude,duplicate'
+  },
+  {
+    project_id: 1,
+    bug_id: 'GT-037',
+    requirement_id: null,
+    req_id_ref: 'REQ-EC013',
+    title: 'Profile update accepts invalid email format',
+    description: 'The profile update endpoint does not validate email format, allowing invalid emails.',
+    expected_behavior: 'Email should be validated for correct format before updating.',
+    actual_behavior: 'Profile update accepts any string as email.',
+    severity: 'High',
+    priority: 'P1',
+    module: 'User Profile',
+    trigger_condition: 'Update profile with an invalid email like "notanemail".',
+    detection_keywords: 'profile,email,validation,format,update'
   }
 ];
 
@@ -562,10 +855,12 @@ const insertGroundTruth = db.prepare(
 );
 
 groundTruthBugs.forEach(bug => {
+  const reqIdStr = bug.req_id_ref || bugReqIdToReqId[bug.requirement_id];
+  const resolvedReqId = reqIdStr ? requirementIdMap[reqIdStr] : null;
   insertGroundTruth.run(
     projectId,
     bug.bug_id,
-    bug.requirement_id,
+    resolvedReqId,
     bug.title,
     bug.description,
     bug.expected_behavior,

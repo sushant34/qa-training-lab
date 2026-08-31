@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { getProducts, getCategories, addToCart } from '../services/api';
-import { Product } from '../types';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { getProducts, getCategories, addToCart, getWishlist, addToWishlist, removeFromWishlist } from '../services/api';
+import { Product, PaginatedProducts } from '../types';
 import toast from 'react-hot-toast';
-import { ShoppingCart, Search, Filter } from 'lucide-react';
+import { ShoppingCart, Search, Filter, Heart, ChevronLeft, ChevronRight, DollarSign, Package } from 'lucide-react';
 
 const ShopPage: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -11,41 +11,69 @@ const ShopPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [total, setTotal] = useState(0);
+  const [minPrice, setMinPrice] = useState('');
+  const [maxPrice, setMaxPrice] = useState('');
+  const [wishlistIds, setWishlistIds] = useState<Set<number>>(new Set());
   const navigate = useNavigate();
 
   useEffect(() => {
-    loadData();
+    loadCategories();
+    loadWishlist();
   }, []);
 
   useEffect(() => {
-    loadProducts();
-  }, [selectedCategory, search]);
+    setPage(1);
+  }, [selectedCategory, search, minPrice, maxPrice]);
 
-  const loadData = async () => {
+  useEffect(() => {
+    loadProducts();
+  }, [selectedCategory, search, page, minPrice, maxPrice]);
+
+  const loadCategories = async () => {
     try {
-      const [prods, cats] = await Promise.all([
-        getProducts(),
-        getCategories(),
-      ]);
-      setProducts(prods);
+      const cats = await getCategories();
       setCategories(cats);
     } catch (error) {
-      console.error('Failed to load data:', error);
-    } finally {
-      setLoading(false);
+      console.error('Failed to load categories:', error);
+    }
+  };
+
+  const loadWishlist = async () => {
+    try {
+      const items = await getWishlist();
+      setWishlistIds(new Set(items.map(i => i.product_id)));
+    } catch (error) {
+      console.error('Failed to load wishlist:', error);
     }
   };
 
   const loadProducts = async () => {
     try {
-      const prods = await getProducts(selectedCategory || undefined, search || undefined);
-      setProducts(prods);
+      setLoading(true);
+      const data: PaginatedProducts = await getProducts(
+        selectedCategory || undefined,
+        search || undefined,
+        page,
+        12,
+        minPrice ? parseFloat(minPrice) : undefined,
+        maxPrice ? parseFloat(maxPrice) : undefined,
+      );
+      setProducts(data.products);
+      setTotalPages(data.totalPages);
+      setTotal(data.total);
     } catch (error) {
       console.error('Failed to load products:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleAddToCart = async (product: Product) => {
+  const handleAddToCart = async (e: React.MouseEvent, product: Product) => {
+    e.preventDefault();
+    e.stopPropagation();
     try {
       await addToCart(product.id);
       toast.success(`${product.name} added to cart`);
@@ -54,10 +82,33 @@ const ShopPage: React.FC = () => {
     }
   };
 
-  if (loading) {
+  const handleToggleWishlist = async (e: React.MouseEvent, productId: number) => {
+    e.preventDefault();
+    e.stopPropagation();
+    try {
+      if (wishlistIds.has(productId)) {
+        await removeFromWishlist(productId);
+        setWishlistIds(prev => { const next = new Set(prev); next.delete(productId); return next; });
+        toast.success('Removed from wishlist');
+      } else {
+        await addToWishlist(productId);
+        setWishlistIds(prev => new Set(prev).add(productId));
+        toast.success('Added to wishlist');
+      }
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to update wishlist');
+    }
+  };
+
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  if (loading && products.length === 0) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
       </div>
     );
   }
@@ -68,71 +119,104 @@ const ShopPage: React.FC = () => {
         <div>
           <h1 className="text-2xl font-bold text-slate-900">E-Commerce Store</h1>
           <p className="text-slate-500 mt-1">
-            Browse products and test the shopping experience.
+            {total} product{total !== 1 ? 's' : ''} found. Browse and test the shopping experience.
           </p>
         </div>
-        <button
-          onClick={() => navigate('/ecommerce/cart')}
-          className="btn btn-primary"
-        >
+        <button onClick={() => navigate('/ecommerce/cart')} className="btn btn-primary">
           <ShoppingCart size={18} />
           View Cart
         </button>
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-4">
-        <div className="relative flex-1 max-w-md">
-          <Search size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
-          <input
-            type="text"
-            placeholder="Search products..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="input-field pl-10"
-          />
+      <div className="card space-y-4">
+        <div className="flex flex-col sm:flex-row gap-4">
+          <div className="relative flex-1 max-w-md">
+            <Search size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+            <input
+              type="text"
+              placeholder="Search products..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="input-field pl-10"
+            />
+          </div>
+          <div className="flex items-center gap-2">
+            <Filter size={18} className="text-slate-400 hidden sm:block" />
+            <select
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              className="input-field w-full sm:w-auto"
+            >
+              <option value="">All Categories</option>
+              {categories.map(cat => (
+                <option key={cat} value={cat}>{cat}</option>
+              ))}
+            </select>
+          </div>
         </div>
-        <div className="flex items-center gap-2">
-          <Filter size={18} className="text-slate-400 hidden sm:block" />
-          <select
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
-            className="input-field w-full sm:w-auto"
-          >
-            <option value="">All Categories</option>
-            {categories.map(cat => (
-              <option key={cat} value={cat}>{cat}</option>
-            ))}
-          </select>
+
+        <div className="flex flex-col sm:flex-row gap-3 items-end">
+          <div className="flex items-center gap-2">
+            <DollarSign size={16} className="text-slate-400" />
+            <span className="text-sm text-slate-500">Price:</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <input
+              type="number"
+              placeholder="Min"
+              value={minPrice}
+              onChange={(e) => setMinPrice(e.target.value)}
+              className="input-field w-24"
+              min="0"
+            />
+            <span className="text-slate-400">-</span>
+            <input
+              type="number"
+              placeholder="Max"
+              value={maxPrice}
+              onChange={(e) => setMaxPrice(e.target.value)}
+              className="input-field w-24"
+              min="0"
+            />
+          </div>
+          {(minPrice || maxPrice) && (
+            <button onClick={() => { setMinPrice(''); setMaxPrice(''); }} className="text-sm text-indigo-600 hover:text-indigo-800">
+              Clear
+            </button>
+          )}
         </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
         {products.map(product => (
-          <div key={product.id} className="card group hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 overflow-hidden">
-            <div className="aspect-square bg-gradient-to-br from-slate-50 to-indigo-50 rounded-xl mb-4 flex items-center justify-center overflow-hidden group-hover:scale-[1.02] transition-transform">
+          <Link
+            key={product.id}
+            to={`/ecommerce/products/${product.id}`}
+            className="card group hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 overflow-hidden"
+          >
+            <div className="aspect-square bg-gradient-to-br from-slate-50 to-indigo-50 rounded-xl mb-4 flex items-center justify-center overflow-hidden group-hover:scale-[1.02] transition-transform relative">
               {(() => {
-                // GT-025: Wireless Mouse (ID 4) shows headphones image
                 const imageUrl = product.id === 4
                   ? 'https://placehold.co/400x400/7c3aed/ffffff?text=Headphones'
                   : product.image_url;
                 return imageUrl ? (
-                  <img
-                    src={imageUrl}
-                    alt={product.name}
-                    className="w-full h-full object-cover"
-                  />
+                  <img src={imageUrl} alt={product.name} className="w-full h-full object-cover" />
                 ) : (
-                  <span className="text-5xl">📦</span>
+                  <Package size={48} className="text-slate-300" />
                 );
               })()}
+              <button
+                onClick={(e) => handleToggleWishlist(e, product.id)}
+                className={`absolute top-2 right-2 p-2 rounded-full transition-colors ${wishlistIds.has(product.id) ? 'bg-red-50 text-red-500' : 'bg-white/80 text-slate-400 hover:text-red-400'}`}
+              >
+                <Heart size={16} fill={wishlistIds.has(product.id) ? 'currentColor' : 'none'} />
+              </button>
             </div>
             <div className="space-y-2">
-              {/* GT-021: Laptop Backpack (ID 5) shows wrong category */}
               <span className="inline-block px-2 py-0.5 text-xs font-medium bg-indigo-50 text-indigo-600 rounded-full">
                 {product.id === 5 ? 'Electronics' : product.category}
               </span>
               <h3 className="font-semibold text-slate-900 line-clamp-2">{product.name}</h3>
-              {/* GT-022: Bluetooth Speaker (ID 8) shows wrong description */}
               <p className="text-sm text-slate-500 line-clamp-2">
                 {product.id === 8
                   ? 'Compact portable speaker with rich bass and waterproof design.'
@@ -141,33 +225,62 @@ const ShopPage: React.FC = () => {
               </p>
               <div className="flex items-center justify-between pt-3 border-t border-slate-100">
                 <div>
-                  {/* GT-024: Notebook Set (ID 15) shows $0.00 */}
                   <span className="text-lg font-bold text-slate-900">
                     ${product.id === 15 ? '0.00' : product.price.toFixed(2)}
                   </span>
                   <p className="text-xs text-emerald-600">{product.stock} in stock</p>
                 </div>
-                {/* GT-023: Webcam HD (ID 10) has no Add to Cart button */}
                 {product.id !== 10 && (
                   <button
-                    onClick={() => handleAddToCart(product)}
+                    onClick={(e) => handleAddToCart(e, product)}
                     className="btn btn-primary btn-sm"
+                    disabled={product.stock === 0}
                   >
                     <ShoppingCart size={14} />
-                    Add
+                    {product.stock === 0 ? 'Out' : 'Add'}
                   </button>
                 )}
               </div>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
 
-      {products.length === 0 && (
+      {products.length === 0 && !loading && (
         <div className="text-center py-16">
           <p className="text-4xl mb-3">🔍</p>
           <h3 className="text-lg font-semibold text-slate-800 mb-1">No products found</h3>
-          <p className="text-slate-500">Try adjusting your search or category filter.</p>
+          <p className="text-slate-500">Try adjusting your search or filters.</p>
+        </div>
+      )}
+
+      {totalPages > 1 && (
+        <div className="flex items-center justify-center gap-2 pt-4">
+          <button
+            onClick={() => handlePageChange(page - 1)}
+            disabled={page === 1}
+            className="btn btn-outline btn-sm"
+          >
+            <ChevronLeft size={16} />
+            Prev
+          </button>
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
+            <button
+              key={p}
+              onClick={() => handlePageChange(p)}
+              className={`w-9 h-9 rounded-lg text-sm font-medium transition-colors ${p === page ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}
+            >
+              {p}
+            </button>
+          ))}
+          <button
+            onClick={() => handlePageChange(page + 1)}
+            disabled={page === totalPages}
+            className="btn btn-outline btn-sm"
+          >
+            Next
+            <ChevronRight size={16} />
+          </button>
         </div>
       )}
     </div>

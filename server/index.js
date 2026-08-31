@@ -26,6 +26,8 @@ const productRoutes = require('./routes/products');
 const cartRoutes = require('./routes/cart');
 const checkoutRoutes = require('./routes/checkout');
 const ecommerceAuthRoutes = require('./routes/ecommerceAuth');
+const wishlistRoutes = require('./routes/wishlist');
+const reviewRoutes = require('./routes/reviews');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
@@ -40,6 +42,8 @@ app.use('/api/products', productRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/checkout', checkoutRoutes);
 app.use('/api/ecommerce/auth', ecommerceAuthRoutes);
+app.use('/api/wishlist', wishlistRoutes);
+app.use('/api/products', reviewRoutes);
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });

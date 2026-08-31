@@ -1,4 +1,4 @@
-import { User, Project, Requirement, TestCase, TestExecution, BugReport, GroundTruthBug, Evaluation, Product, Cart, Order } from '../types';
+import { User, Project, Requirement, TestCase, TestExecution, BugReport, GroundTruthBug, Evaluation, Product, Cart, Order, PaginatedProducts, WishlistItem, Review, ReviewStats } from '../types';
 
 const API_BASE = '/api';
 
@@ -232,10 +232,14 @@ export const resetTraining = async (userId: number, projectId: number): Promise<
 };
 
 // Products (E-commerce)
-export const getProducts = async (category?: string, search?: string): Promise<Product[]> => {
+export const getProducts = async (category?: string, search?: string, page?: number, limit?: number, minPrice?: number, maxPrice?: number): Promise<PaginatedProducts> => {
   let url = `${API_BASE}/products?`;
   if (category) url += `category=${category}&`;
   if (search) url += `search=${encodeURIComponent(search)}&`;
+  if (page) url += `page=${page}&`;
+  if (limit) url += `limit=${limit}&`;
+  if (minPrice !== undefined) url += `min_price=${minPrice}&`;
+  if (maxPrice !== undefined) url += `max_price=${maxPrice}&`;
   const response = await fetch(url, { headers: getHeaders() });
   return handleResponse(response);
 };
@@ -301,5 +305,62 @@ export const checkout = async (data: { full_name: string; email: string; phone?:
 
 export const getOrderHistory = async (): Promise<Order[]> => {
   const response = await fetch(`${API_BASE}/checkout/history`, { headers: getHeaders() });
+  return handleResponse(response);
+};
+
+// Wishlist
+export const getWishlist = async (): Promise<WishlistItem[]> => {
+  const response = await fetch(`${API_BASE}/wishlist`, { headers: getHeaders() });
+  return handleResponse(response);
+};
+
+export const addToWishlist = async (productId: number): Promise<void> => {
+  await fetch(`${API_BASE}/wishlist/add`, {
+    method: 'POST',
+    headers: getHeaders(),
+    body: JSON.stringify({ product_id: productId }),
+  });
+};
+
+export const removeFromWishlist = async (productId: number): Promise<void> => {
+  await fetch(`${API_BASE}/wishlist/remove/${productId}`, {
+    method: 'DELETE',
+    headers: getHeaders(),
+  });
+};
+
+export const checkWishlist = async (productId: number): Promise<{ isWishlisted: boolean }> => {
+  const response = await fetch(`${API_BASE}/wishlist/check/${productId}`, { headers: getHeaders() });
+  return handleResponse(response);
+};
+
+// Reviews
+export const getProductReviews = async (productId: number): Promise<{ reviews: Review[]; stats: ReviewStats }> => {
+  const response = await fetch(`${API_BASE}/products/${productId}/reviews`, { headers: getHeaders() });
+  return handleResponse(response);
+};
+
+export const createProductReview = async (productId: number, data: { rating: number; title?: string; comment?: string }): Promise<Review> => {
+  const response = await fetch(`${API_BASE}/products/${productId}/reviews`, {
+    method: 'POST',
+    headers: getHeaders(),
+    body: JSON.stringify(data),
+  });
+  return handleResponse(response);
+};
+
+// Related Products
+export const getRelatedProducts = async (productId: number): Promise<Product[]> => {
+  const response = await fetch(`${API_BASE}/products/${productId}/related`, { headers: getHeaders() });
+  return handleResponse(response);
+};
+
+// Profile
+export const updateProfile = async (data: { full_name?: string; email?: string; current_password?: string; new_password?: string }): Promise<{ user: User }> => {
+  const response = await fetch(`${API_BASE}/ecommerce/auth/profile`, {
+    method: 'PUT',
+    headers: getHeaders(),
+    body: JSON.stringify(data),
+  });
   return handleResponse(response);
 };
