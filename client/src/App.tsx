@@ -28,6 +28,9 @@ import EcommerceRegisterPage from './pages/EcommerceRegisterPage';
 import TraceabilityMatrixPage from './pages/TraceabilityMatrixPage';
 import CoverageDashboardPage from './pages/CoverageDashboardPage';
 import TutorialPage from './pages/TutorialPage';
+import ApiTesterPage from './pages/ApiTesterPage';
+import ApiTutorialPage from './pages/ApiTutorialPage';
+import ApiChallengesPage from './pages/ApiChallengesPage';
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user, loading } = useAuth();
@@ -211,6 +214,24 @@ const AppRoutes: React.FC = () => {
       <Route path="/coverage" element={
         <ProtectedRoute>
           <AppLayout><CoverageDashboardPage /></AppLayout>
+        </ProtectedRoute>
+      } />
+
+      <Route path="/api-tester" element={
+        <ProtectedRoute>
+          <AppLayout><ApiTesterPage /></AppLayout>
+        </ProtectedRoute>
+      } />
+
+      <Route path="/api-tutorial" element={
+        <ProtectedRoute>
+          <AppLayout><ApiTutorialPage /></AppLayout>
+        </ProtectedRoute>
+      } />
+
+      <Route path="/api-challenges" element={
+        <ProtectedRoute>
+          <AppLayout><ApiChallengesPage /></AppLayout>
         </ProtectedRoute>
       } />
 

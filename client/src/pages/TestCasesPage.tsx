@@ -28,6 +28,11 @@ const TestCasesPage: React.FC = () => {
     expected_result: '',
     priority: 'P2',
     test_type: 'Functional',
+    api_method: '',
+    api_endpoint: '',
+    api_headers: '',
+    api_body: '',
+    expected_status_code: '',
   });
 
   useEffect(() => {
@@ -88,6 +93,11 @@ const TestCasesPage: React.FC = () => {
       expected_result: testCase.expected_result,
       priority: testCase.priority,
       test_type: testCase.test_type,
+      api_method: testCase.api_method || '',
+      api_endpoint: testCase.api_endpoint || '',
+      api_headers: testCase.api_headers || '',
+      api_body: testCase.api_body || '',
+      expected_status_code: testCase.expected_status_code?.toString() || '',
     });
     setShowModal(true);
   };
@@ -113,6 +123,11 @@ const TestCasesPage: React.FC = () => {
       expected_result: '',
       priority: 'P2',
       test_type: 'Functional',
+      api_method: '',
+      api_endpoint: '',
+      api_headers: '',
+      api_body: '',
+      expected_status_code: '',
     });
   };
 
@@ -266,9 +281,73 @@ const TestCasesPage: React.FC = () => {
                 <option value="UI/UX">UI/UX</option>
                 <option value="Security">Security</option>
                 <option value="Performance">Performance</option>
+                <option value="API">API</option>
               </select>
             </div>
           </div>
+
+          {formData.test_type === 'API' && (
+            <>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="form-group">
+                  <label className="label">HTTP Method</label>
+                  <select
+                    value={formData.api_method}
+                    onChange={(e) => setFormData({ ...formData, api_method: e.target.value })}
+                    className="input-field"
+                  >
+                    <option value="">Select method</option>
+                    <option value="GET">GET</option>
+                    <option value="POST">POST</option>
+                    <option value="PUT">PUT</option>
+                    <option value="DELETE">DELETE</option>
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label className="label">Endpoint URL</label>
+                  <input
+                    type="text"
+                    value={formData.api_endpoint}
+                    onChange={(e) => setFormData({ ...formData, api_endpoint: e.target.value })}
+                    className="input-field"
+                    placeholder="/api/products"
+                  />
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="form-group">
+                  <label className="label">Expected Status Code</label>
+                  <input
+                    type="number"
+                    value={formData.expected_status_code}
+                    onChange={(e) => setFormData({ ...formData, expected_status_code: e.target.value })}
+                    className="input-field"
+                    placeholder="200"
+                  />
+                </div>
+                <div className="form-group">
+                  <label className="label">Headers (JSON)</label>
+                  <input
+                    type="text"
+                    value={formData.api_headers}
+                    onChange={(e) => setFormData({ ...formData, api_headers: e.target.value })}
+                    className="input-field"
+                    placeholder='{"Content-Type":"application/json"}'
+                  />
+                </div>
+              </div>
+              <div className="form-group">
+                <label className="label">Request Body (JSON)</label>
+                <textarea
+                  value={formData.api_body}
+                  onChange={(e) => setFormData({ ...formData, api_body: e.target.value })}
+                  className="input-field"
+                  rows={3}
+                  placeholder='{"key": "value"}'
+                />
+              </div>
+            </>
+          )}
 
           <div className="form-group">
             <label className="label">Preconditions</label>

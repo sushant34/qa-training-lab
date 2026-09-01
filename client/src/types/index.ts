@@ -38,11 +38,16 @@ export interface TestCase {
   steps: string;
   expected_result: string;
   priority: 'P0' | 'P1' | 'P2' | 'P3';
-  test_type: 'Functional' | 'UI/UX' | 'Security' | 'Performance';
+  test_type: 'Functional' | 'UI/UX' | 'Security' | 'Performance' | 'API';
   status: 'Draft' | 'Ready' | 'Executed';
   created_at?: string;
   updated_at?: string;
   requirement_req_id?: string;
+  api_method?: string;
+  api_endpoint?: string;
+  api_headers?: string;
+  api_body?: string;
+  expected_status_code?: number;
 }
 
 export interface TestExecution {

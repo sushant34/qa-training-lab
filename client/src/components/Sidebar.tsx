@@ -4,7 +4,7 @@ import { useAuth } from '../hooks/useAuth';
 import {
   LayoutDashboard, BookOpen, FileText, Play, Bug, Award,
   Users, Shield, BarChart3, ShoppingCart, LogOut, Menu, X, ExternalLink, FlaskConical,
-  GitBranch, Rocket, GraduationCap
+  GitBranch, Rocket, GraduationCap, Send, Code, Target
 } from 'lucide-react';
 
 const Sidebar: React.FC = () => {
@@ -24,7 +24,12 @@ const Sidebar: React.FC = () => {
     { path: '/my-score', label: 'My Score', icon: Award },
     { path: '/traceability', label: 'Traceability', icon: GitBranch },
     { path: '/coverage', label: 'Coverage', icon: BarChart3 },
-    { path: '/ecommerce/shop', label: 'E-Commerce App', icon: ShoppingCart, external: true },
+  ];
+
+  const apiLinks = [
+    { path: '/api-tester', label: 'API Tester', icon: Send },
+    { path: '/api-tutorial', label: 'API Tutorial', icon: Code },
+    { path: '/api-challenges', label: 'API Challenges', icon: Target },
   ];
 
   const trainerLinks = [
@@ -128,6 +133,37 @@ const Sidebar: React.FC = () => {
                 </Link>
               )
             )}
+
+            {!isTrainer && (
+              <>
+                <p className="px-4 pt-4 pb-2 text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                  API Testing
+                </p>
+                {apiLinks.map((link) => (
+                  <Link
+                    key={link.path}
+                    to={link.path}
+                    onClick={() => setIsOpen(false)}
+                    className={`sidebar-link ${isActive(link.path) ? 'active' : ''}`}
+                  >
+                    <link.icon size={18} />
+                    <span>{link.label}</span>
+                  </Link>
+                ))}
+                <a
+                  href="/ecommerce/shop"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="sidebar-link"
+                >
+                  <ShoppingCart size={18} />
+                  <span>E-Commerce App</span>
+                  <ExternalLink size={14} className="ml-auto opacity-50" />
+                </a>
+              </>
+            )}
+
+            {isTrainer && null}
           </nav>
 
           <div className="p-4 border-t border-white/10">
