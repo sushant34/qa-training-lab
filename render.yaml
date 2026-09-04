@@ -13,3 +13,6 @@ services:
         generateValue: true
       - key: NODE_ENV
         value: production
+      - key: CORS_ORIGINS
+        syncFromProperty: false
+        value: https://qa-training-lab.onrender.com
