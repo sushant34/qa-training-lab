@@ -1,18 +1,17 @@
 const express = require('express');
 const db = require('../models/database');
 const { authenticateToken } = require('../middleware/auth');
+const { checkoutRules } = require('../validators/checkout');
+const validate = require('../middleware/validate');
+const tryCatch = require('../middleware/tryCatch');
 
 const router = express.Router();
 
-router.post('/', authenticateToken, (req, res) => {
+router.post('/', authenticateToken, checkoutRules, validate, tryCatch(async (req, res) => {
   const { full_name, email, phone, address } = req.body;
 
   // BUG-008: Checkout allows submission without phone number
   // This check is intentionally missing for phone
-
-  if (!full_name || !email || !address) {
-    return res.status(400).json({ error: 'Full name, email, and address are required' });
-  }
 
   // BUG-008: Phone validation is missing
   // Should require phone but doesn't
@@ -59,9 +58,9 @@ router.post('/', authenticateToken, (req, res) => {
   `).all(orderResult.lastInsertRowid);
 
   res.status(201).json({ order, items: orderItems });
-});
+}));
 
-router.get('/history', authenticateToken, (req, res) => {
+router.get('/history', authenticateToken, tryCatch(async (req, res) => {
   const orders = db.prepare('SELECT * FROM orders WHERE user_id = ? ORDER BY created_at DESC').all(req.user.id);
 
   const ordersWithItems = orders.map(order => {
@@ -75,6 +74,6 @@ router.get('/history', authenticateToken, (req, res) => {
   });
 
   res.json(ordersWithItems);
-});
+}));
 
 module.exports = router;

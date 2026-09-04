@@ -1,7 +1,9 @@
 const jwt = require('jsonwebtoken');
 const db = require('../models/database');
+const env = require('../config/env');
+const logger = require('../config/logger');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'qa-training-lab-secret-key-change-in-production';
+const JWT_SECRET = env.JWT_SECRET;
 
 const authenticateToken = (req, res, next) => {
   const authHeader = req.headers['authorization'];
@@ -16,12 +18,14 @@ const authenticateToken = (req, res, next) => {
     const user = db.prepare('SELECT id, username, email, role, full_name FROM users WHERE id = ?').get(decoded.userId);
 
     if (!user) {
+      logger.warn({ userId: decoded.userId }, 'Token valid but user not found');
       return res.status(401).json({ error: 'User not found' });
     }
 
     req.user = user;
     next();
   } catch (error) {
+    logger.warn({ error: error.message }, 'Token validation failed');
     return res.status(403).json({ error: 'Invalid or expired token' });
   }
 };

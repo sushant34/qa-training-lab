@@ -336,12 +336,12 @@ export const checkWishlist = async (productId: number): Promise<{ isWishlisted: 
 
 // Reviews
 export const getProductReviews = async (productId: number): Promise<{ reviews: Review[]; stats: ReviewStats }> => {
-  const response = await fetch(`${API_BASE}/products/${productId}/reviews`, { headers: getHeaders() });
+  const response = await fetch(`${API_BASE}/reviews/${productId}`, { headers: getHeaders() });
   return handleResponse(response);
 };
 
 export const createProductReview = async (productId: number, data: { rating: number; title?: string; comment?: string }): Promise<Review> => {
-  const response = await fetch(`${API_BASE}/products/${productId}/reviews`, {
+  const response = await fetch(`${API_BASE}/reviews/${productId}`, {
     method: 'POST',
     headers: getHeaders(),
     body: JSON.stringify(data),

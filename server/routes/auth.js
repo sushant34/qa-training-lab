@@ -2,9 +2,12 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const db = require('../models/database');
+const env = require('../config/env');
+const logger = require('../config/logger');
+const { authenticateToken } = require('../middleware/auth');
 
 const router = express.Router();
-const JWT_SECRET = process.env.JWT_SECRET || 'qa-training-lab-secret-key-change-in-production';
+const JWT_SECRET = env.JWT_SECRET;
 
 router.post('/login', (req, res) => {
   const { username, password } = req.body;
@@ -16,19 +19,23 @@ router.post('/login', (req, res) => {
   const user = db.prepare('SELECT * FROM users WHERE username = ?').get(username);
 
   if (!user) {
+    logger.warn({ username }, 'Login failed: user not found');
     return res.status(401).json({ error: 'Invalid credentials' });
   }
 
   const validPassword = bcrypt.compareSync(password, user.password);
 
   if (!validPassword) {
+    logger.warn({ username, userId: user.id }, 'Login failed: invalid password');
     return res.status(401).json({ error: 'Invalid credentials' });
   }
+
+  logger.info({ userId: user.id, username }, 'Login successful');
 
   const token = jwt.sign(
     { userId: user.id, role: user.role },
     JWT_SECRET,
-    { expiresIn: '24h' }
+    { expiresIn: env.JWT_EXPIRES_IN }
   );
 
   res.json({
@@ -56,16 +63,18 @@ router.post('/register', (req, res) => {
     return res.status(409).json({ error: 'Username or email already exists' });
   }
 
-  const hashedPassword = bcrypt.hashSync(password, 10);
+  const hashedPassword = bcrypt.hashSync(password, env.BCRYPT_SALT_ROUNDS);
 
   const result = db.prepare(
     'INSERT INTO users (username, email, password, role, full_name) VALUES (?, ?, ?, ?, ?)'
   ).run(username, email, hashedPassword, 'INTERN', full_name);
 
+  logger.info({ userId: result.lastInsertRowid, username }, 'User registered');
+
   const token = jwt.sign(
     { userId: result.lastInsertRowid, role: 'INTERN' },
     JWT_SECRET,
-    { expiresIn: '24h' }
+    { expiresIn: env.JWT_EXPIRES_IN }
   );
 
   res.status(201).json({
@@ -80,26 +89,8 @@ router.post('/register', (req, res) => {
   });
 });
 
-router.get('/me', (req, res) => {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
-
-  if (!token) {
-    return res.status(401).json({ error: 'Access token required' });
-  }
-
-  try {
-    const decoded = jwt.verify(token, JWT_SECRET);
-    const user = db.prepare('SELECT id, username, email, role, full_name FROM users WHERE id = ?').get(decoded.userId);
-
-    if (!user) {
-      return res.status(401).json({ error: 'User not found' });
-    }
-
-    res.json({ user });
-  } catch (error) {
-    return res.status(403).json({ error: 'Invalid or expired token' });
-  }
+router.get('/me', authenticateToken, (req, res) => {
+  res.json({ user: req.user });
 });
 
 module.exports = router;

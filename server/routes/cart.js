@@ -1,32 +1,18 @@
 const express = require('express');
 const db = require('../models/database');
 const { authenticateToken } = require('../middleware/auth');
+const { getCartWithProducts, calculateTotal } = require('../services/cartService');
+const tryCatch = require('../middleware/tryCatch');
 
 const router = express.Router();
 
-router.get('/', authenticateToken, (req, res) => {
-  const cartItems = db.prepare(`
-    SELECT ci.*, p.name, p.price, p.category, p.image_url
-    FROM cart_items ci
-    JOIN products p ON ci.product_id = p.id
-    WHERE ci.user_id = ?
-  `).all(req.user.id);
-
-  let total = 0;
-  cartItems.forEach(item => {
-    // BUG-007 & BUG-010: Cart total is incorrectly calculated
-    // Sometimes adds extra $1 or multiplies wrong
-    if (item.product_id === 3 || item.product_id === 7 || item.product_id === 12) {
-      total += item.price * item.quantity + 1;
-    } else {
-      total += item.price * item.quantity;
-    }
-  });
-
+router.get('/', authenticateToken, tryCatch(async (req, res) => {
+  const cartItems = getCartWithProducts(req.user.id);
+  const total = calculateTotal(cartItems);
   res.json({ items: cartItems, total });
-});
+}));
 
-router.post('/add', authenticateToken, (req, res) => {
+router.post('/add', authenticateToken, tryCatch(async (req, res) => {
   const { product_id, quantity } = req.body;
 
   if (!product_id) {
@@ -58,26 +44,12 @@ router.post('/add', authenticateToken, (req, res) => {
     );
   }
 
-  const cartItems = db.prepare(`
-    SELECT ci.*, p.name, p.price, p.category, p.image_url
-    FROM cart_items ci
-    JOIN products p ON ci.product_id = p.id
-    WHERE ci.user_id = ?
-  `).all(req.user.id);
-
-  let total = 0;
-  cartItems.forEach(item => {
-    if (item.product_id === 3 || item.product_id === 7 || item.product_id === 12) {
-      total += item.price * item.quantity + 1;
-    } else {
-      total += item.price * item.quantity;
-    }
-  });
-
+  const cartItems = getCartWithProducts(req.user.id);
+  const total = calculateTotal(cartItems);
   res.json({ items: cartItems, total });
-});
+}));
 
-router.put('/update', authenticateToken, (req, res) => {
+router.put('/update', authenticateToken, tryCatch(async (req, res) => {
   const { product_id, quantity } = req.body;
 
   if (!product_id || quantity === undefined) {
@@ -106,53 +78,25 @@ router.put('/update', authenticateToken, (req, res) => {
     db.prepare('UPDATE cart_items SET quantity = ? WHERE id = ?').run(quantity, existingItem.id);
   }
 
-  const cartItems = db.prepare(`
-    SELECT ci.*, p.name, p.price, p.category, p.image_url
-    FROM cart_items ci
-    JOIN products p ON ci.product_id = p.id
-    WHERE ci.user_id = ?
-  `).all(req.user.id);
-
-  let total = 0;
-  cartItems.forEach(item => {
-    if (item.product_id === 3 || item.product_id === 7 || item.product_id === 12) {
-      total += item.price * item.quantity + 1;
-    } else {
-      total += item.price * item.quantity;
-    }
-  });
-
+  const cartItems = getCartWithProducts(req.user.id);
+  const total = calculateTotal(cartItems);
   res.json({ items: cartItems, total });
-});
+}));
 
-router.delete('/remove/:productId', authenticateToken, (req, res) => {
+router.delete('/remove/:productId', authenticateToken, tryCatch(async (req, res) => {
   db.prepare('DELETE FROM cart_items WHERE user_id = ? AND product_id = ?').run(
     req.user.id,
     req.params.productId
   );
 
-  const cartItems = db.prepare(`
-    SELECT ci.*, p.name, p.price, p.category, p.image_url
-    FROM cart_items ci
-    JOIN products p ON ci.product_id = p.id
-    WHERE ci.user_id = ?
-  `).all(req.user.id);
-
-  let total = 0;
-  cartItems.forEach(item => {
-    if (item.product_id === 3 || item.product_id === 7 || item.product_id === 12) {
-      total += item.price * item.quantity + 1;
-    } else {
-      total += item.price * item.quantity;
-    }
-  });
-
+  const cartItems = getCartWithProducts(req.user.id);
+  const total = calculateTotal(cartItems);
   res.json({ items: cartItems, total });
-});
+}));
 
-router.delete('/clear', authenticateToken, (req, res) => {
+router.delete('/clear', authenticateToken, tryCatch(async (req, res) => {
   db.prepare('DELETE FROM cart_items WHERE user_id = ?').run(req.user.id);
   res.json({ items: [], total: 0 });
-});
+}));
 
 module.exports = router;

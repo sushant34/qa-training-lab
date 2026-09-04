@@ -1,10 +1,13 @@
 const express = require('express');
 const db = require('../models/database');
 const { authenticateToken } = require('../middleware/auth');
+const { productListRules } = require('../validators/products');
+const validate = require('../middleware/validate');
+const tryCatch = require('../middleware/tryCatch');
 
 const router = express.Router();
 
-router.get('/', authenticateToken, (req, res) => {
+router.get('/', authenticateToken, productListRules, validate, tryCatch(async (req, res) => {
   const { category, search, page, limit, min_price, max_price } = req.query;
 
   let query = 'SELECT * FROM products WHERE stock > 0';
@@ -58,14 +61,14 @@ router.get('/', authenticateToken, (req, res) => {
   const totalPages = Math.ceil(total / pageSize);
 
   res.json({ products, total, page: pageNum, totalPages });
-});
+}));
 
-router.get('/categories', authenticateToken, (req, res) => {
+router.get('/categories', authenticateToken, tryCatch(async (req, res) => {
   const categories = db.prepare('SELECT DISTINCT category FROM products ORDER BY category ASC').all();
   res.json(categories.map(c => c.category));
-});
+}));
 
-router.get('/:id', authenticateToken, (req, res) => {
+router.get('/:id', authenticateToken, tryCatch(async (req, res) => {
   const product = db.prepare('SELECT * FROM products WHERE id = ?').get(req.params.id);
 
   if (!product) {
@@ -73,9 +76,9 @@ router.get('/:id', authenticateToken, (req, res) => {
   }
 
   res.json(product);
-});
+}));
 
-router.get('/:id/related', authenticateToken, (req, res) => {
+router.get('/:id/related', authenticateToken, tryCatch(async (req, res) => {
   const product = db.prepare('SELECT * FROM products WHERE id = ?').get(req.params.id);
 
   if (!product) {
@@ -87,6 +90,6 @@ router.get('/:id/related', authenticateToken, (req, res) => {
   ).all(product.category, req.params.id);
 
   res.json(related);
-});
+}));
 
 module.exports = router;

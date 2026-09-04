@@ -1,8 +1,8 @@
 const Database = require('better-sqlite3');
-const path = require('path');
 const bcrypt = require('bcryptjs');
+const env = require('../config/env');
 
-const DB_PATH = path.join(__dirname, '..', 'qa-training.db');
+const DB_PATH = env.DB_PATH;
 
 const db = new Database(DB_PATH);
 

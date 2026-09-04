@@ -1,10 +1,13 @@
 const express = require('express');
 const db = require('../models/database');
 const { authenticateToken, requireRole } = require('../middleware/auth');
+const { requireOwnershipOrTrainer } = require('../middleware/ownership');
+const { generateSequentialId } = require('../services/idGenerator');
+const tryCatch = require('../middleware/tryCatch');
 
 const router = express.Router();
 
-router.get('/', authenticateToken, (req, res) => {
+router.get('/', authenticateToken, tryCatch(async (req, res) => {
   const { project_id, user_id } = req.query;
 
   let query = 'SELECT tc.*, r.req_id as requirement_req_id FROM test_cases tc LEFT JOIN requirements r ON tc.requirement_id = r.id WHERE 1=1';
@@ -27,28 +30,16 @@ router.get('/', authenticateToken, (req, res) => {
 
   const testCases = db.prepare(query).all(...params);
   res.json(testCases);
-});
+}));
 
-router.post('/', authenticateToken, (req, res) => {
+router.post('/', authenticateToken, tryCatch(async (req, res) => {
   const { project_id, requirement_id, title, preconditions, test_data, steps, expected_result, priority, test_type } = req.body;
 
   if (!project_id || !title || !steps || !expected_result) {
     return res.status(400).json({ error: 'Project, title, steps, and expected result are required' });
   }
 
-  const lastTestCase = db.prepare(
-    'SELECT tc_id FROM test_cases WHERE user_id = ? ORDER BY id DESC LIMIT 1'
-  ).get(req.user.id);
-
-  let nextNumber = 1;
-  if (lastTestCase) {
-    const match = lastTestCase.tc_id.match(/TC-(\d+)/);
-    if (match) {
-      nextNumber = parseInt(match[1]) + 1;
-    }
-  }
-
-  const tc_id = `TC-${String(nextNumber).padStart(3, '0')}`;
+  const tc_id = generateSequentialId('TC', 'test_cases', req.user.id);
 
   const result = db.prepare(
     `INSERT INTO test_cases (user_id, project_id, requirement_id, tc_id, title, preconditions, test_data, steps, expected_result, priority, test_type)
@@ -69,18 +60,10 @@ router.post('/', authenticateToken, (req, res) => {
 
   const testCase = db.prepare('SELECT * FROM test_cases WHERE id = ?').get(result.lastInsertRowid);
   res.status(201).json(testCase);
-});
+}));
 
-router.put('/:id', authenticateToken, (req, res) => {
-  const testCase = db.prepare('SELECT * FROM test_cases WHERE id = ?').get(req.params.id);
-
-  if (!testCase) {
-    return res.status(404).json({ error: 'Test case not found' });
-  }
-
-  if (req.user.role === 'INTERN' && testCase.user_id !== req.user.id) {
-    return res.status(403).json({ error: 'Access denied' });
-  }
+router.put('/:id', authenticateToken, requireOwnershipOrTrainer('testCase'), tryCatch(async (req, res) => {
+  const testCase = req.entity;
 
   const { title, preconditions, test_data, steps, expected_result, priority, test_type, requirement_id } = req.body;
 
@@ -100,23 +83,13 @@ router.put('/:id', authenticateToken, (req, res) => {
 
   const updatedTestCase = db.prepare('SELECT * FROM test_cases WHERE id = ?').get(req.params.id);
   res.json(updatedTestCase);
-});
+}));
 
-router.delete('/:id', authenticateToken, (req, res) => {
-  const testCase = db.prepare('SELECT * FROM test_cases WHERE id = ?').get(req.params.id);
-
-  if (!testCase) {
-    return res.status(404).json({ error: 'Test case not found' });
-  }
-
-  if (req.user.role === 'INTERN' && testCase.user_id !== req.user.id) {
-    return res.status(403).json({ error: 'Access denied' });
-  }
-
+router.delete('/:id', authenticateToken, requireOwnershipOrTrainer('testCase'), tryCatch(async (req, res) => {
   db.prepare('DELETE FROM test_executions WHERE test_case_id = ?').run(req.params.id);
   db.prepare('DELETE FROM test_cases WHERE id = ?').run(req.params.id);
 
   res.json({ message: 'Test case deleted successfully' });
-});
+}));
 
 module.exports = router;

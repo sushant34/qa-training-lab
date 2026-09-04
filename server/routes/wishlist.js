@@ -1,10 +1,11 @@
 const express = require('express');
 const db = require('../models/database');
 const { authenticateToken } = require('../middleware/auth');
+const tryCatch = require('../middleware/tryCatch');
 
 const router = express.Router();
 
-router.get('/', authenticateToken, (req, res) => {
+router.get('/', authenticateToken, tryCatch(async (req, res) => {
   const items = db.prepare(`
     SELECT w.id, w.product_id, w.created_at, p.name, p.price, p.category, p.image_url, p.stock
     FROM wishlist_items w
@@ -13,9 +14,9 @@ router.get('/', authenticateToken, (req, res) => {
     ORDER BY w.created_at DESC
   `).all(req.user.id);
   res.json(items);
-});
+}));
 
-router.post('/add', authenticateToken, (req, res) => {
+router.post('/add', authenticateToken, tryCatch(async (req, res) => {
   const { product_id } = req.body;
 
   if (!product_id) {
@@ -41,9 +42,9 @@ router.post('/add', authenticateToken, (req, res) => {
   );
 
   res.status(201).json({ message: 'Added to wishlist' });
-});
+}));
 
-router.delete('/remove/:productId', authenticateToken, (req, res) => {
+router.delete('/remove/:productId', authenticateToken, tryCatch(async (req, res) => {
   const result = db.prepare(
     'DELETE FROM wishlist_items WHERE user_id = ? AND product_id = ?'
   ).run(req.user.id, req.params.productId);
@@ -53,14 +54,14 @@ router.delete('/remove/:productId', authenticateToken, (req, res) => {
   }
 
   res.json({ message: 'Removed from wishlist' });
-});
+}));
 
-router.get('/check/:productId', authenticateToken, (req, res) => {
+router.get('/check/:productId', authenticateToken, tryCatch(async (req, res) => {
   const item = db.prepare(
     'SELECT id FROM wishlist_items WHERE user_id = ? AND product_id = ?'
   ).get(req.user.id, req.params.productId);
 
   res.json({ isWishlisted: !!item });
-});
+}));
 
 module.exports = router;

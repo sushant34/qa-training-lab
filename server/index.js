@@ -2,14 +2,32 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const dotenv = require('dotenv');
+const pinoHttp = require('pino-http');
 const db = require('./models/database');
+const env = require('./config/env');
+const logger = require('./config/logger');
+const securityMiddleware = require('./middleware/security');
+const errorHandler = require('./middleware/errorHandler');
+const AppError = require('./middleware/AppError');
 
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = env.PORT;
 
-app.use(cors());
+const httpLogger = pinoHttp({
+  logger,
+  redact: ['req.headers.authorization'],
+});
+
+securityMiddleware(app);
+
+app.use(httpLogger);
+app.use(cors({
+  origin: env.CORS_ORIGINS,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true,
+}));
 app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
@@ -45,7 +63,7 @@ app.use('/api/cart', cartRoutes);
 app.use('/api/checkout', checkoutRoutes);
 app.use('/api/ecommerce/auth', ecommerceAuthRoutes);
 app.use('/api/wishlist', wishlistRoutes);
-app.use('/api/products', reviewRoutes);
+app.use('/api/reviews', reviewRoutes);
 app.use('/api/traceability', traceabilityRoutes);
 app.use('/api/coverage', coverageRoutes);
 
@@ -53,19 +71,44 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-// Serve static files from React build (production)
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '..', 'client', 'dist')));
+app.use('/api', (req, res, next) => {
+  next(new AppError(`Route not found: ${req.method} ${req.originalUrl}`, 404));
+});
 
-  // SPA catch-all route — serve index.html for all non-API routes
+app.use(errorHandler);
+
+if (env.isProduction) {
+  app.use(express.static(path.join(__dirname, '..', 'client', 'dist')));
   app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'client', 'dist', 'index.html'));
   });
 }
 
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-  console.log('Demo accounts:');
-  console.log('  Trainer: trainer / April@2025');
-  console.log('  Intern: intern / intern123');
+const server = app.listen(PORT, () => {
+  logger.info(`Server running on http://localhost:${PORT}`);
+  if (env.isDevelopment) {
+    logger.info('Demo accounts:');
+    logger.info('  Trainer: trainer / April@2025');
+    logger.info('  Intern: intern / intern123');
+  }
 });
+
+process.on('SIGTERM', () => {
+  logger.info('SIGTERM received. Shutting down gracefully...');
+  server.close(() => {
+    db.close();
+    logger.info('Database connection closed.');
+    process.exit(0);
+  });
+});
+
+process.on('SIGINT', () => {
+  logger.info('SIGINT received. Shutting down gracefully...');
+  server.close(() => {
+    db.close();
+    logger.info('Database connection closed.');
+    process.exit(0);
+  });
+});
+
+module.exports = app;

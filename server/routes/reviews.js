@@ -1,10 +1,13 @@
 const express = require('express');
 const db = require('../models/database');
 const { authenticateToken } = require('../middleware/auth');
+const { reviewCreateRules } = require('../validators/reviews');
+const validate = require('../middleware/validate');
+const tryCatch = require('../middleware/tryCatch');
 
 const router = express.Router();
 
-router.get('/:productId', (req, res) => {
+router.get('/:productId', tryCatch(async (req, res) => {
   const reviews = db.prepare(`
     SELECT r.*, u.full_name as author_name
     FROM reviews r
@@ -19,15 +22,11 @@ router.get('/:productId', (req, res) => {
   `).get(req.params.productId);
 
   res.json({ reviews, stats });
-});
+}));
 
-router.post('/:productId', authenticateToken, (req, res) => {
+router.post('/:productId', authenticateToken, reviewCreateRules, validate, tryCatch(async (req, res) => {
   const { rating, title, comment } = req.body;
   const productId = req.params.productId;
-
-  if (!rating || rating < 1 || rating > 5) {
-    return res.status(400).json({ error: 'Rating must be between 1 and 5' });
-  }
 
   const product = db.prepare('SELECT * FROM products WHERE id = ?').get(productId);
   if (!product) {
@@ -54,6 +53,6 @@ router.post('/:productId', authenticateToken, (req, res) => {
   `).get(result.lastInsertRowid);
 
   res.status(201).json(review);
-});
+}));
 
 module.exports = router;

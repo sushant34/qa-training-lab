@@ -1,10 +1,13 @@
 const express = require('express');
 const db = require('../models/database');
 const { authenticateToken, requireRole } = require('../middleware/auth');
+const { requireOwnershipOrTrainer } = require('../middleware/ownership');
+const { generateSequentialId } = require('../services/idGenerator');
+const tryCatch = require('../middleware/tryCatch');
 
 const router = express.Router();
 
-router.get('/', authenticateToken, (req, res) => {
+router.get('/', authenticateToken, tryCatch(async (req, res) => {
   const { project_id, user_id } = req.query;
 
   let query = `
@@ -33,28 +36,16 @@ router.get('/', authenticateToken, (req, res) => {
 
   const bugReports = db.prepare(query).all(...params);
   res.json(bugReports);
-});
+}));
 
-router.post('/', authenticateToken, (req, res) => {
+router.post('/', authenticateToken, tryCatch(async (req, res) => {
   const { project_id, requirement_id, test_case_id, title, environment, steps_to_reproduce, expected_result, actual_result, severity, priority, screenshot, additional_notes } = req.body;
 
   if (!project_id || !title || !steps_to_reproduce || !expected_result || !actual_result) {
     return res.status(400).json({ error: 'Project, title, steps, expected result, and actual result are required' });
   }
 
-  const lastBug = db.prepare(
-    'SELECT bug_id FROM bug_reports WHERE user_id = ? ORDER BY id DESC LIMIT 1'
-  ).get(req.user.id);
-
-  let nextNumber = 1;
-  if (lastBug) {
-    const match = lastBug.bug_id.match(/BUG-(\d+)/);
-    if (match) {
-      nextNumber = parseInt(match[1]) + 1;
-    }
-  }
-
-  const bug_id = `BUG-${String(nextNumber).padStart(3, '0')}`;
+  const bug_id = generateSequentialId('BUG', 'bug_reports', req.user.id);
 
   const result = db.prepare(
     `INSERT INTO bug_reports (user_id, project_id, requirement_id, test_case_id, bug_id, title, environment, steps_to_reproduce, expected_result, actual_result, severity, priority, screenshot, additional_notes)
@@ -78,18 +69,10 @@ router.post('/', authenticateToken, (req, res) => {
 
   const bugReport = db.prepare('SELECT * FROM bug_reports WHERE id = ?').get(result.lastInsertRowid);
   res.status(201).json(bugReport);
-});
+}));
 
-router.put('/:id', authenticateToken, (req, res) => {
-  const bugReport = db.prepare('SELECT * FROM bug_reports WHERE id = ?').get(req.params.id);
-
-  if (!bugReport) {
-    return res.status(404).json({ error: 'Bug report not found' });
-  }
-
-  if (req.user.role === 'INTERN' && bugReport.user_id !== req.user.id) {
-    return res.status(403).json({ error: 'Access denied' });
-  }
+router.put('/:id', authenticateToken, requireOwnershipOrTrainer('bugReport'), tryCatch(async (req, res) => {
+  const bugReport = req.entity;
 
   const { title, environment, steps_to_reproduce, expected_result, actual_result, severity, priority, screenshot, additional_notes, status } = req.body;
 
@@ -111,21 +94,11 @@ router.put('/:id', authenticateToken, (req, res) => {
 
   const updatedBugReport = db.prepare('SELECT * FROM bug_reports WHERE id = ?').get(req.params.id);
   res.json(updatedBugReport);
-});
+}));
 
-router.delete('/:id', authenticateToken, (req, res) => {
-  const bugReport = db.prepare('SELECT * FROM bug_reports WHERE id = ?').get(req.params.id);
-
-  if (!bugReport) {
-    return res.status(404).json({ error: 'Bug report not found' });
-  }
-
-  if (req.user.role === 'INTERN' && bugReport.user_id !== req.user.id) {
-    return res.status(403).json({ error: 'Access denied' });
-  }
-
+router.delete('/:id', authenticateToken, requireOwnershipOrTrainer('bugReport'), tryCatch(async (req, res) => {
   db.prepare('DELETE FROM bug_reports WHERE id = ?').run(req.params.id);
   res.json({ message: 'Bug report deleted successfully' });
-});
+}));
 
 module.exports = router;
