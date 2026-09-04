@@ -35,7 +35,10 @@ const calculateEvaluation = (userId, projectId) => {
       if (found) detectedRequirements.add(gtBug.requirement_id);
     });
 
-    bugDetectionScore = Math.min(25, (detectedRequirements.size / groundTruthBugs.length) * 25);
+    const uniqueGTRequirements = new Set(
+      groundTruthBugs.map(b => b.requirement_id).filter(Boolean)
+    ).size;
+    bugDetectionScore = Math.min(25, (detectedRequirements.size / uniqueGTRequirements) * 25);
 
     userBugs.forEach(bug => {
       const matchingGT = groundTruthBugs.find(gt => gt.requirement_id === bug.requirement_id);

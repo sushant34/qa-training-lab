@@ -78,17 +78,17 @@ const TrainerDashboardPage: React.FC = () => {
     {
       key: 'testCases',
       label: 'Test Cases',
-      render: (row: any) => row.evaluation.bug_detection_score > 0 ? '✓' : '-',
+      render: (row: any) => row.evaluation.test_case_quality_score > 0 ? '✓' : '-',
     },
     {
       key: 'executions',
       label: 'Executed',
-      render: (row: any) => row.evaluation.requirement_mapping_score > 0 ? '✓' : '-',
+      render: (row: any) => row.evaluation.test_execution_score > 0 ? '✓' : '-',
     },
     {
       key: 'bugsFound',
       label: 'Bugs Found',
-      render: (row: any) => Math.round(row.evaluation.bug_detection_score / 3),
+      render: (row: any) => Math.round(row.evaluation.bug_detection_score / 25 * 39),
     },
     {
       key: 'bugDetection',
@@ -96,7 +96,7 @@ const TrainerDashboardPage: React.FC = () => {
       render: (row: any) => (
         <ProgressBar
           value={row.evaluation.bug_detection_score}
-          max={30}
+          max={25}
           showLabel={false}
           color="bg-red-600"
         />
@@ -107,8 +107,8 @@ const TrainerDashboardPage: React.FC = () => {
       label: 'Test Case Quality %',
       render: (row: any) => (
         <ProgressBar
-          value={row.evaluation.requirement_mapping_score + row.evaluation.reproduction_steps_score}
-          max={30}
+          value={row.evaluation.test_case_quality_score}
+          max={15}
           showLabel={false}
           color="bg-blue-600"
         />

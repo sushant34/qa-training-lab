@@ -3,6 +3,8 @@ const db = require('../models/database');
 const { authenticateToken, requireRole } = require('../middleware/auth');
 const { requireOwnershipOrTrainer } = require('../middleware/ownership');
 const { generateSequentialId } = require('../services/idGenerator');
+const { bugReportCreateRules, bugReportUpdateRules } = require('../validators/bugReports');
+const validate = require('../middleware/validate');
 const tryCatch = require('../middleware/tryCatch');
 
 const router = express.Router();
@@ -38,7 +40,7 @@ router.get('/', authenticateToken, tryCatch(async (req, res) => {
   res.json(bugReports);
 }));
 
-router.post('/', authenticateToken, tryCatch(async (req, res) => {
+router.post('/', authenticateToken, bugReportCreateRules, validate, tryCatch(async (req, res) => {
   const { project_id, requirement_id, test_case_id, title, environment, steps_to_reproduce, expected_result, actual_result, severity, priority, screenshot, additional_notes } = req.body;
 
   if (!project_id || !title || !steps_to_reproduce || !expected_result || !actual_result) {
@@ -71,7 +73,7 @@ router.post('/', authenticateToken, tryCatch(async (req, res) => {
   res.status(201).json(bugReport);
 }));
 
-router.put('/:id', authenticateToken, requireOwnershipOrTrainer('bugReport'), tryCatch(async (req, res) => {
+router.put('/:id', authenticateToken, requireOwnershipOrTrainer('bugReport'), bugReportUpdateRules, validate, tryCatch(async (req, res) => {
   const bugReport = req.entity;
 
   const { title, environment, steps_to_reproduce, expected_result, actual_result, severity, priority, screenshot, additional_notes, status } = req.body;
@@ -79,16 +81,16 @@ router.put('/:id', authenticateToken, requireOwnershipOrTrainer('bugReport'), tr
   db.prepare(
     `UPDATE bug_reports SET title = ?, environment = ?, steps_to_reproduce = ?, expected_result = ?, actual_result = ?, severity = ?, priority = ?, screenshot = ?, additional_notes = ?, status = ? WHERE id = ?`
   ).run(
-    title || bugReport.title,
+    title !== undefined ? title : bugReport.title,
     environment !== undefined ? environment : bugReport.environment,
-    steps_to_reproduce || bugReport.steps_to_reproduce,
-    expected_result || bugReport.expected_result,
-    actual_result || bugReport.actual_result,
-    severity || bugReport.severity,
-    priority || bugReport.priority,
+    steps_to_reproduce !== undefined ? steps_to_reproduce : bugReport.steps_to_reproduce,
+    expected_result !== undefined ? expected_result : bugReport.expected_result,
+    actual_result !== undefined ? actual_result : bugReport.actual_result,
+    severity !== undefined ? severity : bugReport.severity,
+    priority !== undefined ? priority : bugReport.priority,
     screenshot !== undefined ? screenshot : bugReport.screenshot,
     additional_notes !== undefined ? additional_notes : bugReport.additional_notes,
-    status || bugReport.status,
+    status !== undefined ? status : bugReport.status,
     req.params.id
   );
 

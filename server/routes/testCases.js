@@ -3,6 +3,8 @@ const db = require('../models/database');
 const { authenticateToken, requireRole } = require('../middleware/auth');
 const { requireOwnershipOrTrainer } = require('../middleware/ownership');
 const { generateSequentialId } = require('../services/idGenerator');
+const { testCaseCreateRules, testCaseUpdateRules } = require('../validators/testCases');
+const validate = require('../middleware/validate');
 const tryCatch = require('../middleware/tryCatch');
 
 const router = express.Router();
@@ -32,7 +34,7 @@ router.get('/', authenticateToken, tryCatch(async (req, res) => {
   res.json(testCases);
 }));
 
-router.post('/', authenticateToken, tryCatch(async (req, res) => {
+router.post('/', authenticateToken, testCaseCreateRules, validate, tryCatch(async (req, res) => {
   const { project_id, requirement_id, title, preconditions, test_data, steps, expected_result, priority, test_type } = req.body;
 
   if (!project_id || !title || !steps || !expected_result) {
@@ -62,7 +64,7 @@ router.post('/', authenticateToken, tryCatch(async (req, res) => {
   res.status(201).json(testCase);
 }));
 
-router.put('/:id', authenticateToken, requireOwnershipOrTrainer('testCase'), tryCatch(async (req, res) => {
+router.put('/:id', authenticateToken, requireOwnershipOrTrainer('testCase'), testCaseUpdateRules, validate, tryCatch(async (req, res) => {
   const testCase = req.entity;
 
   const { title, preconditions, test_data, steps, expected_result, priority, test_type, requirement_id } = req.body;
@@ -70,13 +72,13 @@ router.put('/:id', authenticateToken, requireOwnershipOrTrainer('testCase'), try
   db.prepare(
     `UPDATE test_cases SET title = ?, preconditions = ?, test_data = ?, steps = ?, expected_result = ?, priority = ?, test_type = ?, requirement_id = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?`
   ).run(
-    title || testCase.title,
+    title !== undefined ? title : testCase.title,
     preconditions !== undefined ? preconditions : testCase.preconditions,
     test_data !== undefined ? test_data : testCase.test_data,
-    steps || testCase.steps,
-    expected_result || testCase.expected_result,
-    priority || testCase.priority,
-    test_type || testCase.test_type,
+    steps !== undefined ? steps : testCase.steps,
+    expected_result !== undefined ? expected_result : testCase.expected_result,
+    priority !== undefined ? priority : testCase.priority,
+    test_type !== undefined ? test_type : testCase.test_type,
     requirement_id !== undefined ? requirement_id : testCase.requirement_id,
     req.params.id
   );
@@ -86,6 +88,7 @@ router.put('/:id', authenticateToken, requireOwnershipOrTrainer('testCase'), try
 }));
 
 router.delete('/:id', authenticateToken, requireOwnershipOrTrainer('testCase'), tryCatch(async (req, res) => {
+  db.prepare('UPDATE bug_reports SET test_case_id = NULL WHERE test_case_id = ?').run(req.params.id);
   db.prepare('DELETE FROM test_executions WHERE test_case_id = ?').run(req.params.id);
   db.prepare('DELETE FROM test_cases WHERE id = ?').run(req.params.id);
 

@@ -106,9 +106,9 @@ const InternsPage: React.FC = () => {
             <h2 className="text-lg font-semibold text-slate-900 mb-4">Evaluation</h2>
             <div className="grid grid-cols-2 gap-4">
               <ProgressBar value={evaluation.overall_score} label="Overall Score" color="bg-blue-600" />
-              <ProgressBar value={evaluation.bug_detection_score} max={30} label="Bug Detection" color="bg-red-600" />
-              <ProgressBar value={evaluation.requirement_mapping_score} max={15} label="Requirement Mapping" color="bg-green-600" />
-              <ProgressBar value={evaluation.reproduction_steps_score} max={15} label="Reproduction Steps" color="bg-yellow-600" />
+              <ProgressBar value={evaluation.bug_detection_score} max={25} label="Bug Detection" color="bg-red-600" />
+              <ProgressBar value={evaluation.requirement_mapping_score} max={10} label="Requirement Mapping" color="bg-green-600" />
+              <ProgressBar value={evaluation.reproduction_steps_score} max={10} label="Reproduction Steps" color="bg-yellow-600" />
             </div>
           </div>
         )}

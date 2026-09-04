@@ -50,6 +50,28 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
   return <>{children}</>;
 };
 
+const TrainerRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (user.role !== 'TRAINER') {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  return <>{children}</>;
+};
+
 const EcommerceProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { isAuthenticated, loading } = useEcommerceAuth();
 
@@ -152,9 +174,9 @@ const AppRoutes: React.FC = () => {
       } />
 
       <Route path="/trainer-dashboard" element={
-        <ProtectedRoute>
+        <TrainerRoute>
           <AppLayout><TrainerDashboardPage /></AppLayout>
-        </ProtectedRoute>
+        </TrainerRoute>
       } />
 
       <Route path="/requirements" element={
@@ -188,15 +210,15 @@ const AppRoutes: React.FC = () => {
       } />
 
       <Route path="/interns" element={
-        <ProtectedRoute>
+        <TrainerRoute>
           <AppLayout><InternsPage /></AppLayout>
-        </ProtectedRoute>
+        </TrainerRoute>
       } />
 
       <Route path="/bug-repository" element={
-        <ProtectedRoute>
+        <TrainerRoute>
           <AppLayout><BugRepositoryPage /></AppLayout>
-        </ProtectedRoute>
+        </TrainerRoute>
       } />
 
       <Route path="/tutorial" element={

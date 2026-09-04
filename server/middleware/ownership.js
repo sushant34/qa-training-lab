@@ -16,14 +16,14 @@ const requireOwnershipOrTrainer = (entityType) => {
   return (req, res, next) => {
     const config = ownershipChecks[entityType];
     if (!config) {
-      throw new AppError(`Unknown entity type: ${entityType}`, 500);
+      return next(new AppError(`Unknown entity type: ${entityType}`, 500));
     }
 
     const entityId = req.params.id;
     const entity = db.prepare(`SELECT * FROM ${config.table} WHERE id = ?`).get(entityId);
 
     if (!entity) {
-      throw new AppError(`${entityType} not found`, 404);
+      return next(new AppError(`${entityType} not found`, 404));
     }
 
     if (req.user.role === 'TRAINER') {
@@ -32,7 +32,7 @@ const requireOwnershipOrTrainer = (entityType) => {
     }
 
     if (entity[config.ownerField] !== req.user.id) {
-      throw new AppError('Access denied', 403);
+      return next(new AppError('Access denied', 403));
     }
 
     req.entity = entity;

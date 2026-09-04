@@ -37,9 +37,11 @@ const handleResponse = async (response: Response) => {
       if (isEcommerceRoute && localStorage.getItem('ecommerce_token')) {
         localStorage.removeItem('ecommerce_token');
         window.location.href = '/ecommerce/login';
+        throw new Error('Session expired');
       } else {
         setAuthToken(null);
         window.location.href = '/login';
+        throw new Error('Session expired');
       }
     }
     const error = await response.json();

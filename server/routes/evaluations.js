@@ -33,8 +33,8 @@ router.get('/all-interns/:projectId', authenticateToken, requireRole('TRAINER'),
 router.post('/reset/:userId/:projectId', authenticateToken, requireRole('TRAINER'), tryCatch(async (req, res) => {
   db.prepare('DELETE FROM evaluations WHERE user_id = ? AND project_id = ?').run(req.params.userId, req.params.projectId);
   db.prepare('DELETE FROM test_executions WHERE user_id = ? AND test_case_id IN (SELECT id FROM test_cases WHERE project_id = ?)').run(req.params.userId, req.params.projectId);
-  db.prepare('DELETE FROM test_cases WHERE user_id = ? AND project_id = ?').run(req.params.userId, req.params.projectId);
   db.prepare('DELETE FROM bug_reports WHERE user_id = ? AND project_id = ?').run(req.params.userId, req.params.projectId);
+  db.prepare('DELETE FROM test_cases WHERE user_id = ? AND project_id = ?').run(req.params.userId, req.params.projectId);
 
   res.json({ message: 'Training attempt reset successfully' });
 }));
