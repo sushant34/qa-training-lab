@@ -5,11 +5,12 @@ const db = require('../models/database');
 const env = require('../config/env');
 const logger = require('../config/logger');
 const { authenticateToken } = require('../middleware/auth');
+const tryCatch = require('../middleware/tryCatch');
 
 const router = express.Router();
 const JWT_SECRET = env.JWT_SECRET;
 
-router.post('/login', (req, res) => {
+router.post('/login', tryCatch(async (req, res) => {
   const { username, password } = req.body;
 
   if (!username || !password) {
@@ -48,9 +49,9 @@ router.post('/login', (req, res) => {
       full_name: user.full_name,
     },
   });
-});
+}));
 
-router.post('/register', (req, res) => {
+router.post('/register', tryCatch(async (req, res) => {
   const { username, email, password, full_name } = req.body;
 
   if (!username || !email || !password || !full_name) {
@@ -87,7 +88,7 @@ router.post('/register', (req, res) => {
       full_name,
     },
   });
-});
+}));
 
 router.get('/me', authenticateToken, (req, res) => {
   res.json({ user: req.user });

@@ -1,10 +1,11 @@
 const express = require('express');
 const db = require('../models/database');
 const { authenticateToken } = require('../middleware/auth');
+const tryCatch = require('../middleware/tryCatch');
 
 const router = express.Router();
 
-router.get('/', authenticateToken, (req, res) => {
+router.get('/', authenticateToken, tryCatch(async (req, res) => {
   const { project_id } = req.query;
 
   let query = 'SELECT * FROM requirements';
@@ -19,9 +20,9 @@ router.get('/', authenticateToken, (req, res) => {
 
   const requirements = db.prepare(query).all(...params);
   res.json(requirements);
-});
+}));
 
-router.get('/:id', authenticateToken, (req, res) => {
+router.get('/:id', authenticateToken, tryCatch(async (req, res) => {
   const requirement = db.prepare('SELECT * FROM requirements WHERE id = ?').get(req.params.id);
 
   if (!requirement) {
@@ -29,6 +30,6 @@ router.get('/:id', authenticateToken, (req, res) => {
   }
 
   res.json(requirement);
-});
+}));
 
 module.exports = router;
