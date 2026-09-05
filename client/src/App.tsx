@@ -225,15 +225,15 @@ const AppRoutes: React.FC = () => {
       } />
 
       <Route path="/traceability" element={
-        <ProtectedRoute>
+        <TrainerRoute>
           <AppLayout><TraceabilityMatrixPage /></AppLayout>
-        </ProtectedRoute>
+        </TrainerRoute>
       } />
 
       <Route path="/coverage" element={
-        <ProtectedRoute>
+        <TrainerRoute>
           <AppLayout><CoverageDashboardPage /></AppLayout>
-        </ProtectedRoute>
+        </TrainerRoute>
       } />
 
       <Route path="/api-tester" element={
