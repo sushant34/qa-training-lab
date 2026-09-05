@@ -77,10 +77,10 @@ const steps: TutorialStep[] = [
   {
     id: 7,
     title: 'Find More Bugs',
-    description: 'Explore the e-commerce app thoroughly. Use the Traceability Matrix to see which requirements still need test cases, and the Coverage Dashboard to track your progress. The more you test, the more bugs you\'ll find!',
+    description: 'Explore the e-commerce app thoroughly. Test edge cases, boundary conditions, and error scenarios. The more you test, the more bugs you\'ll find!',
     objective: 'Develop systematic testing strategies and maximize bug detection.',
-    action: 'View Coverage',
-    route: '/coverage',
+    action: 'View E-Commerce App',
+    route: '/ecommerce/shop',
     icon: Rocket,
     color: 'bg-pink-600',
   },

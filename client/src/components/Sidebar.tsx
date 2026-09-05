@@ -24,8 +24,6 @@ const Sidebar: React.FC = () => {
     { path: '/test-execution', label: 'Test Execution', icon: Play },
     { path: '/bug-reports', label: 'Bug Reports', icon: Bug },
     { path: '/my-score', label: 'My Score', icon: Award },
-    { path: '/traceability', label: 'Traceability', icon: GitBranch },
-    { path: '/coverage', label: 'Coverage', icon: BarChart3 },
   ];
 
   const apiLinks = [
