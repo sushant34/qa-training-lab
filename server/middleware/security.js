@@ -3,7 +3,18 @@ const rateLimit = require('express-rate-limit');
 const env = require('../config/env');
 
 const securityMiddleware = (app) => {
-  app.use(helmet());
+  app.use(helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'"],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+        imgSrc: ["'self'", "data:", "https://placehold.co"],
+        fontSrc: ["'self'"],
+        connectSrc: ["'self'"],
+      },
+    },
+  }));
 
   const generalLimiter = rateLimit({
     windowMs: env.RATE_LIMIT_WINDOW_MS,
