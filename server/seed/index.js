@@ -849,21 +849,6 @@ const groundTruthBugs = [
   },
   {
     project_id: 1,
-    bug_id: 'GT-039',
-    requirement_id: null,
-    req_id_ref: 'REQ-COV01',
-    title: 'Coverage percentage does not update after adding test case',
-    description: 'The coverage dashboard percentage remains stale after creating new test cases linked to uncovered requirements.',
-    expected_behavior: 'Coverage percentage should update in real-time when test cases are added.',
-    actual_behavior: 'Coverage percentage shows old value until page is manually refreshed.',
-    severity: 'Medium',
-    priority: 'P2',
-    module: 'Coverage Dashboard',
-    trigger_condition: 'Add a test case for an uncovered requirement and check coverage percentage.',
-    detection_keywords: 'coverage,percentage,stale,update,cache'
-  },
-  {
-    project_id: 1,
     bug_id: 'GT-040',
     requirement_id: null,
     req_id_ref: 'REQ-EC010',

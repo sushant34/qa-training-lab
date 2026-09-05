@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { getProjects, getCoverage } from '../services/api';
 import { CoverageData } from '../types';
-import { BarChart3, AlertCircle, CheckCircle, FileText, Bug } from 'lucide-react';
+import { BarChart3, AlertCircle, CheckCircle, FileText, Bug, RefreshCw } from 'lucide-react';
 
 const CoverageDashboardPage: React.FC = () => {
   const [data, setData] = useState<CoverageData | null>(null);
   const [loading, setLoading] = useState(true);
+  const location = useLocation();
 
   useEffect(() => {
     loadData();
-  }, []);
+  }, [location.key]);
 
   const loadData = async () => {
     try {
@@ -41,14 +43,24 @@ const CoverageDashboardPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
-          <BarChart3 size={24} />
-          Test Coverage Dashboard
-        </h1>
-        <p className="text-slate-500 dark:text-slate-400 mt-1">
-          Visual overview of your test coverage across all requirements.
-        </p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+            <BarChart3 size={24} />
+            Test Coverage Dashboard
+          </h1>
+          <p className="text-slate-500 dark:text-slate-400 mt-1">
+            Visual overview of your test coverage across all requirements.
+          </p>
+        </div>
+        <button
+          onClick={loadData}
+          className="btn btn-outline btn-sm"
+          aria-label="Refresh coverage data"
+        >
+          <RefreshCw size={16} />
+          Refresh
+        </button>
       </div>
 
       <div className="card bg-gradient-to-r from-indigo-600 to-violet-600 dark:from-indigo-700 dark:to-violet-700 border-0 text-white">
