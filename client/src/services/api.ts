@@ -21,7 +21,8 @@ const getHeaders = () => {
   const headers: HeadersInit = {
     'Content-Type': 'application/json',
   };
-  const token = authToken || getEcommerceToken();
+  const isEcommerceRoute = window.location.pathname.startsWith('/ecommerce');
+  const token = isEcommerceRoute ? getEcommerceToken() : authToken;
   if (token) {
     headers['Authorization'] = `Bearer ${token}`;
   }

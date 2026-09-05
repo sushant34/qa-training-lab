@@ -861,6 +861,66 @@ const groundTruthBugs = [
     module: 'Coverage Dashboard',
     trigger_condition: 'Add a test case for an uncovered requirement and check coverage percentage.',
     detection_keywords: 'coverage,percentage,stale,update,cache'
+  },
+  {
+    project_id: 1,
+    bug_id: 'GT-040',
+    requirement_id: null,
+    req_id_ref: 'REQ-EC010',
+    title: 'Product stock not decremented after order placement',
+    description: 'When an order is placed, the product stock quantity is not reduced. Multiple users can purchase the same last unit of a product.',
+    expected_behavior: 'Product stock should be decremented by the ordered quantity when an order is placed.',
+    actual_behavior: 'Stock remains unchanged after order placement, allowing overselling of products.',
+    severity: 'High',
+    priority: 'P1',
+    module: 'Checkout',
+    trigger_condition: 'Add a product with stock=1 to cart, place the order, then check the product stock in the database.',
+    detection_keywords: 'stock,decrement,order,inventory,oversell,quantity'
+  },
+  {
+    project_id: 1,
+    bug_id: 'GT-041',
+    requirement_id: null,
+    req_id_ref: 'REQ-EC010',
+    title: 'Cart validators exist but are never applied',
+    description: 'The server defines cartAddRules and cartUpdateRules validators in validators/cart.js but they are never imported or used in the cart routes.',
+    expected_behavior: 'Cart add and update endpoints should validate product_id is a positive integer and quantity is an integer.',
+    actual_behavior: 'Cart endpoints accept any values for product_id and quantity without validation.',
+    severity: 'Medium',
+    priority: 'P2',
+    module: 'Shopping Cart',
+    trigger_condition: 'Send a POST to /api/cart/add with product_id=-1 or quantity="abc".',
+    detection_keywords: 'cart,validator,validation,product_id,quantity,middleware'
+  },
+  {
+    project_id: 1,
+    bug_id: 'GT-042',
+    requirement_id: null,
+    req_id_ref: 'REQ-EC006',
+    title: 'Empty cart checkout redirects to wrong path',
+    description: 'When the cart is empty during checkout, the page navigates to /cart instead of /ecommerce/cart.',
+    expected_behavior: 'Should redirect to /ecommerce/cart when cart is empty.',
+    actual_behavior: 'Redirects to /cart which results in a 404 or incorrect page.',
+    severity: 'Medium',
+    priority: 'P2',
+    module: 'Checkout',
+    trigger_condition: 'Navigate to /ecommerce/checkout with an empty cart.',
+    detection_keywords: 'checkout,redirect,cart,empty,navigation,path'
+  },
+  {
+    project_id: 1,
+    bug_id: 'GT-043',
+    requirement_id: null,
+    req_id_ref: 'REQ-EC007',
+    title: 'No duplicate review prevention on frontend',
+    description: 'The frontend does not check if a user has already reviewed a product. Submitting a duplicate review shows a 409 error toast instead of gracefully handling it.',
+    expected_behavior: 'Frontend should check for existing reviews and hide/disable the review form or show a message.',
+    actual_behavior: 'Review form is always shown, and duplicate submission results in a cryptic 409 error.',
+    severity: 'Medium',
+    priority: 'P2',
+    module: 'Product Reviews',
+    trigger_condition: 'Submit a review for a product, then try to submit another review for the same product.',
+    detection_keywords: 'review,duplicate,409,conflict,already reviewed'
   }
 ];
 
