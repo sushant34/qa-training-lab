@@ -16,6 +16,8 @@ const ShopPage: React.FC = () => {
   const [total, setTotal] = useState(0);
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
+  const [debouncedMinPrice, setDebouncedMinPrice] = useState('');
+  const [debouncedMaxPrice, setDebouncedMaxPrice] = useState('');
   const [wishlistIds, setWishlistIds] = useState<Set<number>>(new Set());
   const [recentlyViewed, setRecentlyViewed] = useState<RecentlyViewedItem[]>([]);
   const navigate = useNavigate();
@@ -28,11 +30,19 @@ const ShopPage: React.FC = () => {
 
   useEffect(() => {
     setPage(1);
-  }, [selectedCategory, search, minPrice, maxPrice]);
+  }, [selectedCategory, search, debouncedMinPrice, debouncedMaxPrice]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedMinPrice(minPrice);
+      setDebouncedMaxPrice(maxPrice);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [minPrice, maxPrice]);
 
   useEffect(() => {
     loadProducts();
-  }, [selectedCategory, search, page, minPrice, maxPrice]);
+  }, [selectedCategory, search, page, debouncedMinPrice, debouncedMaxPrice]);
 
   const loadCategories = async () => {
     try {
@@ -69,8 +79,8 @@ const ShopPage: React.FC = () => {
         search || undefined,
         page,
         12,
-        minPrice ? parseFloat(minPrice) : undefined,
-        maxPrice ? parseFloat(maxPrice) : undefined,
+        debouncedMinPrice ? parseFloat(debouncedMinPrice) : undefined,
+        debouncedMaxPrice ? parseFloat(debouncedMaxPrice) : undefined,
       );
       setProducts(data.products);
       setTotalPages(data.totalPages);
