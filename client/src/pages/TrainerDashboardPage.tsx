@@ -70,8 +70,8 @@ const TrainerDashboardPage: React.FC = () => {
       label: 'Intern',
       render: (row: any) => (
         <div>
-          <p className="font-medium text-slate-900">{row.intern.full_name}</p>
-          <p className="text-xs text-slate-500">{row.intern.email}</p>
+          <p className="font-medium text-slate-900 dark:text-slate-100">{row.intern.full_name}</p>
+          <p className="text-xs text-slate-500 dark:text-slate-400">{row.intern.email}</p>
         </div>
       ),
     },
@@ -118,7 +118,7 @@ const TrainerDashboardPage: React.FC = () => {
       key: 'overallScore',
       label: 'Overall Score',
       render: (row: any) => (
-        <span className="font-bold text-lg">{Math.round(row.evaluation.overall_score)}</span>
+        <span className="font-bold text-lg dark:text-slate-100">{Math.round(row.evaluation.overall_score)}</span>
       ),
     },
     {
@@ -146,13 +146,13 @@ const TrainerDashboardPage: React.FC = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Trainer Dashboard</h1>
-        <p className="text-slate-600 mt-1">
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Trainer Dashboard</h1>
+        <p className="text-slate-600 dark:text-slate-400 mt-1">
           Monitor intern progress and evaluate testing performance.
         </p>
       </div>
 
-      <div className="card bg-gradient-to-r from-indigo-600 to-violet-600 border-0 text-white shadow-lg shadow-indigo-200">
+      <div className="card bg-gradient-to-r from-indigo-600 to-violet-600 border-0 text-white shadow-lg shadow-indigo-200 dark:shadow-indigo-900/30">
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-xl font-semibold mb-1">Average Intern Score</h2>
@@ -168,57 +168,57 @@ const TrainerDashboardPage: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="card hover:shadow-md transition-shadow">
+        <div className="card hover:shadow-md transition-shadow dark:bg-slate-800 dark:border-slate-700">
           <div className="flex items-center gap-3">
-            <div className="p-3 bg-indigo-100 rounded-xl">
-              <Users size={22} className="text-indigo-600" />
+            <div className="p-3 bg-indigo-100 dark:bg-indigo-900/20 rounded-xl">
+              <Users size={22} className="text-indigo-600 dark:text-indigo-400" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-slate-900">{stats.totalInterns}</p>
-              <p className="text-sm text-slate-500">Total Interns</p>
+              <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">{stats.totalInterns}</p>
+              <p className="text-sm text-slate-500 dark:text-slate-400">Total Interns</p>
             </div>
           </div>
         </div>
 
-        <div className="card hover:shadow-md transition-shadow">
+        <div className="card hover:shadow-md transition-shadow dark:bg-slate-800 dark:border-slate-700">
           <div className="flex items-center gap-3">
-            <div className="p-3 bg-violet-100 rounded-xl">
-              <FileText size={22} className="text-violet-600" />
+            <div className="p-3 bg-violet-100 dark:bg-violet-900/20 rounded-xl">
+              <FileText size={22} className="text-violet-600 dark:text-violet-400" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-slate-900">{stats.totalTestCases}</p>
-              <p className="text-sm text-slate-500">Total Test Cases</p>
+              <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">{stats.totalTestCases}</p>
+              <p className="text-sm text-slate-500 dark:text-slate-400">Total Test Cases</p>
             </div>
           </div>
         </div>
 
-        <div className="card hover:shadow-md transition-shadow">
+        <div className="card hover:shadow-md transition-shadow dark:bg-slate-800 dark:border-slate-700">
           <div className="flex items-center gap-3">
-            <div className="p-3 bg-emerald-100 rounded-xl">
-              <Play size={22} className="text-emerald-600" />
+            <div className="p-3 bg-emerald-100 dark:bg-emerald-900/20 rounded-xl">
+              <Play size={22} className="text-emerald-600 dark:text-emerald-400" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-slate-900">{stats.totalExecutions}</p>
-              <p className="text-sm text-slate-500">Total Executions</p>
+              <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">{stats.totalExecutions}</p>
+              <p className="text-sm text-slate-500 dark:text-slate-400">Total Executions</p>
             </div>
           </div>
         </div>
 
-        <div className="card hover:shadow-md transition-shadow">
+        <div className="card hover:shadow-md transition-shadow dark:bg-slate-800 dark:border-slate-700">
           <div className="flex items-center gap-3">
-            <div className="p-3 bg-red-100 rounded-xl">
-              <Bug size={22} className="text-red-600" />
+            <div className="p-3 bg-red-100 dark:bg-red-900/20 rounded-xl">
+              <Bug size={22} className="text-red-600 dark:text-red-400" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-slate-900">{stats.totalBugs}</p>
-              <p className="text-sm text-slate-500">Total Bugs</p>
+              <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">{stats.totalBugs}</p>
+              <p className="text-sm text-slate-500 dark:text-slate-400">Total Bugs</p>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="card">
-        <h2 className="text-lg font-semibold text-slate-900 mb-4">Intern Performance</h2>
+      <div className="card dark:bg-slate-800 dark:border-slate-700">
+        <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4">Intern Performance</h2>
         <DataTable
           data={internData}
           columns={columns}

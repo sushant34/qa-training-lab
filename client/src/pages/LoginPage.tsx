@@ -30,7 +30,7 @@ const LoginPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-950 via-slate-900 to-violet-950 flex items-center justify-center p-4">
-      <div className="w-full max-w-5xl grid lg:grid-cols-2 bg-white/95 backdrop-blur rounded-3xl shadow-2xl overflow-hidden">
+      <div className="w-full max-w-5xl grid lg:grid-cols-2 bg-white/95 dark:bg-slate-800/95 backdrop-blur rounded-3xl shadow-2xl overflow-hidden">
         {/* Left branding panel */}
         <div className="hidden lg:flex flex-col justify-between p-10 bg-gradient-to-br from-indigo-600 to-violet-700 text-white">
           <div className="flex items-center gap-3">
@@ -79,12 +79,12 @@ const LoginPage: React.FC = () => {
               <span className="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center">
                 <FlaskConical size={22} />
               </span>
-              <h1 className="text-2xl font-bold text-slate-900">QA Training Lab</h1>
+              <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">QA Training Lab</h1>
             </div>
           </div>
 
-          <h2 className="text-2xl font-bold text-slate-900 mb-1">Welcome back</h2>
-          <p className="text-slate-500 mb-8">Sign in to continue your training</p>
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-1">Welcome back</h2>
+          <p className="text-slate-500 dark:text-slate-400 mb-8">Sign in to continue your training</p>
 
           <form onSubmit={handleSubmit}>
             <div className="form-group">
@@ -128,25 +128,25 @@ const LoginPage: React.FC = () => {
           </form>
 
           <div className="mt-6 text-center">
-            <p className="text-sm text-slate-600">
+            <p className="text-sm text-slate-600 dark:text-slate-400">
               Don't have an account?{' '}
-              <Link to="/register" className="text-indigo-600 hover:text-indigo-700 font-semibold">
+              <Link to="/register" className="text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 font-semibold">
                 Register here
               </Link>
             </p>
           </div>
 
-          <div className="mt-8 p-4 bg-slate-50 rounded-xl border border-slate-200">
-            <p className="text-xs font-semibold text-slate-700 mb-2 flex items-center gap-1.5">
+          <div className="mt-8 p-4 bg-slate-50 dark:bg-slate-700/50 rounded-xl border border-slate-200 dark:border-slate-600">
+            <p className="text-xs font-semibold text-slate-700 dark:text-slate-300 mb-2 flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-indigo-500" />
               Intern Demo Account
             </p>
-            <div className="text-sm text-slate-600 flex items-center justify-between">
+            <div className="text-sm text-slate-600 dark:text-slate-400 flex items-center justify-between">
               <span>
-                <span className="font-mono font-medium text-slate-800">intern</span>
+                <span className="font-mono font-medium text-slate-800 dark:text-slate-200">intern</span>
               </span>
-              <span className="text-slate-400">·</span>
-              <span className="font-mono font-medium text-slate-800">intern123</span>
+              <span className="text-slate-400 dark:text-slate-500">·</span>
+              <span className="font-mono font-medium text-slate-800 dark:text-slate-200">intern123</span>
             </div>
           </div>
         </div>

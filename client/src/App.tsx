@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'r
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider, useAuth } from './hooks/useAuth';
 import { EcommerceAuthProvider, useEcommerceAuth } from './hooks/useEcommerceAuth';
+import { ThemeProvider } from './hooks/useTheme';
 import Sidebar from './components/Sidebar';
 import EcommerceSidebar from './components/EcommerceSidebar';
 import LoginPage from './pages/LoginPage';
@@ -32,15 +33,17 @@ import ApiTesterPage from './pages/ApiTesterPage';
 import ApiTutorialPage from './pages/ApiTutorialPage';
 import ApiChallengesPage from './pages/ApiChallengesPage';
 
+const LoadingSpinner: React.FC<{ color?: string }> = ({ color = 'border-indigo-600' }) => (
+  <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-900">
+    <div className={`animate-spin rounded-full h-8 w-8 border-b-2 ${color}`}></div>
+  </div>
+);
+
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user, loading } = useAuth();
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   if (!user) {
@@ -54,11 +57,7 @@ const TrainerRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => 
   const { user, loading } = useAuth();
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   if (!user) {
@@ -76,11 +75,7 @@ const EcommerceProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ chil
   const { isAuthenticated, loading } = useEcommerceAuth();
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600"></div>
-      </div>
-    );
+    return <LoadingSpinner color="border-emerald-600" />;
   }
 
   if (!isAuthenticated) {
@@ -92,9 +87,10 @@ const EcommerceProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ chil
 
 const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 transition-colors">
+      <a href="#main-content" className="skip-link">Skip to content</a>
       <Sidebar />
-      <main className="lg:ml-72 p-4 lg:p-8 pt-20 lg:pt-8 max-w-7xl mx-auto">
+      <main id="main-content" className="lg:ml-72 p-4 lg:p-8 pt-20 lg:pt-8 max-w-7xl mx-auto page-enter">
         {children}
       </main>
     </div>
@@ -103,9 +99,10 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
 const EcommerceLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 transition-colors">
+      <a href="#main-content" className="skip-link">Skip to content</a>
       <EcommerceSidebar />
-      <main className="lg:ml-72 p-4 lg:p-8 pt-20 lg:pt-8 max-w-7xl mx-auto">
+      <main id="main-content" className="lg:ml-72 p-4 lg:p-8 pt-20 lg:pt-8 max-w-7xl mx-auto page-enter">
         {children}
       </main>
     </div>
@@ -264,14 +261,16 @@ const AppRoutes: React.FC = () => {
 
 const App: React.FC = () => {
   return (
-    <AuthProvider>
-      <EcommerceAuthProvider>
-        <Router>
-          <Toaster position="top-right" />
-          <AppRoutes />
-        </Router>
-      </EcommerceAuthProvider>
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <EcommerceAuthProvider>
+          <Router>
+            <Toaster position="top-right" />
+            <AppRoutes />
+          </Router>
+        </EcommerceAuthProvider>
+      </AuthProvider>
+    </ThemeProvider>
   );
 };
 

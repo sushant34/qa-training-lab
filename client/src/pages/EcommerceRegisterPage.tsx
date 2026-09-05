@@ -99,7 +99,7 @@ const EcommerceRegisterPage: React.FC = () => {
         </div>
 
         <div className="card">
-          <h2 className="text-xl font-semibold text-slate-900 mb-6 flex items-center gap-2">
+          <h2 className="text-xl font-semibold text-slate-900 dark:text-slate-100 mb-6 flex items-center gap-2">
             <UserPlus size={20} />
             Create Account
           </h2>
@@ -180,9 +180,9 @@ const EcommerceRegisterPage: React.FC = () => {
           </form>
 
           <div className="mt-6 text-center">
-            <p className="text-sm text-slate-600">
+            <p className="text-sm text-slate-600 dark:text-slate-400">
               Already have an account?{' '}
-              <Link to="/ecommerce/login" className="text-emerald-600 hover:text-emerald-700 font-medium">
+              <Link to="/ecommerce/login" className="text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300 font-medium">
                 Sign in here
               </Link>
             </p>

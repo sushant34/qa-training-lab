@@ -21,8 +21,8 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
     <div className="w-full">
       {showLabel && (
         <div className="flex justify-between items-center mb-1">
-          <span className="text-sm font-medium text-slate-700">{label}</span>
-          <span className="text-sm text-slate-500">{Math.round(percentage)}%</span>
+          <span className="text-sm font-medium text-slate-700 dark:text-slate-300">{label}</span>
+          <span className="text-sm text-slate-500 dark:text-slate-400">{Math.round(percentage)}%</span>
         </div>
       )}
       <div className="progress-bar">

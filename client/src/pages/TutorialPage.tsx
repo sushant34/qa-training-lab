@@ -112,11 +112,11 @@ const TutorialPage: React.FC = () => {
     <div className="max-w-3xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
             <BookOpen size={24} />
             QA Workflow Tutorial
           </h1>
-          <p className="text-slate-500 mt-1">
+          <p className="text-slate-500 dark:text-slate-400 mt-1">
             Step {currentStep + 1} of {steps.length}
           </p>
         </div>
@@ -138,7 +138,7 @@ const TutorialPage: React.FC = () => {
                   ? 'bg-emerald-500'
                   : i === currentStep
                   ? 'bg-indigo-500'
-                  : 'bg-slate-200'
+                  : 'bg-slate-200 dark:bg-slate-700'
               }`}
             />
           ))}
@@ -153,7 +153,7 @@ const TutorialPage: React.FC = () => {
                   ? 'bg-indigo-100 text-indigo-700 font-semibold'
                   : completedSteps.has(s.id)
                   ? 'bg-emerald-50 text-emerald-600'
-                  : 'text-slate-400 hover:text-slate-600'
+                   : 'text-slate-400 hover:text-slate-600 dark:text-slate-400 dark:hover:text-slate-300'
               }`}
             >
               {completedSteps.has(s.id) ? '✓' : s.id}
@@ -168,14 +168,14 @@ const TutorialPage: React.FC = () => {
             <step.icon size={24} />
           </div>
           <div>
-            <h2 className="text-xl font-bold text-slate-900">{step.title}</h2>
-            <p className="text-slate-600 mt-2 leading-relaxed">{step.description}</p>
+            <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100">{step.title}</h2>
+            <p className="text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">{step.description}</p>
           </div>
         </div>
 
-        <div className="bg-indigo-50 rounded-xl p-4 mb-6">
-          <p className="text-sm font-semibold text-indigo-900 mb-1">Learning Objective</p>
-          <p className="text-sm text-indigo-700">{step.objective}</p>
+        <div className="bg-indigo-50 dark:bg-indigo-900/20 rounded-xl p-4 mb-6">
+          <p className="text-sm font-semibold text-indigo-900 dark:text-indigo-200 mb-1">Learning Objective</p>
+          <p className="text-sm text-indigo-700 dark:text-indigo-300">{step.objective}</p>
         </div>
 
         <div className="flex items-center justify-between">
@@ -219,7 +219,7 @@ const TutorialPage: React.FC = () => {
         <div className="card bg-gradient-to-r from-emerald-500 to-teal-500 border-0 text-white text-center py-8">
           <CheckCircle size={48} className="mx-auto mb-3" />
           <h2 className="text-xl font-bold mb-2">Tutorial Complete!</h2>
-          <p className="text-emerald-100 mb-4">You've learned the complete QA workflow. Now go find those bugs!</p>
+          <p className="text-emerald-100 dark:text-emerald-200 mb-4">You've learned the complete QA workflow. Now go find those bugs!</p>
           <button onClick={() => navigate('/dashboard')} className="btn bg-white text-emerald-600 hover:bg-emerald-50">
             Go to Dashboard
           </button>

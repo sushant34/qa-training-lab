@@ -95,7 +95,7 @@ const TestExecutionPage: React.FC = () => {
   });
 
   const columns = [
-    { key: 'tc_id', label: 'ID', render: (tc: any) => <span className="font-mono text-blue-600">{tc.tc_id}</span> },
+    { key: 'tc_id', label: 'ID', render: (tc: any) => <span className="font-mono text-blue-600 dark:text-blue-400">{tc.tc_id}</span> },
     { key: 'title', label: 'Title' },
     { key: 'requirement', label: 'Requirement', render: (tc: any) => tc.requirement_req_id || '-' },
     { key: 'executionStatus', label: 'Status', render: (tc: any) => <StatusBadge status={tc.executionStatus} size="sm" /> },
@@ -116,7 +116,7 @@ const TestExecutionPage: React.FC = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 dark:border-blue-400"></div>
       </div>
     );
   }
@@ -124,8 +124,8 @@ const TestExecutionPage: React.FC = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Test Execution</h1>
-        <p className="text-slate-600 mt-1">
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Test Execution</h1>
+        <p className="text-slate-600 dark:text-slate-400 mt-1">
           Execute your test cases and record the results. When a test fails, report it as a bug.
         </p>
       </div>
@@ -164,9 +164,9 @@ const TestExecutionPage: React.FC = () => {
         maxWidth="max-w-lg"
       >
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="p-3 bg-slate-50 rounded-lg">
-            <p className="text-sm text-slate-600">{selectedTestCase?.title}</p>
-            <p className="text-xs text-slate-500 mt-1">Expected: {selectedTestCase?.expected_result}</p>
+          <div className="p-3 bg-slate-50 dark:bg-slate-700 rounded-lg">
+            <p className="text-sm text-slate-600 dark:text-slate-300">{selectedTestCase?.title}</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Expected: {selectedTestCase?.expected_result}</p>
           </div>
 
           <div className="form-group">

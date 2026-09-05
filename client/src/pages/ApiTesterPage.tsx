@@ -45,10 +45,10 @@ const ENDPOINTS = [
 ];
 
 const METHOD_COLORS: Record<string, string> = {
-  GET: 'bg-emerald-100 text-emerald-700',
-  POST: 'bg-blue-100 text-blue-700',
-  PUT: 'bg-amber-100 text-amber-700',
-  DELETE: 'bg-red-100 text-red-700',
+  GET: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
+  POST: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
+  PUT: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
+  DELETE: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
 };
 
 const ApiTesterPage: React.FC = () => {
@@ -157,17 +157,17 @@ const ApiTesterPage: React.FC = () => {
   };
 
   const getStatusColor = (status: number) => {
-    if (status >= 200 && status < 300) return 'text-emerald-600 bg-emerald-50';
-    if (status >= 400 && status < 500) return 'text-amber-600 bg-amber-50';
-    if (status >= 500) return 'text-red-600 bg-red-50';
-    return 'text-slate-600 bg-slate-50';
+    if (status >= 200 && status < 300) return 'text-emerald-600 bg-emerald-50 dark:text-emerald-400 dark:bg-emerald-900/30';
+    if (status >= 400 && status < 500) return 'text-amber-600 bg-amber-50 dark:text-amber-400 dark:bg-amber-900/30';
+    if (status >= 500) return 'text-red-600 bg-red-50 dark:text-red-400 dark:bg-red-900/30';
+    return 'text-slate-600 bg-slate-50 dark:text-slate-400 dark:bg-slate-800/50';
   };
 
   return (
     <div className="space-y-4">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">API Tester</h1>
-        <p className="text-slate-500 mt-1">Send HTTP requests to test the API endpoints.</p>
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">API Tester</h1>
+        <p className="text-slate-500 dark:text-slate-400 mt-1">Send HTTP requests to test the API endpoints.</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
@@ -195,17 +195,17 @@ const ApiTesterPage: React.FC = () => {
                   placeholder="/api/..."
                 />
                 {showEndpoints && endpointSearch && (
-                  <div className="absolute z-10 top-full left-0 right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-lg max-h-48 overflow-y-auto">
+                  <div className="absolute z-10 top-full left-0 right-0 mt-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-lg max-h-48 overflow-y-auto">
                     {filteredEndpoints.map(ep => (
                       <button
                         key={ep}
                         onMouseDown={() => selectEndpoint(ep)}
-                        className="w-full text-left px-3 py-2 text-sm hover:bg-slate-50 flex items-center gap-2"
+                        className="w-full text-left px-3 py-2 text-sm hover:bg-slate-50 dark:hover:bg-slate-700/50 flex items-center gap-2"
                       >
                         <span className={`text-xs font-bold px-1.5 py-0.5 rounded ${METHOD_COLORS[ep.split(' ')[0]]}`}>
                           {ep.split(' ')[0]}
                         </span>
-                        <span className="font-mono text-slate-700">{ep.split(' ').slice(1).join(' ')}</span>
+                        <span className="font-mono text-slate-700 dark:text-slate-300">{ep.split(' ').slice(1).join(' ')}</span>
                       </button>
                     ))}
                   </div>
@@ -225,9 +225,9 @@ const ApiTesterPage: React.FC = () => {
           </div>
 
           <div className="card">
-            <div className="flex gap-4 mb-3 border-b border-slate-100 pb-3">
-              <span className="text-sm font-semibold text-slate-900">Headers</span>
-              <button onClick={addHeader} className="text-xs text-indigo-600 hover:text-indigo-800">+ Add</button>
+            <div className="flex gap-4 mb-3 border-b border-slate-100 dark:border-slate-700 pb-3">
+              <span className="text-sm font-semibold text-slate-900 dark:text-slate-100">Headers</span>
+              <button onClick={addHeader} className="text-xs text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300">+ Add</button>
             </div>
             <div className="space-y-2">
               {headers.map((h, i) => (
@@ -246,7 +246,7 @@ const ApiTesterPage: React.FC = () => {
                     className="input-field text-sm"
                     placeholder="Value"
                   />
-                  <button onClick={() => removeHeader(i)} className="p-2 text-slate-400 hover:text-red-500">
+                  <button onClick={() => removeHeader(i)} className="p-2 text-slate-400 dark:text-slate-500 hover:text-red-500">
                     <Trash2 size={14} />
                   </button>
                 </div>
@@ -256,7 +256,7 @@ const ApiTesterPage: React.FC = () => {
 
           {['POST', 'PUT'].includes(method) && (
             <div className="card">
-              <p className="text-sm font-semibold text-slate-900 mb-3">Request Body (JSON)</p>
+              <p className="text-sm font-semibold text-slate-900 dark:text-slate-100 mb-3">Request Body (JSON)</p>
               <textarea
                 ref={bodyRef}
                 value={body}
@@ -270,11 +270,11 @@ const ApiTesterPage: React.FC = () => {
           {response && (
             <div className="card">
               <div className="flex items-center gap-3 mb-3">
-                <span className="text-sm font-semibold text-slate-900">Response</span>
+                <span className="text-sm font-semibold text-slate-900 dark:text-slate-100">Response</span>
                 <span className={`px-2 py-0.5 rounded-lg text-sm font-bold ${getStatusColor(response.status)}`}>
                   {response.status} {response.statusText}
                 </span>
-                <span className="text-xs text-slate-500">{response.time}ms</span>
+                <span className="text-xs text-slate-500 dark:text-slate-400">{response.time}ms</span>
               </div>
               <pre className="bg-slate-900 text-slate-100 rounded-xl p-4 text-sm overflow-x-auto max-h-96 overflow-y-auto font-mono">
                 {response.body}
@@ -286,26 +286,26 @@ const ApiTesterPage: React.FC = () => {
         <div className="space-y-4">
           <div className="card">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-semibold text-slate-900">History</h3>
-              <button onClick={() => setShowHistory(!showHistory)} className="text-xs text-indigo-600">
+              <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100">History</h3>
+              <button onClick={() => setShowHistory(!showHistory)} className="text-xs text-indigo-600 dark:text-indigo-400">
                 {showHistory ? 'Hide' : 'Show'}
               </button>
             </div>
             {history.length === 0 ? (
-              <p className="text-xs text-slate-400">No requests yet</p>
+              <p className="text-xs text-slate-400 dark:text-slate-500">No requests yet</p>
             ) : (
               <div className="space-y-1.5">
                 {history.map((h, i) => (
                   <button
                     key={i}
                     onClick={() => { setMethod(h.method); setUrl(h.url); }}
-                    className="w-full text-left p-2 rounded-lg hover:bg-slate-50 text-xs flex items-center gap-2"
+                    className="w-full text-left p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700/50 text-xs flex items-center gap-2"
                   >
                     <span className={`font-bold px-1 py-0.5 rounded text-[10px] ${METHOD_COLORS[h.method]}`}>
                       {h.method}
                     </span>
-                    <span className="font-mono text-slate-600 truncate flex-1">{h.url}</span>
-                    <span className={h.status >= 200 && h.status < 300 ? 'text-emerald-600' : 'text-red-600'}>
+                    <span className="font-mono text-slate-600 dark:text-slate-400 truncate flex-1">{h.url}</span>
+                    <span className={h.status >= 200 && h.status < 300 ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400'}>
                       {h.status}
                     </span>
                   </button>
@@ -315,8 +315,8 @@ const ApiTesterPage: React.FC = () => {
           </div>
 
           <div className="card">
-            <h3 className="text-sm font-semibold text-slate-900 mb-3">Quick Reference</h3>
-            <div className="space-y-2 text-xs text-slate-600">
+            <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100 mb-3">Quick Reference</h3>
+            <div className="space-y-2 text-xs text-slate-600 dark:text-slate-400">
               <p><strong>200</strong> — Success</p>
               <p><strong>201</strong> — Created</p>
               <p><strong>400</strong> — Bad Request</p>

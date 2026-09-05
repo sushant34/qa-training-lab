@@ -39,28 +39,28 @@ const BugRepositoryPage: React.FC = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Ground Truth Bug Repository</h1>
-        <p className="text-slate-600 mt-1">
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Ground Truth Bug Repository</h1>
+        <p className="text-slate-600 dark:text-slate-400 mt-1">
           View all intentional defects and their detection status by interns.
         </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="card text-center">
-          <p className="text-3xl font-bold text-slate-900">{bugs.length}</p>
-          <p className="text-sm text-slate-500">Total Bugs</p>
+          <p className="text-3xl font-bold text-slate-900 dark:text-slate-100">{bugs.length}</p>
+          <p className="text-sm text-slate-500 dark:text-slate-400">Total Bugs</p>
         </div>
         <div className="card text-center">
           <p className="text-3xl font-bold text-green-600">
             {bugs.filter(b => b.detection_status === 'Detected').length}
           </p>
-          <p className="text-sm text-slate-500">Detected</p>
+          <p className="text-sm text-slate-500 dark:text-slate-400">Detected</p>
         </div>
         <div className="card text-center">
           <p className="text-3xl font-bold text-red-600">
             {bugs.filter(b => b.detection_status === 'Not Detected').length}
           </p>
-          <p className="text-sm text-slate-500">Not Detected</p>
+          <p className="text-sm text-slate-500 dark:text-slate-400">Not Detected</p>
         </div>
       </div>
 

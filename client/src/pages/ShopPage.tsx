@@ -108,7 +108,7 @@ const ShopPage: React.FC = () => {
   if (loading && products.length === 0) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600 dark:border-indigo-400"></div>
       </div>
     );
   }
@@ -117,8 +117,8 @@ const ShopPage: React.FC = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">E-Commerce Store</h1>
-          <p className="text-slate-500 mt-1">
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">E-Commerce Store</h1>
+          <p className="text-slate-500 dark:text-slate-400 mt-1">
             {total} product{total !== 1 ? 's' : ''} found. Browse and test the shopping experience.
           </p>
         </div>
@@ -131,7 +131,7 @@ const ShopPage: React.FC = () => {
       <div className="card space-y-4">
         <div className="flex flex-col sm:flex-row gap-4">
           <div className="relative flex-1 max-w-md">
-            <Search size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+            <Search size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
             <input
               type="text"
               placeholder="Search products..."
@@ -141,7 +141,7 @@ const ShopPage: React.FC = () => {
             />
           </div>
           <div className="flex items-center gap-2">
-            <Filter size={18} className="text-slate-400 hidden sm:block" />
+            <Filter size={18} className="text-slate-400 dark:text-slate-500 hidden sm:block" />
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
@@ -157,8 +157,8 @@ const ShopPage: React.FC = () => {
 
         <div className="flex flex-col sm:flex-row gap-3 items-end">
           <div className="flex items-center gap-2">
-            <DollarSign size={16} className="text-slate-400" />
-            <span className="text-sm text-slate-500">Price:</span>
+            <DollarSign size={16} className="text-slate-400 dark:text-slate-500" />
+            <span className="text-sm text-slate-500 dark:text-slate-400">Price:</span>
           </div>
           <div className="flex items-center gap-2">
             <input
@@ -169,7 +169,7 @@ const ShopPage: React.FC = () => {
               className="input-field w-24"
               min="0"
             />
-            <span className="text-slate-400">-</span>
+            <span className="text-slate-400 dark:text-slate-500">-</span>
             <input
               type="number"
               placeholder="Max"
@@ -180,7 +180,7 @@ const ShopPage: React.FC = () => {
             />
           </div>
           {(minPrice || maxPrice) && (
-            <button onClick={() => { setMinPrice(''); setMaxPrice(''); }} className="text-sm text-indigo-600 hover:text-indigo-800">
+            <button onClick={() => { setMinPrice(''); setMaxPrice(''); }} className="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300">
               Clear
             </button>
           )}
@@ -194,7 +194,7 @@ const ShopPage: React.FC = () => {
             to={`/ecommerce/products/${product.id}`}
             className="card group hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 overflow-hidden"
           >
-            <div className="aspect-square bg-gradient-to-br from-slate-50 to-indigo-50 rounded-xl mb-4 flex items-center justify-center overflow-hidden group-hover:scale-[1.02] transition-transform relative">
+            <div className="aspect-square bg-gradient-to-br from-slate-50 to-indigo-50 dark:from-slate-700 dark:to-indigo-900/30 rounded-xl mb-4 flex items-center justify-center overflow-hidden group-hover:scale-[1.02] transition-transform relative">
               {(() => {
                 const imageUrl = product.id === 4
                   ? 'https://placehold.co/400x400/7c3aed/ffffff?text=Headphones'
@@ -202,33 +202,33 @@ const ShopPage: React.FC = () => {
                 return imageUrl ? (
                   <img src={imageUrl} alt={product.name} className="w-full h-full object-cover" />
                 ) : (
-                  <Package size={48} className="text-slate-300" />
+                  <Package size={48} className="text-slate-300 dark:text-slate-600" />
                 );
               })()}
               <button
                 onClick={(e) => handleToggleWishlist(e, product.id)}
-                className={`absolute top-2 right-2 p-2 rounded-full transition-colors ${wishlistIds.has(product.id) ? 'bg-red-50 text-red-500' : 'bg-white/80 text-slate-400 hover:text-red-400'}`}
+                className={`absolute top-2 right-2 p-2 rounded-full transition-colors ${wishlistIds.has(product.id) ? 'bg-red-50 dark:bg-red-900/40 text-red-500 dark:text-red-400' : 'bg-white/80 dark:bg-slate-800/80 text-slate-400 dark:text-slate-500 hover:text-red-400 dark:hover:text-red-400'}`}
               >
                 <Heart size={16} fill={wishlistIds.has(product.id) ? 'currentColor' : 'none'} />
               </button>
             </div>
             <div className="space-y-2">
-              <span className="inline-block px-2 py-0.5 text-xs font-medium bg-indigo-50 text-indigo-600 rounded-full">
+              <span className="inline-block px-2 py-0.5 text-xs font-medium bg-indigo-50 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 rounded-full">
                 {product.id === 5 ? 'Electronics' : product.category}
               </span>
-              <h3 className="font-semibold text-slate-900 line-clamp-2">{product.name}</h3>
-              <p className="text-sm text-slate-500 line-clamp-2">
+              <h3 className="font-semibold text-slate-900 dark:text-slate-100 line-clamp-2">{product.name}</h3>
+              <p className="text-sm text-slate-500 dark:text-slate-400 line-clamp-2">
                 {product.id === 8
                   ? 'Compact portable speaker with rich bass and waterproof design.'
                   : product.description
                 }
               </p>
-              <div className="flex items-center justify-between pt-3 border-t border-slate-100">
+              <div className="flex items-center justify-between pt-3 border-t border-slate-100 dark:border-slate-700">
                 <div>
-                  <span className="text-lg font-bold text-slate-900">
+                  <span className="text-lg font-bold text-slate-900 dark:text-slate-100">
                     ${product.id === 15 ? '0.00' : product.price.toFixed(2)}
                   </span>
-                  <p className="text-xs text-emerald-600">{product.stock} in stock</p>
+                  <p className="text-xs text-emerald-600 dark:text-emerald-400">{product.stock} in stock</p>
                 </div>
                 {product.id !== 10 && (
                   <button
@@ -249,8 +249,8 @@ const ShopPage: React.FC = () => {
       {products.length === 0 && !loading && (
         <div className="text-center py-16">
           <p className="text-4xl mb-3">🔍</p>
-          <h3 className="text-lg font-semibold text-slate-800 mb-1">No products found</h3>
-          <p className="text-slate-500">Try adjusting your search or filters.</p>
+          <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-200 mb-1">No products found</h3>
+          <p className="text-slate-500 dark:text-slate-400">Try adjusting your search or filters.</p>
         </div>
       )}
 
@@ -268,7 +268,7 @@ const ShopPage: React.FC = () => {
             <button
               key={p}
               onClick={() => handlePageChange(p)}
-              className={`w-9 h-9 rounded-lg text-sm font-medium transition-colors ${p === page ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}
+              className={`w-9 h-9 rounded-lg text-sm font-medium transition-colors ${p === page ? 'bg-indigo-600 text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600'}`}
             >
               {p}
             </button>

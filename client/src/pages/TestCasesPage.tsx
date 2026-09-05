@@ -140,7 +140,7 @@ const TestCasesPage: React.FC = () => {
   });
 
   const columns = [
-    { key: 'tc_id', label: 'ID', render: (tc: TestCase) => <span className="font-mono text-blue-600">{tc.tc_id}</span> },
+    { key: 'tc_id', label: 'ID', render: (tc: TestCase) => <span className="font-mono text-blue-600 dark:text-blue-400">{tc.tc_id}</span> },
     { key: 'title', label: 'Title' },
     { key: 'requirement', label: 'Requirement', render: (tc: TestCase) => tc.requirement_req_id || '-' },
     { key: 'test_type', label: 'Type', render: (tc: TestCase) => <StatusBadge status={tc.test_type} size="sm" /> },
@@ -153,11 +153,11 @@ const TestCasesPage: React.FC = () => {
         <div className="flex gap-2">
           {isIntern && (
             <>
-              <button onClick={(e) => { e.stopPropagation(); handleEdit(tc); }} className="p-1 hover:bg-slate-100 rounded">
-                <Edit size={16} className="text-slate-600" />
+              <button onClick={(e) => { e.stopPropagation(); handleEdit(tc); }} className="p-1 hover:bg-slate-100 dark:hover:bg-slate-700 rounded">
+                <Edit size={16} className="text-slate-600 dark:text-slate-400" />
               </button>
-              <button onClick={(e) => { e.stopPropagation(); setDeleteConfirm(tc); }} className="p-1 hover:bg-red-50 rounded">
-                <Trash2 size={16} className="text-red-600" />
+              <button onClick={(e) => { e.stopPropagation(); setDeleteConfirm(tc); }} className="p-1 hover:bg-red-50 dark:hover:bg-red-900/30 rounded">
+                <Trash2 size={16} className="text-red-600 dark:text-red-400" />
               </button>
             </>
           )}
@@ -169,7 +169,7 @@ const TestCasesPage: React.FC = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 dark:border-blue-400"></div>
       </div>
     );
   }
@@ -178,8 +178,8 @@ const TestCasesPage: React.FC = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Test Cases</h1>
-          <p className="text-slate-600 mt-1">
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Test Cases</h1>
+          <p className="text-slate-600 dark:text-slate-400 mt-1">
             Try to write test cases that prove whether the requirement is working correctly.
           </p>
         </div>

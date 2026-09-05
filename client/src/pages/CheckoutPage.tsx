@@ -97,12 +97,12 @@ const CheckoutPage: React.FC = () => {
         <div className="w-20 h-20 rounded-full bg-emerald-100 flex items-center justify-center mx-auto mb-5 shadow-inner">
           <CheckCircle size={40} className="text-emerald-600" />
         </div>
-        <h1 className="text-2xl font-bold text-slate-900 mb-2">Order Confirmed! 🎉</h1>
-        <p className="text-slate-600 mb-4">
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-2">Order Confirmed! 🎉</h1>
+        <p className="text-slate-600 dark:text-slate-400 mb-4">
           Your order <span className="font-mono font-semibold text-indigo-600">#{orderId}</span> has been placed successfully.
         </p>
-        <p className="text-sm text-slate-500 mb-8">
-          Total: <span className="font-bold text-slate-800">${cart.total.toFixed(2)}</span>
+        <p className="text-sm text-slate-500 dark:text-slate-400 mb-8">
+          Total: <span className="font-bold text-slate-800 dark:text-slate-200">${cart.total.toFixed(2)}</span>
         </p>
         <button
           onClick={() => navigate('/ecommerce/shop')}
@@ -117,18 +117,18 @@ const CheckoutPage: React.FC = () => {
   return (
     <div className="max-w-2xl mx-auto space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Checkout</h1>
-        <p className="text-slate-600 mt-1">
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Checkout</h1>
+        <p className="text-slate-600 dark:text-slate-400 mt-1">
           Enter your shipping information to complete your order.
         </p>
       </div>
 
       <div className="card">
-        <h2 className="text-lg font-semibold text-slate-900 mb-4">Order Summary</h2>
+        <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4">Order Summary</h2>
         <div className="space-y-3">
           {cart.items.map(item => (
             <div key={item.id} className="flex justify-between text-sm">
-              <span className="text-slate-600">
+              <span className="text-slate-600 dark:text-slate-400">
                 {item.name} x {item.quantity}
               </span>
               <span className="font-medium">${(item.price * item.quantity).toFixed(2)}</span>
@@ -142,7 +142,7 @@ const CheckoutPage: React.FC = () => {
       </div>
 
       <form onSubmit={handleSubmit} className="card space-y-4">
-        <h2 className="text-lg font-semibold text-slate-900 mb-4">Shipping Information</h2>
+        <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4">Shipping Information</h2>
 
         <div className="form-group">
           <label className="label">Full Name *</label>

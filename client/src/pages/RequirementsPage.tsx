@@ -42,8 +42,8 @@ const RequirementsPage: React.FC = () => {
     <div className="space-y-6">
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Requirements</h1>
-          <p className="text-slate-500 mt-1">
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Requirements</h1>
+          <p className="text-slate-500 dark:text-slate-400 mt-1">
             Read each requirement carefully before creating your test cases. Think about positive, negative and boundary scenarios.
           </p>
         </div>
@@ -57,19 +57,19 @@ const RequirementsPage: React.FC = () => {
       </div>
 
       {project && (
-        <div className="card bg-gradient-to-r from-indigo-50 to-violet-50 border-indigo-100">
+        <div className="card bg-gradient-to-r from-indigo-50 to-violet-50 dark:from-indigo-900/30 dark:to-violet-900/30 border-indigo-100 dark:border-indigo-800">
           <div className="flex items-start gap-3">
-            <div className="p-2 bg-white rounded-xl shadow-sm">
-              <FileText size={22} className="text-indigo-600" />
+            <div className="p-2 bg-white dark:bg-slate-800 rounded-xl shadow-sm">
+              <FileText size={22} className="text-indigo-600 dark:text-indigo-400" />
             </div>
             <div>
-              <h2 className="text-lg font-semibold text-slate-900">{project.name}</h2>
-              <p className="text-slate-600 mt-1">{project.description}</p>
+              <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">{project.name}</h2>
+              <p className="text-slate-600 dark:text-slate-400 mt-1">{project.description}</p>
               <div className="flex items-center gap-3 mt-2">
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white text-sm font-medium text-slate-700 border border-slate-200">
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white dark:bg-slate-800 text-sm font-medium text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
                   {project.difficulty}
                 </span>
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-sm font-medium text-emerald-700 border border-emerald-200">
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-900/30 text-sm font-medium text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">
                   {requirements.length} requirements
                 </span>
               </div>
@@ -82,31 +82,31 @@ const RequirementsPage: React.FC = () => {
         {requirements.map((req) => (
           <div
             key={req.id}
-            className="card cursor-pointer hover:border-indigo-300 hover:shadow-md transition-all"
+            className="card cursor-pointer hover:border-indigo-300 dark:hover:border-indigo-600 hover:shadow-md transition-all"
             onClick={() => setExpandedId(expandedId === req.id ? null : req.id)}
           >
             <div className="flex items-start gap-4">
-              <div className="p-2.5 bg-indigo-100 rounded-xl">
-                <BookOpen size={20} className="text-indigo-600" />
+              <div className="p-2.5 bg-indigo-100 dark:bg-indigo-900/40 rounded-xl">
+                <BookOpen size={20} className="text-indigo-600 dark:text-indigo-400" />
               </div>
               <div className="flex-1">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <span className="text-sm font-mono bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded-md">{req.req_id}</span>
-                  <h3 className="text-lg font-semibold text-slate-900">{req.title}</h3>
+                  <span className="text-sm font-mono bg-indigo-50 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 px-2 py-0.5 rounded-md">{req.req_id}</span>
+                  <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">{req.title}</h3>
                 </div>
-                <p className="text-slate-600 mt-1.5">{req.description}</p>
+                <p className="text-slate-600 dark:text-slate-400 mt-1.5">{req.description}</p>
 
                 {expandedId === req.id && (
-                  <div className="mt-4 p-4 bg-slate-50 rounded-xl animate-[fadeInUp_.2s_ease-out]">
-                    <h4 className="font-semibold text-slate-900 mb-3 flex items-center gap-2">
+                  <div className="mt-4 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-xl animate-[fadeInUp_.2s_ease-out]">
+                    <h4 className="font-semibold text-slate-900 dark:text-slate-100 mb-3 flex items-center gap-2">
                       <span className="w-1.5 h-4 bg-indigo-500 rounded-full" />
                       Acceptance Criteria
                     </h4>
-                    <ul className="space-y-2 text-sm text-slate-700">
+                    <ul className="space-y-2 text-sm text-slate-700 dark:text-slate-300">
                       {req.acceptance_criteria.split('\n').map((criteria, idx) => (
                         <li key={idx} className="flex items-start gap-2">
-                          <span className="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center mt-0.5 shrink-0">
-                            <span className="text-emerald-600 text-xs font-bold">✓</span>
+                          <span className="w-5 h-5 rounded-full bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center mt-0.5 shrink-0">
+                            <span className="text-emerald-600 dark:text-emerald-400 text-xs font-bold">✓</span>
                           </span>
                           <span>{criteria}</span>
                         </li>

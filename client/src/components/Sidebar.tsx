@@ -1,14 +1,16 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
+import { useTheme } from '../hooks/useTheme';
 import {
   LayoutDashboard, BookOpen, FileText, Play, Bug, Award,
   Users, Shield, BarChart3, ShoppingCart, LogOut, Menu, X, ExternalLink, FlaskConical,
-  GitBranch, Rocket, GraduationCap, Send, Code, Target
+  GitBranch, GraduationCap, Send, Code, Target, Sun, Moon
 } from 'lucide-react';
 
 const Sidebar: React.FC = () => {
   const { user, isTrainer, logout } = useAuth();
+  const { theme, toggleTheme, isDark } = useTheme();
   const location = useLocation();
   const [isOpen, setIsOpen] = React.useState(false);
 
@@ -51,6 +53,7 @@ const Sidebar: React.FC = () => {
       <button
         onClick={() => setIsOpen(true)}
         className="lg:hidden fixed top-4 left-4 z-50 p-2.5 bg-indigo-600 text-white rounded-xl shadow-lg shadow-indigo-900/30"
+        aria-label="Open navigation menu"
       >
         <Menu size={20} />
       </button>
@@ -59,6 +62,7 @@ const Sidebar: React.FC = () => {
         <div
           className="lg:hidden fixed inset-0 bg-black/50 z-40"
           onClick={() => setIsOpen(false)}
+          aria-hidden="true"
         />
       )}
 
@@ -66,6 +70,7 @@ const Sidebar: React.FC = () => {
         className={`fixed left-0 top-0 h-full w-72 bg-gradient-to-b from-slate-900 via-slate-900 to-indigo-950 text-white transform transition-transform duration-300 z-50 shadow-2xl ${
           isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         }`}
+        aria-label="Main navigation"
       >
         <div className="flex flex-col h-full">
           <div className="p-5 border-b border-white/10">
@@ -79,12 +84,22 @@ const Sidebar: React.FC = () => {
                   <p className="text-xs text-slate-400">Manual Testing Platform</p>
                 </div>
               </div>
-              <button
-                onClick={() => setIsOpen(false)}
-                className="lg:hidden text-white"
-              >
-                <X size={20} />
-              </button>
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={toggleTheme}
+                  className="theme-toggle"
+                  aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+                >
+                  {isDark ? <Sun size={18} /> : <Moon size={18} />}
+                </button>
+                <button
+                  onClick={() => setIsOpen(false)}
+                  className="lg:hidden text-white p-1"
+                  aria-label="Close navigation menu"
+                >
+                  <X size={20} />
+                </button>
+              </div>
             </div>
             {user && (
               <div className="mt-4 p-3 bg-white/10 rounded-xl backdrop-blur">
@@ -103,10 +118,9 @@ const Sidebar: React.FC = () => {
             )}
           </div>
 
-          <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+          <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto" aria-label={isTrainer ? 'Management navigation' : 'My work navigation'}>
             <p className="px-4 pb-2 text-[10px] font-bold uppercase tracking-widest text-slate-500">
-              {isTrainer ? 'Management' : 'My Work'
-              }
+              {isTrainer ? 'Management' : 'My Work'}
             </p>
             {links.map((link) =>
               link.external ? (
@@ -127,6 +141,7 @@ const Sidebar: React.FC = () => {
                   to={link.path}
                   onClick={() => setIsOpen(false)}
                   className={`sidebar-link ${isActive(link.path) ? 'active' : ''}`}
+                  aria-current={isActive(link.path) ? 'page' : undefined}
                 >
                   <link.icon size={18} />
                   <span>{link.label}</span>
@@ -145,6 +160,7 @@ const Sidebar: React.FC = () => {
                     to={link.path}
                     onClick={() => setIsOpen(false)}
                     className={`sidebar-link ${isActive(link.path) ? 'active' : ''}`}
+                    aria-current={isActive(link.path) ? 'page' : undefined}
                   >
                     <link.icon size={18} />
                     <span>{link.label}</span>
@@ -170,6 +186,7 @@ const Sidebar: React.FC = () => {
             <button
               onClick={() => { logout(); setIsOpen(false); }}
               className="sidebar-link w-full text-red-300 hover:bg-red-500/10 hover:text-red-200"
+              aria-label="Sign out of your account"
             >
               <LogOut size={18} />
               <span>Logout</span>

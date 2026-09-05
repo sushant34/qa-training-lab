@@ -23,11 +23,11 @@ const statusClasses: Record<string, string> = {
   Confirmed: 'badge-pass',
   Shipped: 'badge-ready',
   Delivered: 'badge-resolved',
-  Critical: 'bg-red-100 text-red-800',
+  Critical: 'bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300',
   High: 'badge-fail',
   Medium: 'badge-blocked',
   Low: 'badge-open',
-  P0: 'bg-red-100 text-red-800',
+  P0: 'bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300',
   P1: 'badge-fail',
   P2: 'badge-blocked',
   P3: 'badge-open',
@@ -36,13 +36,13 @@ const statusClasses: Record<string, string> = {
   Validation: 'badge-blocked',
   Boundary: 'badge-open',
   Functional: 'badge-ready',
-  'UI/UX': 'bg-pink-100 text-pink-700',
-  Security: 'bg-red-100 text-red-700',
-  Performance: 'bg-amber-100 text-amber-700',
+  'UI/UX': 'bg-pink-100 text-pink-700 dark:bg-pink-900/40 dark:text-pink-300',
+  Security: 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300',
+  Performance: 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300',
 };
 
 const StatusBadge: React.FC<StatusBadgeProps> = ({ status, size = 'md' }) => {
-  const baseClass = statusClasses[status] || 'bg-slate-100 text-slate-800';
+  const baseClass = statusClasses[status] || 'bg-slate-100 text-slate-800 dark:bg-slate-700 dark:text-slate-300';
   const sizeClass = size === 'sm' ? 'px-2 py-0.5 text-xs' : 'px-2.5 py-0.5 text-xs';
 
   return (

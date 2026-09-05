@@ -84,22 +84,22 @@ const ProfilePage: React.FC = () => {
   return (
     <div className="max-w-2xl mx-auto space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">My Profile</h1>
-        <p className="text-slate-500 mt-1">Manage your account settings.</p>
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">My Profile</h1>
+        <p className="text-slate-500 dark:text-slate-400 mt-1">Manage your account settings.</p>
       </div>
 
-      <div className="card flex items-center gap-4 mb-6">
+      <div className="card bg-white dark:bg-slate-800 flex items-center gap-4 mb-6">
         <div className="w-16 h-16 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center text-xl font-bold text-white">
           {user?.full_name.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase()}
         </div>
         <div>
-          <h2 className="text-lg font-semibold text-slate-900">{user?.full_name}</h2>
-          <p className="text-sm text-slate-500">{user?.email}</p>
+          <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">{user?.full_name}</h2>
+          <p className="text-sm text-slate-500 dark:text-slate-400">{user?.email}</p>
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="card space-y-5">
-        <h3 className="text-lg font-semibold text-slate-900 flex items-center gap-2">
+      <form onSubmit={handleSubmit} className="card bg-white dark:bg-slate-800 space-y-5">
+        <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 flex items-center gap-2">
           <User size={18} />
           Personal Information
         </h3>
@@ -116,8 +116,8 @@ const ProfilePage: React.FC = () => {
           {errors.email && <p className="form-error">{errors.email}</p>}
         </div>
 
-        <div className="border-t pt-5 mt-5">
-          <h3 className="text-lg font-semibold text-slate-900 flex items-center gap-2 mb-4">
+        <div className="border-t border-slate-200 dark:border-slate-700 pt-5 mt-5">
+          <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 flex items-center gap-2 mb-4">
             <Lock size={18} />
             Change Password
           </h3>

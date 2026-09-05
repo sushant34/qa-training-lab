@@ -50,7 +50,7 @@ const EcommerceLoginPage: React.FC = () => {
         </div>
 
         <div className="card">
-          <h2 className="text-xl font-semibold text-slate-900 mb-6 flex items-center gap-2">
+          <h2 className="text-xl font-semibold text-slate-900 dark:text-slate-100 mb-6 flex items-center gap-2">
             <LogIn size={20} />
             Sign In
           </h2>
@@ -90,19 +90,19 @@ const EcommerceLoginPage: React.FC = () => {
           </form>
 
           <div className="mt-6 text-center">
-            <p className="text-sm text-slate-600">
+            <p className="text-sm text-slate-600 dark:text-slate-400">
               Don't have an account?{' '}
-              <Link to="/ecommerce/register" className="text-emerald-600 hover:text-emerald-700 font-medium">
+              <Link to="/ecommerce/register" className="text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 font-medium">
                 Register here
               </Link>
             </p>
           </div>
 
-          <div className="mt-6 p-4 bg-emerald-50 rounded-xl border border-emerald-100">
-            <p className="text-xs font-semibold text-emerald-700 mb-2">Quick Test:</p>
-            <div className="text-sm text-emerald-800 space-y-1">
+          <div className="mt-6 p-4 bg-emerald-50 dark:bg-emerald-900/30 rounded-xl border border-emerald-100 dark:border-emerald-800">
+            <p className="text-xs font-semibold text-emerald-700 dark:text-emerald-300 mb-2">Quick Test:</p>
+            <div className="text-sm text-emerald-800 dark:text-emerald-200 space-y-1">
               <p className="font-mono">intern / intern123</p>
-              <p className="text-xs text-emerald-600">Or register a new account above</p>
+              <p className="text-xs text-emerald-600 dark:text-emerald-400">Or register a new account above</p>
             </div>
           </div>
         </div>

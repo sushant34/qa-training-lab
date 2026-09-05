@@ -65,7 +65,7 @@ const RegisterPage: React.FC = () => {
         </div>
 
         <div className="card shadow-2xl">
-          <h2 className="text-xl font-semibold text-slate-900 mb-6">Register</h2>
+          <h2 className="text-xl font-semibold text-slate-900 dark:text-slate-100 mb-6">Register</h2>
 
           <form onSubmit={handleSubmit}>
             <div className="form-group">
@@ -143,9 +143,9 @@ const RegisterPage: React.FC = () => {
           </form>
 
           <div className="mt-6 text-center">
-            <p className="text-sm text-slate-600">
+            <p className="text-sm text-slate-600 dark:text-slate-400">
               Already have an account?{' '}
-              <Link to="/login" className="text-indigo-600 hover:text-indigo-700 font-semibold">
+              <Link to="/login" className="text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 font-semibold">
                 Sign in
               </Link>
             </p>

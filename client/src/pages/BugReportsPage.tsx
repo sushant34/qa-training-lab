@@ -144,7 +144,7 @@ const BugReportsPage: React.FC = () => {
   });
 
   const columns = [
-    { key: 'bug_id', label: 'ID', render: (bug: BugReport) => <span className="font-mono text-red-600">{bug.bug_id}</span> },
+    { key: 'bug_id', label: 'ID', render: (bug: BugReport) => <span className="font-mono text-red-600 dark:text-red-400">{bug.bug_id}</span> },
     { key: 'title', label: 'Title' },
     { key: 'requirement', label: 'Req ID', render: (bug: BugReport) => bug.requirement_req_id || '-' },
     { key: 'severity', label: 'Severity', render: (bug: BugReport) => <StatusBadge status={bug.severity} size="sm" /> },
@@ -155,16 +155,16 @@ const BugReportsPage: React.FC = () => {
       label: 'Actions',
       render: (bug: BugReport) => (
         <div className="flex gap-2">
-          <button onClick={(e) => { e.stopPropagation(); setViewBug(bug); }} className="p-1 hover:bg-slate-100 rounded">
-            <ExternalLink size={16} className="text-slate-600" />
+          <button onClick={(e) => { e.stopPropagation(); setViewBug(bug); }} className="p-1 hover:bg-slate-100 dark:hover:bg-slate-700 rounded">
+            <ExternalLink size={16} className="text-slate-600 dark:text-slate-400" />
           </button>
           {isIntern && (
             <>
-              <button onClick={(e) => { e.stopPropagation(); handleEdit(bug); }} className="p-1 hover:bg-slate-100 rounded">
-                <Edit size={16} className="text-slate-600" />
+              <button onClick={(e) => { e.stopPropagation(); handleEdit(bug); }} className="p-1 hover:bg-slate-100 dark:hover:bg-slate-700 rounded">
+                <Edit size={16} className="text-slate-600 dark:text-slate-400" />
               </button>
-              <button onClick={(e) => { e.stopPropagation(); setDeleteConfirm(bug); }} className="p-1 hover:bg-red-50 rounded">
-                <Trash2 size={16} className="text-red-600" />
+              <button onClick={(e) => { e.stopPropagation(); setDeleteConfirm(bug); }} className="p-1 hover:bg-red-50 dark:hover:bg-red-900/30 rounded">
+                <Trash2 size={16} className="text-red-600 dark:text-red-400" />
               </button>
             </>
           )}
@@ -176,7 +176,7 @@ const BugReportsPage: React.FC = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 dark:border-blue-400"></div>
       </div>
     );
   }
@@ -185,8 +185,8 @@ const BugReportsPage: React.FC = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Bug Reports</h1>
-          <p className="text-slate-600 mt-1">
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Bug Reports</h1>
+          <p className="text-slate-600 dark:text-slate-400 mt-1">
             Describe what you observed, not what you think the developer should change.
           </p>
         </div>
@@ -402,7 +402,7 @@ const BugReportsPage: React.FC = () => {
         {viewBug && (
           <div className="space-y-4">
             <div>
-              <h3 className="font-semibold text-slate-900">{viewBug.title}</h3>
+              <h3 className="font-semibold text-slate-900 dark:text-slate-100">{viewBug.title}</h3>
               <div className="flex gap-2 mt-2">
                 <StatusBadge status={viewBug.severity} />
                 <StatusBadge status={viewBug.priority} />
@@ -412,40 +412,40 @@ const BugReportsPage: React.FC = () => {
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <p className="text-sm font-medium text-slate-700">Requirement</p>
-                <p className="text-sm text-slate-600">{viewBug.requirement_req_id || '-'}</p>
+                <p className="text-sm font-medium text-slate-700 dark:text-slate-300">Requirement</p>
+                <p className="text-sm text-slate-600 dark:text-slate-400">{viewBug.requirement_req_id || '-'}</p>
               </div>
               <div>
-                <p className="text-sm font-medium text-slate-700">Test Case</p>
-                <p className="text-sm text-slate-600">{viewBug.test_case_tc_id || '-'}</p>
+                <p className="text-sm font-medium text-slate-700 dark:text-slate-300">Test Case</p>
+                <p className="text-sm text-slate-600 dark:text-slate-400">{viewBug.test_case_tc_id || '-'}</p>
               </div>
             </div>
 
             <div>
-              <p className="text-sm font-medium text-slate-700">Environment</p>
-              <p className="text-sm text-slate-600">{viewBug.environment || '-'}</p>
+              <p className="text-sm font-medium text-slate-700 dark:text-slate-300">Environment</p>
+              <p className="text-sm text-slate-600 dark:text-slate-400">{viewBug.environment || '-'}</p>
             </div>
 
             <div>
-              <p className="text-sm font-medium text-slate-700">Steps to Reproduce</p>
-              <p className="text-sm text-slate-600 whitespace-pre-wrap">{viewBug.steps_to_reproduce}</p>
+              <p className="text-sm font-medium text-slate-700 dark:text-slate-300">Steps to Reproduce</p>
+              <p className="text-sm text-slate-600 dark:text-slate-400 whitespace-pre-wrap">{viewBug.steps_to_reproduce}</p>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <p className="text-sm font-medium text-slate-700">Expected Result</p>
-                <p className="text-sm text-slate-600">{viewBug.expected_result}</p>
+                <p className="text-sm font-medium text-slate-700 dark:text-slate-300">Expected Result</p>
+                <p className="text-sm text-slate-600 dark:text-slate-400">{viewBug.expected_result}</p>
               </div>
               <div>
-                <p className="text-sm font-medium text-slate-700">Actual Result</p>
-                <p className="text-sm text-slate-600">{viewBug.actual_result}</p>
+                <p className="text-sm font-medium text-slate-700 dark:text-slate-300">Actual Result</p>
+                <p className="text-sm text-slate-600 dark:text-slate-400">{viewBug.actual_result}</p>
               </div>
             </div>
 
             {viewBug.additional_notes && (
               <div>
-                <p className="text-sm font-medium text-slate-700">Additional Notes</p>
-                <p className="text-sm text-slate-600">{viewBug.additional_notes}</p>
+                <p className="text-sm font-medium text-slate-700 dark:text-slate-300">Additional Notes</p>
+                <p className="text-sm text-slate-600 dark:text-slate-400">{viewBug.additional_notes}</p>
               </div>
             )}
           </div>

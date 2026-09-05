@@ -30,7 +30,7 @@ const MyScorePage: React.FC = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 dark:border-blue-400"></div>
       </div>
     );
   }
@@ -38,7 +38,7 @@ const MyScorePage: React.FC = () => {
   if (!evaluation) {
     return (
       <div className="text-center py-12">
-        <p className="text-slate-500">No evaluation data available yet.</p>
+        <p className="text-slate-500 dark:text-slate-400">No evaluation data available yet.</p>
       </div>
     );
   }
@@ -121,18 +121,18 @@ const MyScorePage: React.FC = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">My Score</h1>
-        <p className="text-slate-600 mt-1">
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">My Score</h1>
+        <p className="text-slate-600 dark:text-slate-400 mt-1">
           View your testing performance and evaluation details.
         </p>
       </div>
 
       <div className="card text-center">
-        <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-blue-100 mb-4">
-          <span className="text-3xl font-bold text-blue-600">{Math.round(evaluation.overall_score)}</span>
+        <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-blue-100 dark:bg-blue-900/30 mb-4">
+          <span className="text-3xl font-bold text-blue-600 dark:text-blue-400">{Math.round(evaluation.overall_score)}</span>
         </div>
-        <h2 className="text-xl font-semibold text-slate-900">Overall Score</h2>
-        <p className="text-slate-500">out of 100</p>
+        <h2 className="text-xl font-semibold text-slate-900 dark:text-slate-100">Overall Score</h2>
+        <p className="text-slate-500 dark:text-slate-400">out of 100</p>
         <div className="mt-4 max-w-md mx-auto">
           <ProgressBar value={evaluation.overall_score} label="Overall Progress" color="bg-blue-600" />
         </div>
@@ -142,12 +142,12 @@ const MyScorePage: React.FC = () => {
         {scoreCategories.map((category) => (
           <div key={category.name} className="card">
             <div className="flex items-center gap-3 mb-3">
-              <div className={`p-2 rounded-lg ${category.color}/10`}>
+              <div className={`p-2 rounded-lg ${category.color}/10 dark:${category.color.replace('bg-', 'bg-')}/20`}>
                 <category.icon size={20} className={category.color.replace('bg-', 'text-')} />
               </div>
               <div>
-                <h3 className="font-medium text-slate-900">{category.name}</h3>
-                <p className="text-xs text-slate-500">{category.description}</p>
+                <h3 className="font-medium text-slate-900 dark:text-slate-100">{category.name}</h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400">{category.description}</p>
               </div>
             </div>
             <ProgressBar
@@ -161,8 +161,8 @@ const MyScorePage: React.FC = () => {
       </div>
 
       <div className="card">
-        <h2 className="text-lg font-semibold text-slate-900 mb-4">Scoring Criteria</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-slate-600">
+        <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4">Scoring Criteria</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-slate-600 dark:text-slate-400">
           <div className="space-y-3">
             <p><strong>Bug Detection (25%):</strong> Finding intentional defects in the application.</p>
             <p><strong>Requirement Mapping (10%):</strong> Correctly identifying which requirement each bug violates.</p>

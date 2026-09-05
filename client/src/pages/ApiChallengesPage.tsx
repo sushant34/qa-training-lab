@@ -272,11 +272,11 @@ const ApiChallengesPage: React.FC = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
           <Bug size={24} />
           API Bug-Finding Challenges
         </h1>
-        <p className="text-slate-500 mt-1">
+        <p className="text-slate-500 dark:text-slate-400 mt-1">
           Find real bugs in the API by testing endpoints. {completedChallenges.size} of {challenges.length} completed.
         </p>
       </div>
@@ -287,14 +287,14 @@ const ApiChallengesPage: React.FC = () => {
             <div
               key={c.id}
               className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
-                completedChallenges.has(c.id) ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-400'
+                completedChallenges.has(c.id) ? 'bg-emerald-100 dark:bg-emerald-800 text-emerald-700 dark:text-emerald-300' : 'bg-slate-100 dark:bg-slate-700 text-slate-400 dark:text-slate-500'
               }`}
             >
               {completedChallenges.has(c.id) ? '✓' : c.id}
             </div>
           ))}
         </div>
-        <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+        <div className="h-2 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
           <div
             className="h-full bg-emerald-500 rounded-full transition-all"
             style={{ width: `${(completedChallenges.size / challenges.length) * 100}%` }}
@@ -309,73 +309,73 @@ const ApiChallengesPage: React.FC = () => {
           const showingHint = showHint === challenge.id;
 
           return (
-            <div key={challenge.id} className={`card ${isCompleted ? 'border-emerald-200 bg-emerald-50/30' : ''}`}>
+            <div key={challenge.id} className={`card ${isCompleted ? 'border-emerald-200 dark:border-emerald-800 bg-emerald-50/30 dark:bg-emerald-900/30' : ''}`}>
               <div
                 className="flex items-center justify-between cursor-pointer"
                 onClick={() => setExpandedChallenge(isExpanded ? null : challenge.id)}
               >
                 <div className="flex items-center gap-3">
                   <span className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
-                    isCompleted ? 'bg-emerald-100 text-emerald-700' : 'bg-indigo-100 text-indigo-700'
+                    isCompleted ? 'bg-emerald-100 dark:bg-emerald-800 text-emerald-700 dark:text-emerald-300' : 'bg-indigo-100 dark:bg-indigo-800 text-indigo-700 dark:text-indigo-300'
                   }`}>
                     {isCompleted ? <CheckCircle size={16} /> : challenge.id}
                   </span>
                   <div>
-                    <h3 className="font-semibold text-slate-900">{challenge.title}</h3>
+                    <h3 className="font-semibold text-slate-900 dark:text-slate-100">{challenge.title}</h3>
                     <div className="flex items-center gap-2 mt-0.5">
                       <span className={`text-xs font-bold px-1.5 py-0.5 rounded ${
-                        challenge.method === 'GET' ? 'bg-emerald-100 text-emerald-700'
-                          : challenge.method === 'POST' ? 'bg-blue-100 text-blue-700'
-                          : challenge.method === 'PUT' ? 'bg-amber-100 text-amber-700'
-                          : 'bg-red-100 text-red-700'
+                        challenge.method === 'GET' ? 'bg-emerald-100 dark:bg-emerald-800 text-emerald-700 dark:text-emerald-300'
+                          : challenge.method === 'POST' ? 'bg-blue-100 dark:bg-blue-800 text-blue-700 dark:text-blue-300'
+                          : challenge.method === 'PUT' ? 'bg-amber-100 dark:bg-amber-800 text-amber-700 dark:text-amber-300'
+                          : 'bg-red-100 dark:bg-red-800 text-red-700 dark:text-red-300'
                       }`}>{challenge.method}</span>
-                      <span className="font-mono text-xs text-slate-500">{challenge.endpoint}</span>
+                      <span className="font-mono text-xs text-slate-500 dark:text-slate-400">{challenge.endpoint}</span>
                     </div>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className={`badge ${challenge.severity === 'Critical' ? 'bg-red-100 text-red-700' : challenge.severity === 'High' ? 'bg-orange-100 text-orange-700' : 'bg-amber-100 text-amber-700'}`}>
+                  <span className={`badge ${challenge.severity === 'Critical' ? 'bg-red-100 dark:bg-red-800 text-red-700 dark:text-red-300' : challenge.severity === 'High' ? 'bg-orange-100 dark:bg-orange-800 text-orange-700 dark:text-orange-300' : 'bg-amber-100 dark:bg-amber-800 text-amber-700 dark:text-amber-300'}`}>
                     {challenge.severity}
                   </span>
-                  <ChevronRight size={16} className={`text-slate-400 transition-transform ${isExpanded ? 'rotate-90' : ''}`} />
+                  <ChevronRight size={16} className={`text-slate-400 dark:text-slate-500 transition-transform ${isExpanded ? 'rotate-90' : ''}`} />
                 </div>
               </div>
 
               {isExpanded && (
-                <div className="mt-4 pt-4 border-t border-slate-100 space-y-4">
-                  <p className="text-sm text-slate-600">{challenge.description}</p>
+                <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-700 space-y-4">
+                  <p className="text-sm text-slate-600 dark:text-slate-300">{challenge.description}</p>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <div className="bg-emerald-50 rounded-xl p-3">
-                      <p className="text-xs font-semibold text-emerald-800 mb-1">Expected</p>
-                      <p className="text-sm text-emerald-700">{challenge.expectedBehavior}</p>
+                    <div className="bg-emerald-50 dark:bg-emerald-900/50 rounded-xl p-3">
+                      <p className="text-xs font-semibold text-emerald-800 dark:text-emerald-200 mb-1">Expected</p>
+                      <p className="text-sm text-emerald-700 dark:text-emerald-300">{challenge.expectedBehavior}</p>
                     </div>
-                    <div className="bg-red-50 rounded-xl p-3">
-                      <p className="text-xs font-semibold text-red-800 mb-1">Actual (Bug)</p>
-                      <p className="text-sm text-red-700">{challenge.actualBehavior}</p>
+                    <div className="bg-red-50 dark:bg-red-900/50 rounded-xl p-3">
+                      <p className="text-xs font-semibold text-red-800 dark:text-red-200 mb-1">Actual (Bug)</p>
+                      <p className="text-sm text-red-700 dark:text-red-300">{challenge.actualBehavior}</p>
                     </div>
                   </div>
 
                   <div>
-                    <p className="text-xs font-semibold text-slate-500 uppercase mb-2">Steps to Reproduce</p>
-                    <ol className="list-decimal list-inside text-sm text-slate-600 space-y-1">
+                    <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase mb-2">Steps to Reproduce</p>
+                    <ol className="list-decimal list-inside text-sm text-slate-600 dark:text-slate-300 space-y-1">
                       {challenge.steps.map((step, i) => <li key={i}>{step}</li>)}
                     </ol>
                   </div>
 
                   {challenge.body && (
                     <div>
-                      <p className="text-xs font-semibold text-slate-500 uppercase mb-2">Request Body</p>
-                      <pre className="bg-slate-900 text-slate-100 rounded-lg p-3 text-xs font-mono overflow-x-auto">
+                      <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase mb-2">Request Body</p>
+                      <pre className="bg-slate-900 dark:bg-slate-950 text-slate-100 dark:text-slate-100 rounded-lg p-3 text-xs font-mono overflow-x-auto">
                         {challenge.body}
                       </pre>
                     </div>
                   )}
 
                   {showingHint && (
-                    <div className="bg-amber-50 rounded-xl p-3 flex items-start gap-2">
-                      <Lightbulb size={16} className="text-amber-600 mt-0.5 shrink-0" />
-                      <p className="text-sm text-amber-800">{challenge.hint}</p>
+                    <div className="bg-amber-50 dark:bg-amber-900/50 rounded-xl p-3 flex items-start gap-2">
+                      <Lightbulb size={16} className="text-amber-600 dark:text-amber-400 mt-0.5 shrink-0" />
+                      <p className="text-sm text-amber-800 dark:text-amber-200">{challenge.hint}</p>
                     </div>
                   )}
 
@@ -394,7 +394,7 @@ const ApiChallengesPage: React.FC = () => {
                       </button>
                     )}
                     {isCompleted && (
-                      <span className="text-sm text-emerald-600 font-medium flex items-center gap-1">
+                      <span className="text-sm text-emerald-600 dark:text-emerald-400 font-medium flex items-center gap-1">
                         <CheckCircle size={14} /> Completed
                       </span>
                     )}

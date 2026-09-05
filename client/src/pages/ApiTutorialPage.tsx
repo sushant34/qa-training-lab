@@ -131,11 +131,11 @@ const ApiTutorialPage: React.FC = () => {
     <div className="max-w-3xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
             <Code size={24} />
             API Testing Tutorial
           </h1>
-          <p className="text-slate-500 mt-1">Step {currentStep + 1} of {steps.length}</p>
+          <p className="text-slate-500 dark:text-slate-400 mt-1">Step {currentStep + 1} of {steps.length}</p>
         </div>
         <button
           onClick={() => { localStorage.removeItem(STORAGE_KEY); setCompletedSteps(new Set()); setCurrentStep(0); }}
@@ -151,7 +151,7 @@ const ApiTutorialPage: React.FC = () => {
             <div
               key={i}
               className={`h-1.5 flex-1 rounded-full transition-colors ${
-                completedSteps.has(steps[i].id) ? 'bg-emerald-500' : i === currentStep ? 'bg-indigo-500' : 'bg-slate-200'
+                completedSteps.has(steps[i].id) ? 'bg-emerald-500' : i === currentStep ? 'bg-indigo-500' : 'bg-slate-200 dark:bg-slate-700'
               }`}
             />
           ))}
@@ -162,9 +162,9 @@ const ApiTutorialPage: React.FC = () => {
               key={s.id}
               onClick={() => setCurrentStep(i)}
               className={`text-xs px-2 py-1 rounded-lg transition-colors ${
-                i === currentStep ? 'bg-indigo-100 text-indigo-700 font-semibold'
-                  : completedSteps.has(s.id) ? 'bg-emerald-50 text-emerald-600'
-                  : 'text-slate-400 hover:text-slate-600'
+                i === currentStep ? 'bg-indigo-100 text-indigo-700 font-semibold dark:bg-indigo-900/50 dark:text-indigo-300'
+                  : completedSteps.has(s.id) ? 'bg-emerald-50 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400'
+                  : 'text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300'
               }`}
             >
               {completedSteps.has(s.id) ? '✓' : s.id}
@@ -179,21 +179,21 @@ const ApiTutorialPage: React.FC = () => {
             <step.icon size={24} />
           </div>
           <div className="flex-1">
-            <h2 className="text-xl font-bold text-slate-900">{step.title}</h2>
-            <div className="text-slate-600 mt-3 leading-relaxed whitespace-pre-line text-sm">{step.content}</div>
+            <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100">{step.title}</h2>
+            <div className="text-slate-600 dark:text-slate-400 mt-3 leading-relaxed whitespace-pre-line text-sm">{step.content}</div>
           </div>
         </div>
 
-        <div className="bg-slate-50 rounded-xl p-4 mb-4">
-          <p className="text-xs font-semibold text-slate-500 uppercase mb-2">Try It — Example Request</p>
+        <div className="bg-slate-50 dark:bg-slate-800/50 rounded-xl p-4 mb-4">
+          <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase mb-2">Try It — Example Request</p>
           <div className="flex items-center gap-2 mb-2">
             <span className={`text-xs font-bold px-2 py-0.5 rounded ${
-              step.example.method === 'GET' ? 'bg-emerald-100 text-emerald-700'
-                : step.example.method === 'POST' ? 'bg-blue-100 text-blue-700'
-                : step.example.method === 'PUT' ? 'bg-amber-100 text-amber-700'
-                : 'bg-red-100 text-red-700'
+              step.example.method === 'GET' ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-400'
+                : step.example.method === 'POST' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-400'
+                : step.example.method === 'PUT' ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/50 dark:text-amber-400'
+                : 'bg-red-100 text-red-700 dark:bg-red-900/50 dark:text-red-400'
             }`}>{step.example.method}</span>
-            <span className="font-mono text-sm text-slate-700">{step.example.url}</span>
+            <span className="font-mono text-sm text-slate-700 dark:text-slate-300">{step.example.url}</span>
           </div>
           {step.example.body && (
             <pre className="bg-slate-900 text-slate-100 rounded-lg p-3 text-xs overflow-x-auto font-mono mt-2">
@@ -209,9 +209,9 @@ const ApiTutorialPage: React.FC = () => {
           </button>
         </div>
 
-        <div className="bg-indigo-50 rounded-xl p-4 mb-6">
-          <p className="text-xs font-semibold text-indigo-900 mb-1">Expected Result</p>
-          <p className="text-sm text-indigo-700">
+        <div className="bg-indigo-50 dark:bg-indigo-900/30 rounded-xl p-4 mb-6">
+          <p className="text-xs font-semibold text-indigo-900 dark:text-indigo-300 mb-1">Expected Result</p>
+          <p className="text-sm text-indigo-700 dark:text-indigo-400">
             <strong>Status: {step.expectedStatus}</strong> — {step.expectedDescription}
           </p>
         </div>
@@ -240,7 +240,7 @@ const ApiTutorialPage: React.FC = () => {
           <CheckCircle size={48} className="mx-auto mb-3" />
           <h2 className="text-xl font-bold mb-2">Tutorial Complete!</h2>
           <p className="text-emerald-100 mb-4">You've learned the fundamentals of API testing. Now try the challenges!</p>
-          <button onClick={() => navigate('/api-challenges')} className="btn bg-white text-emerald-600 hover:bg-emerald-50">
+          <button onClick={() => navigate('/api-challenges')} className="btn bg-white dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-slate-700">
             Start Challenges
           </button>
         </div>

@@ -1,12 +1,14 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useEcommerceAuth } from '../hooks/useEcommerceAuth';
+import { useTheme } from '../hooks/useTheme';
 import {
-  Store, ShoppingCart, LogOut, Menu, X, User, RotateCcw, ShoppingBag, Heart, Clock, UserCircle
+  Store, ShoppingCart, LogOut, Menu, X, User, RotateCcw, ShoppingBag, Heart, Clock, UserCircle, Sun, Moon
 } from 'lucide-react';
 
 const EcommerceSidebar: React.FC = () => {
   const { user, isAuthenticated, logout } = useEcommerceAuth();
+  const { toggleTheme, isDark } = useTheme();
   const location = useLocation();
   const [isOpen, setIsOpen] = React.useState(false);
 
@@ -32,6 +34,7 @@ const EcommerceSidebar: React.FC = () => {
       <button
         onClick={() => setIsOpen(true)}
         className="lg:hidden fixed top-4 left-4 z-50 p-2.5 bg-emerald-600 text-white rounded-xl shadow-lg shadow-emerald-900/30"
+        aria-label="Open navigation menu"
       >
         <Menu size={20} />
       </button>
@@ -40,6 +43,7 @@ const EcommerceSidebar: React.FC = () => {
         <div
           className="lg:hidden fixed inset-0 bg-black/50 z-40"
           onClick={() => setIsOpen(false)}
+          aria-hidden="true"
         />
       )}
 
@@ -47,6 +51,7 @@ const EcommerceSidebar: React.FC = () => {
         className={`fixed left-0 top-0 h-full w-72 bg-gradient-to-b from-emerald-900 via-emerald-900 to-teal-950 text-white transform transition-transform duration-300 z-50 shadow-2xl ${
           isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         }`}
+        aria-label="E-Commerce navigation"
       >
         <div className="flex flex-col h-full">
           <div className="p-5 border-b border-white/10">
@@ -60,12 +65,22 @@ const EcommerceSidebar: React.FC = () => {
                   <p className="text-xs text-emerald-300/60">Test the Shopping App</p>
                 </div>
               </div>
-              <button
-                onClick={() => setIsOpen(false)}
-                className="lg:hidden text-white"
-              >
-                <X size={20} />
-              </button>
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={toggleTheme}
+                  className="theme-toggle"
+                  aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+                >
+                  {isDark ? <Sun size={18} /> : <Moon size={18} />}
+                </button>
+                <button
+                  onClick={() => setIsOpen(false)}
+                  className="lg:hidden text-white p-1"
+                  aria-label="Close navigation menu"
+                >
+                  <X size={20} />
+                </button>
+              </div>
             </div>
             {isAuthenticated && user && (
               <div className="mt-4 p-3 bg-white/10 rounded-xl backdrop-blur">
@@ -82,7 +97,7 @@ const EcommerceSidebar: React.FC = () => {
             )}
           </div>
 
-          <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+          <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto" aria-label="Shop navigation">
             <p className="px-4 pb-2 text-[10px] font-bold uppercase tracking-widest text-emerald-300/40">
               Shop
             </p>
@@ -92,6 +107,7 @@ const EcommerceSidebar: React.FC = () => {
                 to={link.path}
                 onClick={() => setIsOpen(false)}
                 className={`sidebar-link ${isActive(link.path) ? 'active' : ''}`}
+                aria-current={isActive(link.path) ? 'page' : undefined}
               >
                 <link.icon size={18} />
                 <span>{link.label}</span>
@@ -104,6 +120,7 @@ const EcommerceSidebar: React.FC = () => {
               <button
                 onClick={() => { logout(); setIsOpen(false); }}
                 className="sidebar-link w-full text-red-300 hover:bg-red-500/10 hover:text-red-200"
+                aria-label="Sign out of your account"
               >
                 <LogOut size={18} />
                 <span>Sign Out</span>

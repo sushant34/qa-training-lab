@@ -87,12 +87,12 @@ const InternsPage: React.FC = () => {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <button onClick={() => { setSelectedIntern(null); window.history.replaceState({}, '', '/interns'); }} className="p-2 hover:bg-slate-100 rounded-lg">
+            <button onClick={() => { setSelectedIntern(null); window.history.replaceState({}, '', '/interns'); }} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg">
               <ArrowLeft size={20} />
             </button>
             <div>
-              <h1 className="text-2xl font-bold text-slate-900">{selectedIntern.full_name}</h1>
-              <p className="text-slate-600">{selectedIntern.email}</p>
+              <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">{selectedIntern.full_name}</h1>
+              <p className="text-slate-600 dark:text-slate-400">{selectedIntern.email}</p>
             </div>
           </div>
           <button onClick={() => setShowResetConfirm(true)} className="btn btn-danger">
@@ -103,7 +103,7 @@ const InternsPage: React.FC = () => {
 
         {evaluation && (
           <div className="card">
-            <h2 className="text-lg font-semibold text-slate-900 mb-4">Evaluation</h2>
+            <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4">Evaluation</h2>
             <div className="grid grid-cols-2 gap-4">
               <ProgressBar value={evaluation.overall_score} label="Overall Score" color="bg-blue-600" />
               <ProgressBar value={evaluation.bug_detection_score} max={25} label="Bug Detection" color="bg-red-600" />
@@ -116,20 +116,20 @@ const InternsPage: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="card text-center">
             <p className="text-3xl font-bold text-blue-600">{testCases.length}</p>
-            <p className="text-sm text-slate-500">Test Cases</p>
+            <p className="text-sm text-slate-500 dark:text-slate-400">Test Cases</p>
           </div>
           <div className="card text-center">
             <p className="text-3xl font-bold text-green-600">{executions.length}</p>
-            <p className="text-sm text-slate-500">Executions</p>
+            <p className="text-sm text-slate-500 dark:text-slate-400">Executions</p>
           </div>
           <div className="card text-center">
             <p className="text-3xl font-bold text-red-600">{bugReports.length}</p>
-            <p className="text-sm text-slate-500">Bug Reports</p>
+            <p className="text-sm text-slate-500 dark:text-slate-400">Bug Reports</p>
           </div>
         </div>
 
         <div className="card">
-          <h2 className="text-lg font-semibold text-slate-900 mb-4">Test Cases</h2>
+          <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4">Test Cases</h2>
           <DataTable
             data={testCases}
             columns={[
@@ -144,7 +144,7 @@ const InternsPage: React.FC = () => {
         </div>
 
         <div className="card">
-          <h2 className="text-lg font-semibold text-slate-900 mb-4">Bug Reports</h2>
+          <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4">Bug Reports</h2>
           <DataTable
             data={bugReports}
             columns={[
@@ -173,8 +173,8 @@ const InternsPage: React.FC = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Interns</h1>
-        <p className="text-slate-600 mt-1">
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Interns</h1>
+        <p className="text-slate-600 dark:text-slate-400 mt-1">
           View and manage intern accounts and their progress.
         </p>
       </div>
