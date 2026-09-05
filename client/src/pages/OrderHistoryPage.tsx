@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { getOrderHistory } from '../services/api';
+import { getOrderHistory, cancelOrder } from '../services/api';
 import { Order } from '../types';
 import { Package, ChevronDown, ChevronUp } from 'lucide-react';
+import OrderStatusTracker from '../components/OrderStatusTracker';
 
 const OrderHistoryPage: React.FC = () => {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -20,6 +21,15 @@ const OrderHistoryPage: React.FC = () => {
       console.error('Failed to load orders:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleCancelOrder = async (orderId: number) => {
+    try {
+      await cancelOrder(orderId);
+      loadOrders();
+    } catch (error) {
+      console.error('Failed to cancel order:', error);
     }
   };
 
@@ -62,7 +72,7 @@ const OrderHistoryPage: React.FC = () => {
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
-                  <span className="badge badge-ready">{order.status}</span>
+                  <span className={`badge ${order.status === 'Cancelled' ? 'badge-cancelled' : 'badge-ready'}`}>{order.status}</span>
                   <span className="font-bold text-slate-900 dark:text-slate-100">${order.total_amount.toFixed(2)}</span>
                   {expandedOrder === order.id ? <ChevronUp size={18} className="text-slate-400 dark:text-slate-500" /> : <ChevronDown size={18} className="text-slate-400 dark:text-slate-500" />}
                 </div>
@@ -70,6 +80,7 @@ const OrderHistoryPage: React.FC = () => {
 
               {expandedOrder === order.id && order.items && (
                 <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-700">
+                  <OrderStatusTracker status={order.status} />
                   <h4 className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3">Order Items</h4>
                   <div className="space-y-2">
                     {order.items.map(item => (
@@ -94,6 +105,16 @@ const OrderHistoryPage: React.FC = () => {
                   <div className="mt-3 pt-3 border-t border-slate-100 dark:border-slate-700 flex justify-between text-sm">
                     <span className="text-slate-500 dark:text-slate-400">Shipping to: {order.address}</span>
                   </div>
+                  {order.status === 'Pending' && (
+                    <div className="mt-3 pt-3 border-t border-slate-100 dark:border-slate-700">
+                      <button
+                        onClick={() => handleCancelOrder(order.id)}
+                        className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm font-medium"
+                      >
+                        Cancel Order
+                      </button>
+                    </div>
+                  )}
                 </div>
               )}
             </div>

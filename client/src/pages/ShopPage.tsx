@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { getProducts, getCategories, addToCart, getWishlist, addToWishlist, removeFromWishlist } from '../services/api';
-import { Product, PaginatedProducts } from '../types';
+import { getProducts, getCategories, addToCart, getWishlist, addToWishlist, removeFromWishlist, getRecentlyViewed } from '../services/api';
+import { Product, PaginatedProducts, RecentlyViewedItem } from '../types';
 import toast from 'react-hot-toast';
 import { ShoppingCart, Search, Filter, Heart, ChevronLeft, ChevronRight, DollarSign, Package } from 'lucide-react';
 
@@ -17,11 +17,13 @@ const ShopPage: React.FC = () => {
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
   const [wishlistIds, setWishlistIds] = useState<Set<number>>(new Set());
+  const [recentlyViewed, setRecentlyViewed] = useState<RecentlyViewedItem[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
     loadCategories();
     loadWishlist();
+    loadRecentlyViewed();
   }, []);
 
   useEffect(() => {
@@ -47,6 +49,15 @@ const ShopPage: React.FC = () => {
       setWishlistIds(new Set(items.map(i => i.product_id)));
     } catch (error) {
       console.error('Failed to load wishlist:', error);
+    }
+  };
+
+  const loadRecentlyViewed = async () => {
+    try {
+      const items = await getRecentlyViewed();
+      setRecentlyViewed(items);
+    } catch (error) {
+      console.error('Failed to load recently viewed:', error);
     }
   };
 
@@ -211,6 +222,16 @@ const ShopPage: React.FC = () => {
               >
                 <Heart size={16} fill={wishlistIds.has(product.id) ? 'currentColor' : 'none'} />
               </button>
+              {product.stock === 0 && (
+                <span className="absolute top-2 left-2 px-2 py-0.5 text-xs font-medium bg-red-500 text-white rounded-full">
+                  Out of Stock
+                </span>
+              )}
+              {product.stock > 0 && product.stock < 5 && (
+                <span className="absolute top-2 left-2 px-2 py-0.5 text-xs font-medium bg-amber-500 text-white rounded-full">
+                  Low Stock
+                </span>
+              )}
             </div>
             <div className="space-y-2">
               <span className="inline-block px-2 py-0.5 text-xs font-medium bg-indigo-50 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 rounded-full">
@@ -228,7 +249,9 @@ const ShopPage: React.FC = () => {
                   <span className="text-lg font-bold text-slate-900 dark:text-slate-100">
                     ${product.id === 15 ? '0.00' : product.price.toFixed(2)}
                   </span>
-                  <p className="text-xs text-emerald-600 dark:text-emerald-400">{product.stock} in stock</p>
+                  <p className={`text-xs ${product.stock === 0 ? 'text-red-600 dark:text-red-400' : product.stock < 5 ? 'text-amber-600 dark:text-amber-400' : 'text-emerald-600 dark:text-emerald-400'}`}>
+                    {product.stock} in stock
+                  </p>
                 </div>
                 {product.id !== 10 && (
                   <button
@@ -281,6 +304,43 @@ const ShopPage: React.FC = () => {
             Next
             <ChevronRight size={16} />
           </button>
+        </div>
+      )}
+
+      {recentlyViewed.length > 0 && (
+        <div className="mt-8">
+          <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-4">Recently Viewed</h2>
+          <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
+            {recentlyViewed.map((item) => (
+              <Link
+                key={item.product_id}
+                to={`/ecommerce/products/${item.product_id}`}
+                className="flex-shrink-0 w-48 card hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 overflow-hidden"
+              >
+                <div className="aspect-square bg-gradient-to-br from-slate-50 to-indigo-50 dark:from-slate-700 dark:to-indigo-900/30 rounded-xl mb-3 flex items-center justify-center overflow-hidden relative">
+                  {item.image_url ? (
+                    <img src={item.image_url} alt={item.name} className="w-full h-full object-cover" />
+                  ) : (
+                    <Package size={36} className="text-slate-300 dark:text-slate-600" />
+                  )}
+                  {item.stock === 0 && (
+                    <span className="absolute top-2 left-2 px-2 py-0.5 text-xs font-medium bg-red-500 text-white rounded-full">
+                      Out of Stock
+                    </span>
+                  )}
+                  {item.stock > 0 && item.stock < 5 && (
+                    <span className="absolute top-2 left-2 px-2 py-0.5 text-xs font-medium bg-amber-500 text-white rounded-full">
+                      Low Stock
+                    </span>
+                  )}
+                </div>
+                <div className="p-3">
+                  <h3 className="font-medium text-sm text-slate-900 dark:text-slate-100 line-clamp-2">{item.name}</h3>
+                  <p className="text-sm font-bold text-slate-900 dark:text-slate-100 mt-1">${item.price.toFixed(2)}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
         </div>
       )}
     </div>

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { getProduct, addToCart, getRelatedProducts, checkWishlist, addToWishlist, removeFromWishlist, getProductReviews, createProductReview } from '../services/api';
+import { getProduct, addToCart, getRelatedProducts, checkWishlist, addToWishlist, removeFromWishlist, getProductReviews, createProductReview, voteReview } from '../services/api';
 import { Product, Review, ReviewStats } from '../types';
 import toast from 'react-hot-toast';
-import { ShoppingCart, Heart, ChevronRight, Star, Package } from 'lucide-react';
+import { ShoppingCart, Heart, ChevronRight, Star, Package, ThumbsUp, ThumbsDown } from 'lucide-react';
 
 const ProductDetailsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -90,6 +90,24 @@ const ProductDetailsPage: React.FC = () => {
       toast.error(error.message || 'Failed to submit review');
     } finally {
       setSubmittingReview(false);
+    }
+  };
+
+  const handleVoteReview = async (reviewId: number, vote: 1 | -1) => {
+    try {
+      const result = await voteReview(reviewId, vote);
+      setReviews(prev =>
+        prev.map(r => {
+          if (r.id !== reviewId) return r;
+          return {
+            ...r,
+            helpful_count: result.helpful_count,
+            user_vote: result.user_vote,
+          };
+        })
+      );
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to record vote');
     }
   };
 
@@ -217,6 +235,34 @@ const ProductDetailsPage: React.FC = () => {
                 </div>
                 {review.title && <p className="font-medium text-slate-900 dark:text-slate-100">{review.title}</p>}
                 {review.comment && <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">{review.comment}</p>}
+
+                <div className="flex items-center gap-3 mt-3">
+                  <button
+                    onClick={() => handleVoteReview(review.id, 1)}
+                    className={`flex items-center gap-1 text-sm transition-colors ${
+                      review.user_vote === 1
+                        ? 'text-indigo-600 font-semibold'
+                        : 'text-slate-400 hover:text-indigo-600'
+                    }`}
+                  >
+                    <ThumbsUp size={14} fill={review.user_vote === 1 ? 'currentColor' : 'none'} />
+                  </button>
+                  <button
+                    onClick={() => handleVoteReview(review.id, -1)}
+                    className={`flex items-center gap-1 text-sm transition-colors ${
+                      review.user_vote === -1
+                        ? 'text-red-500 font-semibold'
+                        : 'text-slate-400 hover:text-red-500'
+                    }`}
+                  >
+                    <ThumbsDown size={14} fill={review.user_vote === -1 ? 'currentColor' : 'none'} />
+                  </button>
+                  {(review.helpful_count ?? 0) > 0 && (
+                    <span className="text-xs text-slate-500 dark:text-slate-400">
+                      {review.helpful_count} {review.helpful_count === 1 ? 'person' : 'people'} found this helpful
+                    </span>
+                  )}
+                </div>
               </div>
             ))}
           </div>

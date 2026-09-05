@@ -1,25 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getCart, updateCartItem, removeFromCart } from '../services/api';
-import { Cart } from '../types';
+import { getCart, updateCartItem, removeFromCart, getSavedItems, addToSaved, removeFromSaved, moveToCart } from '../services/api';
+import { Cart, SavedItem } from '../types';
 import toast from 'react-hot-toast';
-import { Trash2, Plus, Minus, ShoppingBag } from 'lucide-react';
+import { Trash2, Plus, Minus, ShoppingBag, Bookmark } from 'lucide-react';
 
 const CartPage: React.FC = () => {
   const [cart, setCart] = useState<Cart>({ items: [], total: 0 });
+  const [savedItems, setSavedItems] = useState<SavedItem[]>([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
-    loadCart();
+    loadData();
   }, []);
 
-  const loadCart = async () => {
+  const loadData = async () => {
     try {
-      const data = await getCart();
-      setCart(data);
+      const [cartData, savedData] = await Promise.all([getCart(), getSavedItems()]);
+      setCart(cartData);
+      setSavedItems(savedData);
     } catch (error) {
-      console.error('Failed to load cart:', error);
+      console.error('Failed to load data:', error);
     } finally {
       setLoading(false);
     }
@@ -41,6 +43,40 @@ const CartPage: React.FC = () => {
       toast.success('Item removed from cart');
     } catch (error: any) {
       toast.error(error.message || 'Failed to remove item');
+    }
+  };
+
+  const handleSaveForLater = async (productId: number) => {
+    try {
+      const saved = await addToSaved(productId);
+      setSavedItems(saved);
+      const cartData = await removeFromCart(productId);
+      setCart(cartData);
+      toast.success('Item saved for later');
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to save item');
+    }
+  };
+
+  const handleRemoveSaved = async (productId: number) => {
+    try {
+      const saved = await removeFromSaved(productId);
+      setSavedItems(saved);
+      toast.success('Item removed from saved');
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to remove saved item');
+    }
+  };
+
+  const handleMoveToCart = async (productId: number) => {
+    try {
+      const result = await moveToCart(productId);
+      setSavedItems(result.savedItems);
+      const cartData = await getCart();
+      setCart(cartData);
+      toast.success(result.message);
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to move item to cart');
     }
   };
 
@@ -114,13 +150,22 @@ const CartPage: React.FC = () => {
                 </div>
                 <div className="text-right shrink-0">
                   <p className="font-bold text-slate-900 dark:text-slate-100">${(item.price * item.quantity).toFixed(2)}</p>
-                  <button
-                    onClick={() => handleRemove(item.product_id)}
-                    className="text-red-500 hover:text-red-700 mt-1 p-1 -mr-1"
-                    title="Remove"
-                  >
-                    <Trash2 size={16} />
-                  </button>
+                  <div className="flex items-center gap-1 mt-1 justify-end">
+                    <button
+                      onClick={() => handleSaveForLater(item.product_id)}
+                      className="text-slate-500 hover:text-indigo-600 p-1"
+                      title="Save for Later"
+                    >
+                      <Bookmark size={16} />
+                    </button>
+                    <button
+                      onClick={() => handleRemove(item.product_id)}
+                      className="text-red-500 hover:text-red-700 p-1"
+                      title="Remove"
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}
@@ -156,6 +201,48 @@ const CartPage: React.FC = () => {
                 Proceed to Checkout
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {savedItems.length > 0 && (
+        <div className="space-y-4">
+          <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100">Saved Items</h2>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {savedItems.map(item => (
+              <div key={item.id} className="card flex items-center gap-3 hover:shadow-md transition-shadow">
+                <div className="w-16 h-16 bg-gradient-to-br from-slate-50 to-indigo-50 dark:from-slate-700 dark:to-slate-600 rounded-xl flex items-center justify-center shrink-0 overflow-hidden">
+                  {item.image_url ? (
+                    <img
+                      src={item.image_url}
+                      alt={item.name}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <span className="text-2xl">📦</span>
+                  )}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-semibold text-slate-900 dark:text-slate-100 truncate text-sm">{item.name}</h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">{item.category}</p>
+                  <p className="font-bold text-slate-900 dark:text-slate-100 text-sm mt-0.5">${item.price.toFixed(2)}</p>
+                </div>
+                <div className="flex flex-col gap-1 shrink-0">
+                  <button
+                    onClick={() => handleMoveToCart(item.product_id)}
+                    className="btn btn-primary text-xs px-2 py-1"
+                  >
+                    Move to Cart
+                  </button>
+                  <button
+                    onClick={() => handleRemoveSaved(item.product_id)}
+                    className="text-red-500 hover:text-red-700 text-xs px-2 py-1"
+                  >
+                    Remove
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       )}

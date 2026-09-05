@@ -1,6 +1,6 @@
 const express = require('express');
 const db = require('../models/database');
-const { authenticateToken } = require('../middleware/auth');
+const { authenticateToken, requireRole } = require('../middleware/auth');
 const { checkoutRules } = require('../validators/checkout');
 const validate = require('../middleware/validate');
 const tryCatch = require('../middleware/tryCatch');
@@ -8,13 +8,10 @@ const tryCatch = require('../middleware/tryCatch');
 const router = express.Router();
 
 router.post('/', authenticateToken, checkoutRules, validate, tryCatch(async (req, res) => {
-  const { full_name, email, phone, address } = req.body;
+  const { full_name, email, phone, address, coupon_code } = req.body;
 
   // BUG-008: Checkout allows submission without phone number
   // This check is intentionally missing for phone
-
-  // BUG-008: Phone validation is missing
-  // Should require phone but doesn't
 
   const cartItems = db.prepare(`
     SELECT ci.*, p.name, p.price
@@ -37,9 +34,30 @@ router.post('/', authenticateToken, checkoutRules, validate, tryCatch(async (req
     }
   });
 
+  // Apply coupon discount if provided
+  let discount = 0;
+  let appliedCoupon = null;
+  if (coupon_code) {
+    // BUG-044: Case-sensitive coupon lookup (reuses the same bug from coupons.js)
+    const coupon = db.prepare('SELECT * FROM coupons WHERE code = ? AND is_active = 1').get(coupon_code);
+    if (coupon) {
+      // BUG-045: No expiry check
+      // BUG-046: No max_uses check
+      if (coupon.discount_type === 'percentage') {
+        discount = totalAmount * (coupon.discount_value / 100);
+      } else {
+        discount = Math.min(coupon.discount_value, totalAmount);
+      }
+      appliedCoupon = coupon.code;
+      db.prepare('UPDATE coupons SET used_count = used_count + 1 WHERE id = ?').run(coupon.id);
+    }
+  }
+
+  const finalAmount = Math.max(0, totalAmount - discount);
+
   const orderResult = db.prepare(
     'INSERT INTO orders (user_id, full_name, email, phone, address, total_amount) VALUES (?, ?, ?, ?, ?, ?)'
-  ).run(req.user.id, full_name, email, phone || null, address, totalAmount);
+  ).run(req.user.id, full_name, email, phone || null, address, finalAmount);
 
   cartItems.forEach(item => {
     db.prepare(
@@ -57,7 +75,7 @@ router.post('/', authenticateToken, checkoutRules, validate, tryCatch(async (req
     WHERE oi.order_id = ?
   `).all(orderResult.lastInsertRowid);
 
-  res.status(201).json({ order, items: orderItems });
+  res.status(201).json({ order, items: orderItems, discount, applied_coupon: appliedCoupon });
 }));
 
 router.get('/history', authenticateToken, tryCatch(async (req, res) => {
@@ -74,6 +92,56 @@ router.get('/history', authenticateToken, tryCatch(async (req, res) => {
   });
 
   res.json(ordersWithItems);
+}));
+
+// Update order status (Trainer only)
+router.put('/:id/status', authenticateToken, requireRole('TRAINER'), tryCatch(async (req, res) => {
+  const { status } = req.body;
+  const orderId = req.params.id;
+
+  const validStatuses = ['Pending', 'Confirmed', 'Shipped', 'Delivered'];
+  if (!validStatuses.includes(status)) {
+    return res.status(400).json({ error: 'Invalid status' });
+  }
+
+  const order = db.prepare('SELECT * FROM orders WHERE id = ?').get(orderId);
+  if (!order) {
+    return res.status(404).json({ error: 'Order not found' });
+  }
+
+  // BUG-047: Status can skip steps
+  // Should check: const currentIndex = validStatuses.indexOf(order.status);
+  //                const newIndex = validStatuses.indexOf(status);
+  //                if (newIndex !== currentIndex + 1) return error
+  // This check is intentionally not implemented
+
+  // BUG-048: Status can go backwards
+  // Should check: if (newIndex < currentIndex) return error
+  // This check is intentionally not implemented
+
+  db.prepare('UPDATE orders SET status = ? WHERE id = ?').run(status, orderId);
+
+  const updatedOrder = db.prepare('SELECT * FROM orders WHERE id = ?').get(orderId);
+  res.json(updatedOrder);
+}));
+
+// Cancel order (user can cancel only Pending orders)
+router.put('/:id/cancel', authenticateToken, tryCatch(async (req, res) => {
+  const orderId = req.params.id;
+
+  const order = db.prepare('SELECT * FROM orders WHERE id = ? AND user_id = ?').get(orderId, req.user.id);
+  if (!order) {
+    return res.status(404).json({ error: 'Order not found' });
+  }
+
+  if (order.status !== 'Pending') {
+    return res.status(400).json({ error: 'Only pending orders can be cancelled' });
+  }
+
+  db.prepare('UPDATE orders SET status = ? WHERE id = ?').run('Cancelled', orderId);
+
+  const updatedOrder = db.prepare('SELECT * FROM orders WHERE id = ?').get(orderId);
+  res.json(updatedOrder);
 }));
 
 module.exports = router;

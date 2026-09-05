@@ -46,6 +46,8 @@ const checkoutRoutes = require('./routes/checkout');
 const ecommerceAuthRoutes = require('./routes/ecommerceAuth');
 const wishlistRoutes = require('./routes/wishlist');
 const reviewRoutes = require('./routes/reviews');
+const couponRoutes = require('./routes/coupons');
+const savedRoutes = require('./routes/saved');
 const traceabilityRoutes = require('./routes/traceability');
 const coverageRoutes = require('./routes/coverage');
 
@@ -64,6 +66,8 @@ app.use('/api/checkout', checkoutRoutes);
 app.use('/api/ecommerce/auth', ecommerceAuthRoutes);
 app.use('/api/wishlist', wishlistRoutes);
 app.use('/api/reviews', reviewRoutes);
+app.use('/api/coupons', couponRoutes);
+app.use('/api/saved', savedRoutes);
 app.use('/api/traceability', traceabilityRoutes);
 app.use('/api/coverage', coverageRoutes);
 

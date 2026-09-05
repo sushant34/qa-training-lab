@@ -315,6 +315,24 @@ products.forEach(product => {
 
 console.log('Products seeded');
 
+// Seed Coupons
+const coupons = [
+  { code: 'SAVE10', discount_type: 'percentage', discount_value: 10, min_order_amount: 25, max_uses: 100, expires_at: '2026-12-31', is_active: 1 },
+  { code: 'FLAT5', discount_type: 'fixed', discount_value: 5, min_order_amount: 20, max_uses: 50, expires_at: '2026-12-31', is_active: 1 },
+  { code: 'EXPIRED', discount_type: 'percentage', discount_value: 20, min_order_amount: 0, max_uses: 100, expires_at: '2025-01-01', is_active: 1 },
+  { code: 'USEDUP', discount_type: 'percentage', discount_value: 15, min_order_amount: 0, max_uses: 1, used_count: 1, expires_at: '2026-12-31', is_active: 1 },
+];
+
+const insertCoupon = db.prepare(
+  'INSERT INTO coupons (code, discount_type, discount_value, min_order_amount, max_uses, used_count, expires_at, is_active) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
+);
+
+coupons.forEach(coupon => {
+  insertCoupon.run(coupon.code, coupon.discount_type, coupon.discount_value, coupon.min_order_amount, coupon.max_uses, coupon.used_count, coupon.expires_at, coupon.is_active);
+});
+
+console.log('Coupons seeded');
+
 // Seed Ground Truth Bugs
 const groundTruthBugs = [
   {
@@ -906,6 +924,171 @@ const groundTruthBugs = [
     module: 'Product Reviews',
     trigger_condition: 'Submit a review for a product, then try to submit another review for the same product.',
     detection_keywords: 'review,duplicate,409,conflict,already reviewed'
+  },
+  {
+    project_id: 1,
+    bug_id: 'GT-044',
+    requirement_id: null,
+    req_id_ref: 'REQ-EC006',
+    title: 'Coupon code validation is case-sensitive',
+    description: 'The coupon validation requires exact case match. Entering "save10" instead of "SAVE10" rejects the coupon.',
+    expected_behavior: 'Coupon codes should be case-insensitive. "save10", "Save10", and "SAVE10" should all be accepted.',
+    actual_behavior: 'Coupon validation is case-sensitive, requiring exact case match.',
+    severity: 'Medium',
+    priority: 'P2',
+    module: 'Coupons',
+    trigger_condition: 'Enter coupon code "save10" (lowercase) instead of "SAVE10" at checkout.',
+    detection_keywords: 'coupon,case,sensitive,lowercase,uppercase,validation'
+  },
+  {
+    project_id: 1,
+    bug_id: 'GT-045',
+    requirement_id: null,
+    req_id_ref: 'REQ-EC006',
+    title: 'Expired coupon is still accepted',
+    description: 'Coupons with an expires_at date in the past are still accepted and applied to orders.',
+    expected_behavior: 'Expired coupons should be rejected with an appropriate error message.',
+    actual_behavior: 'Expired coupons are accepted and the discount is applied.',
+    severity: 'High',
+    priority: 'P1',
+    module: 'Coupons',
+    trigger_condition: 'Apply coupon code "EXPIRED" which has an expires_at date of 2025-01-01.',
+    detection_keywords: 'coupon,expired,expiry,date,expiration,validity'
+  },
+  {
+    project_id: 1,
+    bug_id: 'GT-046',
+    requirement_id: null,
+    req_id_ref: 'REQ-EC006',
+    title: 'Coupon max_uses limit is not enforced',
+    description: 'Coupons with a max_uses limit can be used beyond their limit. The used_count is not checked.',
+    expected_behavior: 'Coupon should be rejected when used_count >= max_uses.',
+    actual_behavior: 'Coupon is accepted even after exceeding max_uses limit.',
+    severity: 'High',
+    priority: 'P1',
+    module: 'Coupons',
+    trigger_condition: 'Apply coupon code "USEDUP" which has max_uses=1 and used_count=1.',
+    detection_keywords: 'coupon,max,uses,limit,used_count,exceeded'
+  },
+  {
+    project_id: 1,
+    bug_id: 'GT-047',
+    requirement_id: null,
+    req_id_ref: 'REQ-EC006',
+    title: 'Order status can skip intermediate steps',
+    description: 'Order status can be updated from Pending directly to Delivered, skipping Confirmed and Shipped.',
+    expected_behavior: 'Status updates should follow the sequence: Pending → Confirmed → Shipped → Delivered.',
+    actual_behavior: 'Any status can be set regardless of current status, allowing skipped steps.',
+    severity: 'Medium',
+    priority: 'P2',
+    module: 'Order Tracking',
+    trigger_condition: 'Update an order from Pending directly to Delivered via API.',
+    detection_keywords: 'order,status,skip,step,transition,sequence'
+  },
+  {
+    project_id: 1,
+    bug_id: 'GT-048',
+    requirement_id: null,
+    req_id_ref: 'REQ-EC006',
+    title: 'Order status can be changed backwards',
+    description: 'Order status can be changed from a later state to an earlier one (e.g., Delivered to Pending).',
+    expected_behavior: 'Status should only move forward in the sequence, never backwards.',
+    actual_behavior: 'Status can be set to any valid state regardless of current status.',
+    severity: 'High',
+    priority: 'P1',
+    module: 'Order Tracking',
+    trigger_condition: 'Update a Delivered order back to Pending status.',
+    detection_keywords: 'order,status,backward,reverse,revert,downgrade'
+  },
+  {
+    project_id: 1,
+    bug_id: 'GT-049',
+    requirement_id: null,
+    req_id_ref: 'REQ-EC014',
+    title: 'Recently viewed products not cleared on logout',
+    description: 'Recently viewed products persist in the database after user logout and are visible on next login.',
+    expected_behavior: 'Recently viewed products should be cleared or isolated per session.',
+    actual_behavior: 'Recently viewed products from previous sessions remain visible.',
+    severity: 'Medium',
+    priority: 'P2',
+    module: 'Recently Viewed',
+    trigger_condition: 'View products, logout, login again - old viewed products still appear.',
+    detection_keywords: 'recently,viewed,logout,persist,session,clear'
+  },
+  {
+    project_id: 1,
+    bug_id: 'GT-050',
+    requirement_id: null,
+    req_id_ref: 'REQ-EC014',
+    title: 'Recently viewed allows duplicate entries',
+    description: 'Viewing the same product multiple times creates duplicate entries in the recently viewed list.',
+    expected_behavior: 'Each product should appear only once in recently viewed, with the most recent view timestamp.',
+    actual_behavior: 'Duplicate entries appear for products viewed multiple times.',
+    severity: 'Low',
+    priority: 'P3',
+    module: 'Recently Viewed',
+    trigger_condition: 'View the same product 3 times, then check recently viewed list.',
+    detection_keywords: 'recently,viewed,duplicate,multiple,entries'
+  },
+  {
+    project_id: 1,
+    bug_id: 'GT-051',
+    requirement_id: null,
+    req_id_ref: 'REQ-EC007',
+    title: 'Users can vote on their own reviews',
+    description: 'Users can submit helpful votes on their own reviews, which should be prevented.',
+    expected_behavior: 'Users should not be able to vote on their own reviews.',
+    actual_behavior: 'Self-voting is allowed and affects the helpful count.',
+    severity: 'Medium',
+    priority: 'P2',
+    module: 'Review Votes',
+    trigger_condition: 'Submit a review, then click helpful vote on your own review.',
+    detection_keywords: 'review,vote,own,self,voting,prevent'
+  },
+  {
+    project_id: 1,
+    bug_id: 'GT-052',
+    requirement_id: null,
+    req_id_ref: 'REQ-EC007',
+    title: 'Review helpful vote count displays incorrectly',
+    description: 'The helpful vote count on reviews shows an incorrect number after voting.',
+    expected_behavior: 'Vote count should accurately reflect the number of helpful votes.',
+    actual_behavior: 'Vote count is off by one or shows wrong total after voting.',
+    severity: 'Medium',
+    priority: 'P2',
+    module: 'Review Votes',
+    trigger_condition: 'Vote helpful on a review and observe the displayed count.',
+    detection_keywords: 'review,vote,count,helpful,incorrect,wrong'
+  },
+  {
+    project_id: 1,
+    bug_id: 'GT-053',
+    requirement_id: null,
+    req_id_ref: 'REQ-EC010',
+    title: 'Move to cart does not remove item from saved list',
+    description: 'When moving a saved item to cart, it remains in the saved items list instead of being removed.',
+    expected_behavior: 'Moving an item to cart should remove it from the saved list.',
+    actual_behavior: 'Item appears in both cart and saved list after move operation.',
+    severity: 'High',
+    priority: 'P1',
+    module: 'Save for Later',
+    trigger_condition: 'Save an item, then move it to cart, check saved list.',
+    detection_keywords: 'saved,move,cart,remove,duplicate,still present'
+  },
+  {
+    project_id: 1,
+    bug_id: 'GT-054',
+    requirement_id: null,
+    req_id_ref: 'REQ-EC010',
+    title: 'Saved items has no limit per user',
+    description: 'Users can save unlimited items to their saved list with no maximum limit.',
+    expected_behavior: 'Saved items should have a reasonable limit (e.g., 20 items per user).',
+    actual_behavior: 'No limit is enforced, allowing unlimited saved items.',
+    severity: 'Low',
+    priority: 'P3',
+    module: 'Save for Later',
+    trigger_condition: 'Attempt to save 100+ items to the saved list.',
+    detection_keywords: 'saved,limit,maximum,unlimited,items'
   }
 ];
 

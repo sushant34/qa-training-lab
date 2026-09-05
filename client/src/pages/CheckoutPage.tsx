@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getCart, checkout } from '../services/api';
-import { Cart } from '../types';
+import { Cart, Coupon } from '../types';
 import toast from 'react-hot-toast';
 import { CheckCircle } from 'lucide-react';
+import CouponInput from '../components/CouponInput';
 
 const CheckoutPage: React.FC = () => {
   const [cart, setCart] = useState<Cart>({ items: [], total: 0 });
@@ -11,6 +12,8 @@ const CheckoutPage: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
   const [orderComplete, setOrderComplete] = useState(false);
   const [orderId, setOrderId] = useState<number | null>(null);
+  const [appliedCoupon, setAppliedCoupon] = useState<Coupon | null>(null);
+  const [discount, setDiscount] = useState(0);
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     full_name: '',
@@ -37,6 +40,18 @@ const CheckoutPage: React.FC = () => {
       setLoading(false);
     }
   };
+
+  const handleCouponApply = (coupon: Coupon, discountAmount: number) => {
+    setAppliedCoupon(coupon);
+    setDiscount(discountAmount);
+  };
+
+  const handleCouponRemove = () => {
+    setAppliedCoupon(null);
+    setDiscount(0);
+  };
+
+  const finalTotal = Math.max(cart.total - discount, 0);
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
@@ -72,7 +87,10 @@ const CheckoutPage: React.FC = () => {
     setSubmitting(true);
 
     try {
-      const result = await checkout(formData);
+      const result = await checkout({
+        ...formData,
+        coupon_code: appliedCoupon?.code,
+      });
       setOrderId(result.order.id);
       setOrderComplete(true);
       toast.success('Order placed successfully!');
@@ -102,7 +120,7 @@ const CheckoutPage: React.FC = () => {
           Your order <span className="font-mono font-semibold text-indigo-600">#{orderId}</span> has been placed successfully.
         </p>
         <p className="text-sm text-slate-500 dark:text-slate-400 mb-8">
-          Total: <span className="font-bold text-slate-800 dark:text-slate-200">${cart.total.toFixed(2)}</span>
+          Total: <span className="font-bold text-slate-800 dark:text-slate-200">${finalTotal.toFixed(2)}</span>
         </p>
         <button
           onClick={() => navigate('/ecommerce/shop')}
@@ -134,11 +152,26 @@ const CheckoutPage: React.FC = () => {
               <span className="font-medium">${(item.price * item.quantity).toFixed(2)}</span>
             </div>
           ))}
+          {discount > 0 && (
+            <div className="flex justify-between text-sm text-emerald-600 dark:text-emerald-400">
+              <span>Discount ({appliedCoupon?.code})</span>
+              <span>-${discount.toFixed(2)}</span>
+            </div>
+          )}
           <div className="border-t pt-3 flex justify-between font-semibold">
             <span>Total</span>
-            <span>${cart.total.toFixed(2)}</span>
+            <span>${finalTotal.toFixed(2)}</span>
           </div>
         </div>
+      </div>
+
+      <div className="card">
+        <CouponInput
+          onApply={handleCouponApply}
+          onRemove={handleCouponRemove}
+          appliedCoupon={appliedCoupon}
+          orderTotal={cart.total}
+        />
       </div>
 
       <form onSubmit={handleSubmit} className="card space-y-4">

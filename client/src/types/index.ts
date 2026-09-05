@@ -186,6 +186,8 @@ export interface Review {
   comment: string | null;
   created_at: string;
   author_name: string;
+  helpful_count?: number;
+  user_vote?: number | null;
 }
 
 export interface ReviewStats {
@@ -234,4 +236,37 @@ export interface CoverageData {
   };
   uncovered_requirements: { req_id: string; title: string; description: string }[];
   module_stats: Record<string, { total: number; with_tc: number; with_bugs: number }>;
+}
+
+export interface Coupon {
+  code: string;
+  discount_type: 'percentage' | 'fixed';
+  discount_value: number;
+  min_order_amount: number;
+}
+
+export interface SavedItem {
+  id: number;
+  product_id: number;
+  created_at: string;
+  name: string;
+  price: number;
+  category: string;
+  image_url: string | null;
+  stock: number;
+}
+
+export interface RecentlyViewedItem {
+  product_id: number;
+  viewed_at: string;
+  name: string;
+  price: number;
+  category: string;
+  image_url: string | null;
+  stock: number;
+}
+
+export interface ReviewVoteResponse {
+  helpful_count: number;
+  user_vote: number | null;
 }

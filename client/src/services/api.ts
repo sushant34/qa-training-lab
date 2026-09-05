@@ -1,4 +1,4 @@
-import { User, Project, Requirement, TestCase, TestExecution, BugReport, GroundTruthBug, Evaluation, Product, Cart, Order, PaginatedProducts, WishlistItem, Review, ReviewStats, TraceabilityMatrix, CoverageData } from '../types';
+import { User, Project, Requirement, TestCase, TestExecution, BugReport, GroundTruthBug, Evaluation, Product, Cart, Order, PaginatedProducts, WishlistItem, Review, ReviewStats, TraceabilityMatrix, CoverageData, Coupon, SavedItem, RecentlyViewedItem, ReviewVoteResponse } from '../types';
 
 const API_BASE = '/api';
 
@@ -377,5 +377,81 @@ export const getTraceability = async (projectId: number): Promise<TraceabilityMa
 // Coverage Dashboard
 export const getCoverage = async (projectId: number): Promise<CoverageData> => {
   const response = await fetch(`${API_BASE}/coverage/${projectId}`, { headers: getHeaders() });
+  return handleResponse(response);
+};
+
+// Coupons
+export const validateCoupon = async (code: string): Promise<Coupon> => {
+  const response = await fetch(`${API_BASE}/coupons/validate`, {
+    method: 'POST',
+    headers: getHeaders(),
+    body: JSON.stringify({ code }),
+  });
+  return handleResponse(response);
+};
+
+// Recently Viewed
+export const getRecentlyViewed = async (): Promise<RecentlyViewedItem[]> => {
+  const response = await fetch(`${API_BASE}/products/recently-viewed`, { headers: getHeaders() });
+  return handleResponse(response);
+};
+
+// Saved Items
+export const getSavedItems = async (): Promise<SavedItem[]> => {
+  const response = await fetch(`${API_BASE}/saved`, { headers: getHeaders() });
+  return handleResponse(response);
+};
+
+export const addToSaved = async (productId: number): Promise<SavedItem[]> => {
+  const response = await fetch(`${API_BASE}/saved/add`, {
+    method: 'POST',
+    headers: getHeaders(),
+    body: JSON.stringify({ product_id: productId }),
+  });
+  return handleResponse(response);
+};
+
+export const removeFromSaved = async (productId: number): Promise<SavedItem[]> => {
+  const response = await fetch(`${API_BASE}/saved/remove/${productId}`, {
+    method: 'DELETE',
+    headers: getHeaders(),
+  });
+  return handleResponse(response);
+};
+
+export const moveToCart = async (productId: number): Promise<{ message: string; savedItems: SavedItem[] }> => {
+  const response = await fetch(`${API_BASE}/saved/move-to-cart/${productId}`, {
+    method: 'POST',
+    headers: getHeaders(),
+  });
+  return handleResponse(response);
+};
+
+// Review Votes
+export const voteReview = async (reviewId: number, isHelpful: 1 | -1): Promise<ReviewVoteResponse> => {
+  const response = await fetch(`${API_BASE}/reviews/${reviewId}/vote`, {
+    method: 'POST',
+    headers: getHeaders(),
+    body: JSON.stringify({ is_helpful: isHelpful }),
+  });
+  return handleResponse(response);
+};
+
+// Order Status Update (Trainer only)
+export const updateOrderStatus = async (orderId: number, status: string): Promise<Order> => {
+  const response = await fetch(`${API_BASE}/checkout/${orderId}/status`, {
+    method: 'PUT',
+    headers: getHeaders(),
+    body: JSON.stringify({ status }),
+  });
+  return handleResponse(response);
+};
+
+// Cancel Order
+export const cancelOrder = async (orderId: number): Promise<Order> => {
+  const response = await fetch(`${API_BASE}/checkout/${orderId}/cancel`, {
+    method: 'PUT',
+    headers: getHeaders(),
+  });
   return handleResponse(response);
 };

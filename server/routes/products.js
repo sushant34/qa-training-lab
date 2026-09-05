@@ -24,7 +24,6 @@ router.get('/', authenticateToken, productListRules, validate, tryCatch(async (r
 
   if (search) {
     // BUG-004: Search returns unrelated products for some search terms
-    // The search is case-sensitive and uses LIKE without wildcards
     query += ' AND (name LIKE ? OR description LIKE ?)';
     countQuery += ' AND (name LIKE ? OR description LIKE ?)';
     params.push(`%${search}%`, `%${search}%`);
@@ -68,11 +67,38 @@ router.get('/categories', authenticateToken, tryCatch(async (req, res) => {
   res.json(categories.map(c => c.category));
 }));
 
+// Get recently viewed products
+router.get('/recently-viewed', authenticateToken, tryCatch(async (req, res) => {
+  const items = db.prepare(`
+    SELECT rv.product_id, rv.viewed_at, p.name, p.price, p.category, p.image_url, p.stock
+    FROM recently_viewed rv
+    JOIN products p ON rv.product_id = p.id
+    WHERE rv.user_id = ?
+    ORDER BY rv.viewed_at DESC
+    LIMIT 8
+  `).all(req.user.id);
+
+  res.json(items);
+}));
+
 router.get('/:id', authenticateToken, tryCatch(async (req, res) => {
   const product = db.prepare('SELECT * FROM products WHERE id = ?').get(req.params.id);
 
   if (!product) {
     return res.status(404).json({ error: 'Product not found' });
+  }
+
+  // Track recently viewed
+  // BUG-049: Recently viewed not cleared on logout (stored in DB, not session)
+  // BUG-050: Allows duplicate entries (INSERT OR IGNORE handles this, but the
+  //          UNIQUE constraint means duplicates are silently ignored, not updated)
+  //          Should use: INSERT OR REPLACE to update viewed_at on duplicate
+  try {
+    db.prepare('INSERT OR IGNORE INTO recently_viewed (user_id, product_id) VALUES (?, ?)').run(
+      req.user.id, req.params.id
+    );
+  } catch (e) {
+    // Silently fail
   }
 
   res.json(product);
