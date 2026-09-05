@@ -165,7 +165,16 @@ const CheckoutPage: React.FC = () => {
         </div>
       </div>
 
-      <div className="card">
+      <div className="card space-y-3">
+        <div className="p-3 bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-200 dark:border-indigo-800 rounded-xl">
+          <p className="text-sm text-indigo-700 dark:text-indigo-300 font-medium mb-1">Available Coupons</p>
+          <div className="flex flex-wrap gap-2">
+            <span className="px-2 py-0.5 bg-indigo-100 dark:bg-indigo-800/50 text-indigo-700 dark:text-indigo-300 rounded text-xs font-mono">SAVE10</span>
+            <span className="text-xs text-indigo-500 dark:text-indigo-400">10% off (min $25)</span>
+            <span className="px-2 py-0.5 bg-indigo-100 dark:bg-indigo-800/50 text-indigo-700 dark:text-indigo-300 rounded text-xs font-mono">FLAT5</span>
+            <span className="text-xs text-indigo-500 dark:text-indigo-400">$5 off (min $20)</span>
+          </div>
+        </div>
         <CouponInput
           onApply={handleCouponApply}
           onRemove={handleCouponRemove}
